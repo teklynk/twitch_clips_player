@@ -14,6 +14,7 @@ $(document).ready(function () {
     if (!shuffle) {
         shuffle = "false"; //default
     }
+
     if (!limit) {
         limit = "50"; //default
     }
