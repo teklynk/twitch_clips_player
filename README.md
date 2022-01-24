@@ -4,7 +4,8 @@
 
 This is a Twitch Clips Player, browser source overlay for OBS. 
 
-This grabs your Twitch clips and plays them one after the other in a loop. Keep your viewers entertained on your BRB or starting soon scenes.
+This grabs your Twitch clips and plays them one after the other in a loop. Keep your viewers entertained on your BRB or starting soon scenes. Track future development here: [https://github.com/teklynk/twitch_clips_player/projects/1](https://github.com/teklynk/twitch_clips_player/projects/1)
+
 
 ### [Try it here](https://twitch-clips-player.pages.dev/)
 
