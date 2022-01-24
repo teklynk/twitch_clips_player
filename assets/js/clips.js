@@ -7,9 +7,9 @@ $(document).ready(function () {
     }
 
     // URL values
-    let channel = getUrlParameter('channel');
-    let limit = getUrlParameter('limit');
-    let shuffle = getUrlParameter('shuffle');
+    let channel = getUrlParameter('channel').toLowerCase().trim();
+    let limit = getUrlParameter('limit').trim();
+    let shuffle = getUrlParameter('shuffle').trim();
 
     if (!shuffle) {
         shuffle = "false"; //default
