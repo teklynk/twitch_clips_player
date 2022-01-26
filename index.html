@@ -132,12 +132,12 @@ video {
             alert('Twitch username is not set');
         }
 
-        localStorage.setItem("TwitchClipsMainAccount", mainAccount);
+        localStorage.setItem("TwitchClipsMainAccount", mainAccount.toLowerCase().trim());
 
         //build overlay url
         if (mainAccount) {
             let srcURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
-            let fullUrl = srcURL + "clips.html?channel=" + mainAccount.toLowerCase().trim() + "&limit=" + limit.trim() + "&shuffle=" + shuffle + "";
+            let fullUrl = srcURL + "clips.html?channel=" + mainAccount.toLowerCase().trim() + "&limit=" + limit + "&shuffle=" + shuffle + "";
             fullUrl = fullUrl.replace("index.htmlclips.html", "clips.html");
             document.getElementById("overlaylink").classList.remove("hide");
             document.getElementById("overlaylink").innerHTML = "<p>Add this link as a browser source in OBS.<br>" +
