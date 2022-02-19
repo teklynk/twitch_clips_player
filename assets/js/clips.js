@@ -104,6 +104,13 @@ $(document).ready(function () {
             'async': false
         }).responseText);
 
+        // If no user clips exist, then exit/skip
+        if (!clips_json.data) {
+            console.log('no clips exist for channel: ' + channelName);
+            nextClip();
+            return false;
+        }
+
         // Sort array by created_at
         clips_json.data.sort(sortByProperty('created_at'));
 
