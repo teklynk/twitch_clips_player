@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Basic');
+
 html, body {
     overflow: hidden;
     background: transparent;
@@ -16,4 +18,22 @@ video {
     height: auto;
     max-height: 100%;
     border-radius: 10px;
+    z-index: -1;
+}
+
+#text-container {
+    width: 100%;
+    margin: 40px 0;
+    position: absolute;
+    top: 10%;
+}
+
+.title-text {
+    font-family: Basic, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 5vw;
+    word-wrap: break-word;
+    color: #fff;
+    text-align: center;
+    text-shadow: 2px 2px #000;
 }

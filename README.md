@@ -11,9 +11,11 @@ This grabs your Twitch clips and plays them one after the other in a loop. Keep 
 
 ## URL Parameters
 
-**channel=Your channel name** 
+**channel=Your channel name or a comma separated list of channels** 
 
 **shuffle=true/false**  Play clips in a random order.
+
+**showText=true/false**  Displays the channel name on top of the video.
 
 **limit=integer**  Max number of clips to pull from (max is 100).
 
@@ -34,5 +36,22 @@ video {
     height: auto;
     max-height: 100%;
     border-radius: 10px;
+}
+
+#text-container {
+    width: 100%;
+    margin: 40px 0;
+    position: absolute;
+    top: 10%;
+}
+
+.title-text {
+    font-family: Basic, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 5vw;
+    word-wrap: break-word;
+    color: #fff;
+    text-align: center;
+    text-shadow: 2px 2px #000;
 }
 ```
