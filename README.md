@@ -11,13 +11,20 @@ This grabs your Twitch clips and plays them one after the other in a loop. Keep 
 
 ## URL Parameters
 
-**channel=Your channel name or a comma separated list of channels** 
+**channel=Your channel name or a comma separated list of channels** (user1,user2,user3,user4)
 
 **shuffle=true/false**  Play clips in a random order.
 
 **showText=true/false**  Displays the channel name on top of the video.
 
 **limit=integer**  Max number of clips to pull from (max is 100).
+
+**so=true/false**  Say a Shout-out message in chat.
+
+**mainAccount=channel**  The main channel that you want to send chat messages to.
+
+**ref=base64**  Access token
+
 
 ## Custom CSS
 
