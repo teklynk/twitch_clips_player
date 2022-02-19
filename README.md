@@ -25,6 +25,7 @@ This grabs your Twitch clips and plays them one after the other in a loop. Keep 
 
 **ref=base64**  Access token
 
+**customMsg=string**  Shout-out message. Uses variables like: {channel},{games},{tile},{url}
 
 ## Custom CSS
 
