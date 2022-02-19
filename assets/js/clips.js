@@ -25,6 +25,7 @@ $(document).ready(function () {
     let showText = getUrlParameter('showText').trim();
     let so = getUrlParameter('so').trim();
     let ref = getUrlParameter('ref').trim();
+    let customMsg = getUrlParameter('customMsg').trim();
     let randomClip = 0; // Default random clip index
     let clip_index = 0; // Default clip index
 
@@ -138,14 +139,21 @@ $(document).ready(function () {
 
         // Do a shout-out for each clip
         if (so === 'true' && ref) {
-
             let so_json = JSON.parse($.getJSON({
                 'url': "https://twitchapi.teklynk.com/getuserstatus.php?channel=" + channelName + "",
                 'async': false
             }).responseText);
 
-            client.say(mainAccount, "Go check out " + so_json.data[0]['broadcaster_name'] + "! They were playing: " + so_json.data[0]['game_name'] + " - " + so_json.data[0]['title'] + " - https://twitch.tv/" + so_json.data[0]['broadcaster_name']);
-
+            if (customMsg) {
+                customMsg = getUrlParameter('customMsg').trim();
+                customMsg = customMsg.replace('{channel}', so_json.data[0]['broadcaster_name']);
+                customMsg = customMsg.replace('{game}', so_json.data[0]['game_name']);
+                customMsg = customMsg.replace('{title}', so_json.data[0]['title']);
+                customMsg = customMsg.replace('{url}', "https://twitch.tv/" + so_json.data[0]['broadcaster_login']);
+                client.say(mainAccount, customMsg);
+            } else {
+                client.say(mainAccount, "Go check out " + so_json.data[0]['broadcaster_name'] + "! They were playing: " + so_json.data[0]['game_name'] + " - " + so_json.data[0]['title'] + " - https://twitch.tv/" + so_json.data[0]['broadcaster_login']);
+            }
         }
     }
 
