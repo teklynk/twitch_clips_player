@@ -19,14 +19,21 @@ $(document).ready(function () {
 
     // URL values
     let channel = getUrlParameter('channel').toLowerCase().trim();
+    let mainAccount = getUrlParameter('mainAccount').toLowerCase().trim();
     let limit = getUrlParameter('limit').trim();
     let shuffle = getUrlParameter('shuffle').trim();
     let showText = getUrlParameter('showText').trim();
+    let so = getUrlParameter('so').trim();
+    let ref = getUrlParameter('ref').trim();
     let randomClip = 0; // Default random clip index
     let clip_index = 0; // Default clip index
 
     if (!shuffle) {
         shuffle = "false"; //default
+    }
+
+    if (!so) {
+        so = "false"; //default
     }
 
     if (!showText) {
@@ -39,6 +46,31 @@ $(document).ready(function () {
 
     if (!channel) {
         alert('channel is not set in the url');
+    }
+
+    if (so === 'true' && ref === '') {
+        alert('Twitch access token now found');
+    }
+
+    let client = '';
+
+    // If shoutout and Auth token set, then connect to chat using oauth.
+    if (so === 'true' && ref) {
+
+        client = new tmi.Client({
+            options: {
+                debug: true,
+                skipUpdatingEmotesets: true
+            },
+            connection: {reconnect: true},
+            identity: {
+                username: mainAccount,
+                password: 'oauth:' + atob(ref)
+            },
+            channels: [mainAccount]
+        });
+
+        client.connect().catch(console.error);
     }
 
     // Convert string to an array/list
@@ -57,11 +89,14 @@ $(document).ready(function () {
     let curr_clip = document.createElement('video');
     $(curr_clip).appendTo('#container');
 
-    // Play a clip on initial page load
-    loadClip(channel[clip_index]);
+    // wait 3 seconds for TMI to connect to Twitch before doing a shout-out
+    setTimeout(function () {
+        // Play a clip on initial page load
+        loadClip(channel[clip_index]);
+    }, 3000);
 
+    // Get and play the clip
     function loadClip(channelName) {
-
         // Json data - Ajax call
         let clips_json = JSON.parse($.getJSON({
             'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&limit=" + limit + "",
@@ -71,12 +106,14 @@ $(document).ready(function () {
         // Sort array by created_at
         clips_json.data.sort(sortByProperty('created_at'));
 
+        // Grab a random clip index anywhere from 1 to the limit value. Else, grab the most recent popular clip.
         if (shuffle === 'true') {
             randomClip = Math.floor((Math.random() * clips_json.data.length - 1) + 1);
         } else {
             randomClip = 0;
         }
 
+        // Show channel name on top of video
         if (showText === 'true') {
             $("<div id='text-container'><span class='title-text'>" + clips_json.data[0]['broadcaster_name'] + "</span></div>").appendTo('#container');
         }
@@ -99,6 +136,17 @@ $(document).ready(function () {
         // Move to the next clip if the current one finishes playing
         curr_clip.addEventListener("ended", nextClip);
 
+        // Do a shout-out for each clip
+        if (so === 'true' && ref) {
+
+            let so_json = JSON.parse($.getJSON({
+                'url': "https://twitchapi.teklynk.com/getuserstatus.php?channel=" + channelName + "",
+                'async': false
+            }).responseText);
+
+            client.say(mainAccount, "Go check out " + so_json.data[0]['broadcaster_name'] + "! They were playing: " + so_json.data[0]['game_name'] + " - " + so_json.data[0]['title'] + " - https://twitch.tv/" + so_json.data[0]['broadcaster_name']);
+
+        }
     }
 
     function nextClip() {
