@@ -90,11 +90,16 @@ $(document).ready(function () {
     let curr_clip = document.createElement('video');
     $(curr_clip).appendTo('#container');
 
-    // wait 3 seconds for TMI to connect to Twitch before doing a shout-out
-    setTimeout(function () {
-        // Play a clip on initial page load
+    // Only do this if doing a shoutout message, else, play clip right away
+    if (so === 'true' && ref) {
+        // wait 3 seconds for TMI to connect to Twitch before loading clip and doing a shoutout
+        setTimeout(function () {
+            // Play a clip
+            loadClip(channel[clip_index]);
+        }, 3000);
+    } else {
         loadClip(channel[clip_index]);
-    }, 3000);
+    }
 
     // Get and play the clip
     function loadClip(channelName) {
@@ -151,14 +156,17 @@ $(document).ready(function () {
                 'async': false
             }).responseText);
 
+            // Custom message. Replace {variable} with actual values
             if (customMsg) {
                 customMsg = getUrlParameter('customMsg').trim();
                 customMsg = customMsg.replace('{channel}', so_json.data[0]['broadcaster_name']);
                 customMsg = customMsg.replace('{game}', so_json.data[0]['game_name']);
                 customMsg = customMsg.replace('{title}', so_json.data[0]['title']);
                 customMsg = customMsg.replace('{url}', "https://twitch.tv/" + so_json.data[0]['broadcaster_login']);
+                // Say custom message
                 client.say(mainAccount, customMsg);
             } else {
+                // Say default message
                 client.say(mainAccount, "Go check out " + so_json.data[0]['broadcaster_name'] + "! They were playing: " + so_json.data[0]['game_name'] + " - " + so_json.data[0]['title'] + " - https://twitch.tv/" + so_json.data[0]['broadcaster_login']);
             }
         }
