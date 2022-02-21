@@ -50,7 +50,7 @@ $(document).ready(function () {
     }
 
     if (so === 'true' && ref === '') {
-        alert('Twitch access token now found');
+        alert('Twitch access token not set');
     }
 
     let client = '';
@@ -109,7 +109,7 @@ $(document).ready(function () {
             'async': false
         }).responseText);
 
-        // If no user clips exist, then exit/skip
+        // If no user clips exist, then skip to the next channel
         if (!clips_json.data) {
             console.log('no clips exist for channel: ' + channelName);
             nextClip();
