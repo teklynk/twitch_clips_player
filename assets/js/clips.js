@@ -110,7 +110,7 @@ $(document).ready(function () {
         }).responseText);
 
         // If no user clips exist, then skip to the next channel
-        if (!clips_json.data) {
+        if (!clips_json.data || typeof clips_json.data === 'undefined' || clips_json.data.length === 0) {
             console.log('no clips exist for channel: ' + channelName);
             nextClip();
             return false;
