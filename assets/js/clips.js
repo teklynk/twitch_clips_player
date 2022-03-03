@@ -17,6 +17,11 @@ $(document).ready(function () {
         }
     }
 
+    // Array Shuffler
+    function shuffleArray(arr) {
+        arr.sort(() => Math.random() - 0.5);
+    }
+
     // URL values
     let channel = getUrlParameter('channel').toLowerCase().trim();
     let mainAccount = getUrlParameter('mainAccount').toLowerCase().trim();
@@ -77,12 +82,14 @@ $(document).ready(function () {
     // Convert string to an array/list
     channel = channel.split(',');
 
-    let channel_index = channel.length;
-
     // Randomly grab a channel from the list to start from
     if (shuffle === 'true' && channel.length > 0) {
+        // shuffle the list of channel names
+        shuffleArray(channel);
+        // grab a random channel from the chanel list
         clip_index = Math.floor((Math.random() * channel.length - 1) + 1);
     } else {
+        // grab the first item in the list to start from
         clip_index = 0;
     }
 
@@ -176,7 +183,7 @@ $(document).ready(function () {
         // Remove element when the next clip plays
         $('#text-container').remove();
 
-        if (clip_index < channel_index - 1) {
+        if (clip_index < channel.length - 1) {
             clip_index += 1;
         } else {
             clip_index = 0;
