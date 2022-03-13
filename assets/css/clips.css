@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Basic');
+@import url('https://fonts.googleapis.com/css?family=Bowlby+One+SC');
 
 html, body {
     overflow: hidden;
@@ -36,4 +37,124 @@ video {
     color: #fff;
     text-align: center;
     text-shadow: 2px 2px #000;
+}
+
+/*Layout 1*/
+
+#layout1 {
+    width: 1600px;
+}
+
+#videoContainer {
+    display: inline-block;
+    float: right;
+    width: 953px;
+    height: 536px;
+    min-height: 536px;
+}
+
+#videoDetails {
+    background: rgb(199, 4, 142);
+    background: linear-gradient(243deg, rgba(199, 4, 142, 1) 42%, rgba(163, 5, 247, 0.76234243697479) 100%);
+    display: inline-block;
+    float: left;
+    width: 647px;
+    height: 536px;
+    min-height: 536px;
+    max-height: 536px;
+}
+
+#videoContainer video {
+    height: 953px;
+    min-height: 536px;
+    max-height: 536px;
+    border-radius: 0;
+}
+
+.clip-channel-text {
+    font-family: 'Bowlby One SC', cursive;
+    text-transform: uppercase;
+    font-size: 44px;
+    color: white;
+    text-shadow: 2px 2px #000;
+}
+
+.clip-title-text {
+    font-family: Basic, Helvetica, sans-serif;
+    font-size: 36px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+    text-shadow: 2px 2px #000;
+    padding: 20px;
+}
+
+#clip-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 206px;
+    min-height: 206px;
+    text-shadow: 2px 2px #000;
+    overflow: hidden;
+}
+
+#clip-game span:first-child, #clip-date span:first-child, #clip-created span:first-child {
+    font-family: 'Bowlby One SC', cursive;
+    text-align: right;
+    width: 165px;
+    font-size: 20px;
+    text-transform: uppercase;
+    overflow: hidden;
+    display: table-cell;
+    vertical-align: middle;
+    padding: 10px;
+    color: #fff;
+    text-shadow: 2px 2px #000;
+}
+
+#clip-game span.clip-game-text, #clip-date span.clip-created-text, #clip-created span.clip-creator-text {
+    font-family: 'Bowlby One SC', cursive;
+    text-align: right;
+    width: 455px;
+    font-size: 20px;
+    text-transform: uppercase;
+    overflow: hidden;
+    display: table-cell;
+    vertical-align: middle;
+    padding: 10px 34px 10px 10px;
+    color: #fff;
+    text-shadow: 2px 2px #000;
+}
+
+#clip-channel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90px;
+    border-bottom: solid 2px #880f74;
+    background-color: #262626;
+}
+
+#clip-date, #clip-game, #clip-created {
+    background: rgb(6, 27, 246);
+    background: linear-gradient(240deg, rgba(6, 27, 246, 1) 42%, rgba(163, 5, 247, 0.75) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+    overflow: hidden;
+    border-bottom: solid 2px #880f74;
+}
+
+#clip-game {
+
+}
+
+#clip-date {
+
+}
+
+#clip-created {
+    border-bottom: none;
 }

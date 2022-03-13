@@ -22,6 +22,8 @@ $(document).ready(function () {
         arr.sort(() => Math.random() - 0.5);
     }
 
+    let apiDomain = "http://twitchapi.local";
+
     // URL values
     let channel = getUrlParameter('channel').toLowerCase().trim();
     let mainAccount = getUrlParameter('mainAccount').toLowerCase().trim();
@@ -31,6 +33,7 @@ $(document).ready(function () {
     let so = getUrlParameter('so').trim();
     let ref = getUrlParameter('ref').trim();
     let customMsg = getUrlParameter('customMsg').trim();
+    let layout = getUrlParameter('layout').trim();
     let randomClip = 0; // Default random clip index
     let clip_index = 0; // Default clip index
 
@@ -95,7 +98,29 @@ $(document).ready(function () {
 
     // Create new video element
     let curr_clip = document.createElement('video');
-    $(curr_clip).appendTo('#container');
+
+    // Creates elements for layout 1
+    if (layout === "1") {
+        // adds video to video container
+        let layout1 = document.createElement('div');
+        layout1.setAttribute("id", "layout1");
+        $(layout1).appendTo('#container');
+
+        let videoContainer = document.createElement('div');
+        videoContainer.setAttribute("id", "videoContainer");
+        $(videoContainer).appendTo('#layout1');
+
+        // add clip details to video details container
+        let videoDetails = document.createElement('div');
+        videoDetails.setAttribute("id", "videoDetails");
+        $(videoDetails).appendTo('#layout1');
+
+        $(curr_clip).appendTo('#videoContainer');
+
+    } else {
+        // default
+        $(curr_clip).appendTo('#container');
+    }
 
     // Only do this if doing a shoutout message, else, play clip right away
     if (so === 'true' && ref) {
@@ -112,9 +137,12 @@ $(document).ready(function () {
     function loadClip(channelName) {
         // Json data - Ajax call
         let clips_json = JSON.parse($.getJSON({
-            'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&limit=" + limit + "",
+            'url': apiDomain + "/getuserclips.php?channel=" + channelName + "&limit=" + limit + "",
             'async': false
         }).responseText);
+
+        //Get game name from game id
+        //only do this layout=2
 
         // If no user clips exist, then skip to the next channel
         if (!clips_json.data || typeof clips_json.data === 'undefined' || clips_json.data.length === 0) {
@@ -134,8 +162,34 @@ $(document).ready(function () {
         }
 
         // Show channel name on top of video
-        if (showText === 'true') {
+        if (layout !== "1" && showText === 'true') {
             $("<div id='text-container'><span class='title-text'>" + clips_json.data[0]['broadcaster_name'] + "</span></div>").appendTo('#container');
+        }
+
+        if (layout === "1") {
+            let gameName = '';
+
+            if (clips_json.data[randomClip]['game_id']) {
+
+                // Get game title / stream category
+                let game_json = JSON.parse($.getJSON({
+                    'url': apiDomain + "/getgame.php?id=" + clips_json.data[randomClip]['game_id'],
+                    'async': false
+                }).responseText);
+
+                gameName = game_json.data[0]['name'];
+            }
+
+            let clip_datetime = new Date(clips_json.data[randomClip]['created_at']);
+
+            //$("<div id='layout1'></div>").appendTo('#container');
+
+            $("<div id='details'></div>").appendTo('#videoDetails');
+            $("<div id='clip-channel'><span class='clip-channel-text'>" + clips_json.data[randomClip]['broadcaster_name'] + "</span></div>").appendTo('#details');
+            $("<div id='clip-title'><span class='clip-title-text'>" + clips_json.data[randomClip]['title'] + "</span></div>").appendTo('#details');
+            $("<div id='clip-game'><span>Game Name:</span><span class='clip-game-text'>" + gameName + "</span></div>").appendTo('#details');
+            $("<div id='clip-date'><span>Clip Date:</span><span class='clip-created-text'>" + clip_datetime.toLocaleDateString(navigator.language) + "</span></div>").appendTo('#details');
+            $("<div id='clip-created'><span>Clipped By:</span><span class='clip-creator-text'>" + clips_json.data[randomClip]['creator_name'] + "</span></div>").appendTo('#details');
         }
 
         // Parse thumbnail image to build the clip url
@@ -159,7 +213,7 @@ $(document).ready(function () {
         // Do a shout-out for each clip
         if (so === 'true' && ref) {
             let so_json = JSON.parse($.getJSON({
-                'url': "https://twitchapi.teklynk.com/getuserstatus.php?channel=" + channelName + "",
+                'url': apiDomain + "/getuserstatus.php?channel=" + channelName + "",
                 'async': false
             }).responseText);
 
@@ -182,6 +236,7 @@ $(document).ready(function () {
     function nextClip() {
         // Remove element when the next clip plays
         $('#text-container').remove();
+        $('#details').remove();
 
         if (clip_index < channel.length - 1) {
             clip_index += 1;
