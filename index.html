@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Twitch Clips Player</title>
     <script src="assets/js/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.js"></script>
     <link rel="stylesheet" href="assets/css/bootstrap452.min.css">
     <link rel="stylesheet" href="assets/css/dark.min.css">
     <link rel="apple-touch-icon" sizes="57x57" href="assets/images/apple-icon-57x57.png">
@@ -28,6 +29,16 @@
 </style>
 <body onload="onInit()">
 <div class="container">
+    <div class="row pt-md-4">
+        <ul class="nav nav-pills">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle active" data-toggle="dropdown" href="#" role="button"
+                   aria-haspopup="true" aria-expanded="false">Twitch Tools</a>
+                <div class="dropdown-menu" id="main-nav">
+                </div>
+            </li>
+        </ul>
+    </div>
     <div class="row">
         <div class="col-10">
             <h1 class="h3 pt-4 pl-lg-4 text-center">Twitch Clips Player</h1>
@@ -264,5 +275,16 @@ video {
        target="_blank">Help</a>
     <a class="btn btn-link" href="https://github.com/teklynk/twitch_clips_player" target="_blank">Github</a>
 </div>
+<script>
+    // Json data - Ajax call
+    let nav_json = JSON.parse($.getJSON({
+        'url': "https://twitchapi.teklynk.com/getnav.php",
+        'async': false
+    }).responseText);
+
+    $.each(nav_json, function (i, val) {
+        $('<a class="dropdown-item" href="' + val.url + '">' + val.name + '</a>').appendTo('#main-nav');
+    });
+</script>
 </body>
 </html>
