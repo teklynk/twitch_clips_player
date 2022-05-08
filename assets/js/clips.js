@@ -31,6 +31,9 @@ $(document).ready(function () {
     let so = getUrlParameter('so').trim();
     let ref = getUrlParameter('ref').trim();
     let customMsg = getUrlParameter('customMsg').trim();
+    let customText = getUrlParameter('customText').trim();
+    let command = getUrlParameter('command').trim();
+    let modOnly = getUrlParameter('modOnly').trim();
     let randomClip = 0; // Default random clip index
     let clip_index = 0; // Default clip index
 
@@ -40,6 +43,10 @@ $(document).ready(function () {
 
     if (!so) {
         so = "false"; //default
+    }
+
+    if (!modOnly) {
+        modOnly = "false"; //default
     }
 
     if (!showText) {
@@ -60,9 +67,9 @@ $(document).ready(function () {
 
     let client = '';
 
-    // If shoutout and Auth token set, then connect to chat using oauth.
+    // If Auth token is set, then connect to chat using oauth, else connect anonymously.
     if (so === 'true' && ref) {
-
+        // Connect to twitch - needs auth token
         client = new tmi.Client({
             options: {
                 debug: true,
@@ -75,9 +82,19 @@ $(document).ready(function () {
             },
             channels: [mainAccount]
         });
-
-        client.connect().catch(console.error);
+    } else {
+        // Connect to twitch anonymously - does not need auth token
+        client = new tmi.Client({
+            options: {
+                debug: true,
+                skipUpdatingEmotesets: true
+            },
+            connection: {reconnect: true},
+            channels: [mainAccount]
+        });
     }
+
+    client.connect().catch(console.error);
 
     // Convert string to an array/list
     channel = channel.split(',');
@@ -97,15 +114,43 @@ $(document).ready(function () {
     let curr_clip = document.createElement('video');
     $(curr_clip).appendTo('#container');
 
-    // Only do this if doing a shoutout message, else, play clip right away
-    if (so === 'true' && ref) {
-        // wait 3 seconds for TMI to connect to Twitch before loading clip and doing a shoutout
-        setTimeout(function () {
-            // Play a clip
-            loadClip(channel[clip_index]);
-        }, 3000);
+    //if command is set
+    if (command) {
+        // If command is set
+        // triggers on message
+        client.on('chat', (channel, user, message, self) => {
+            if (user['message-type'] === 'chat' && message.startsWith('!' + command)) {
+                if (so === 'true' && ref) {
+                    // wait 3 seconds for TMI to connect to Twitch before loading clip and doing a shoutout
+                    setTimeout(function () {
+                        // Play a clip
+                        if (modOnly === 'true' && (user.mod || user.username === mainAccount)) {
+                            loadClip(channel[clip_index]);
+                        } else if (modOnly === 'false' || user.username === mainAccount) {
+                            loadClip(channel[clip_index]);
+                        }
+                    }, 3000);
+                } else {
+                    if (modOnly === 'true' && (user.mod || user.username === mainAccount)) {
+                        loadClip(channel[clip_index]);
+                    } else if (modOnly === 'false' || user.username === mainAccount) {
+                        loadClip(channel[clip_index]);
+                    }
+                }
+            }
+        });
+        // Plays clips when scene is active
     } else {
-        loadClip(channel[clip_index]);
+        if (so === 'true' && ref) {
+            // wait 3 seconds for TMI to connect to Twitch before loading clip and doing a shoutout
+            setTimeout(function () {
+                // Play a clip
+                loadClip(channel[clip_index]);
+            }, 3000);
+        } else {
+            // Play a clip when scene is active
+            loadClip(channel[clip_index]);
+        }
     }
 
     // Get and play the clip
@@ -135,7 +180,13 @@ $(document).ready(function () {
 
         // Show channel name on top of video
         if (showText === 'true') {
-            $("<div id='text-container'><span class='title-text'>" + clips_json.data[0]['broadcaster_name'] + "</span></div>").appendTo('#container');
+            if (customText) {
+                // custom message to show on top of clip. includes {channel} name as a variable
+                customText = customText.replace("{channel}", clips_json.data[0]['broadcaster_name']);
+                $("<div id='text-container'><span class='title-text'>" + customText + "</span></div>").appendTo('#container');
+            } else {
+                $("<div id='text-container'><span class='title-text'>" + clips_json.data[0]['broadcaster_name'] + "</span></div>").appendTo('#container');
+            }
         }
 
         // Parse thumbnail image to build the clip url
