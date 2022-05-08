@@ -21,6 +21,12 @@ This grabs your Twitch clips and plays them one after the other in a loop. Keep 
 
 **so=true/false**  Say a Shout-out message in chat.
 
+**command=string**  Custom command to fire off the clips player. If Not set, clips player will play as soon as the scene is active.
+
+**customText=string**  Displays custom message on top of clips. Can include {channel}.
+
+**modOnly=true/false**  When command option is used, can limit command to Mods only.
+
 **mainAccount=channel**  The main channel that you want to send chat messages to.
 
 **ref=base64**  Access token
