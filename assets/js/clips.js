@@ -123,6 +123,9 @@ $(document).ready(function () {
 
             if (user['message-type'] === 'chat' && message.startsWith('!' + command)) {
 
+                // Remove element before loading the clip
+                $('#text-container').remove();
+
                 // Create an array of channel names
                 cmdArray = message.split('@').map(element => element.trim()); //Split channel names using the @ symbol
                 cmdArray = cmdArray.slice(1);
