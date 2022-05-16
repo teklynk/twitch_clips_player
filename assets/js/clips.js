@@ -36,6 +36,7 @@ $(document).ready(function () {
     let modOnly = getUrlParameter('modOnly').trim();
     let randomClip = 0; // Default random clip index
     let clip_index = 0; // Default clip index
+    let cmdArray = [];
 
     if (!shuffle) {
         shuffle = "false"; //default
@@ -97,7 +98,7 @@ $(document).ready(function () {
     client.connect().catch(console.error);
 
     // Convert string to an array/list
-    channel = channel.split(',');
+    channel = channel.split(',').map(element => element.trim());
 
     // Randomly grab a channel from the list to start from
     if (shuffle === 'true' && channel.length > 0) {
@@ -119,7 +120,32 @@ $(document).ready(function () {
         // If command is set
         // triggers on message
         client.on('chat', (channel, user, message, self) => {
+
             if (user['message-type'] === 'chat' && message.startsWith('!' + command)) {
+
+                // Create an array of channel names
+                cmdArray = message.split('@').map(element => element.trim()); //Split channel names using the @ symbol
+                cmdArray = cmdArray.slice(1);
+                cmdArray = cmdArray.filter(String);
+
+                // If command also contains @channel names
+                if (cmdArray.length > 0) {
+
+                    // Redeclare channel array as cmdArray from the ! command
+                    channel = cmdArray;
+
+                    // Randomly grab a channel from the list to start from
+                    if (shuffle === 'true' && channel.length > 0) {
+                        // shuffle the list of channel names
+                        shuffleArray(channel);
+                        // grab a random channel from the chanel list
+                        clip_index = Math.floor((Math.random() * channel.length - 1) + 1);
+                    } else {
+                        // grab the first item in the list to start from
+                        clip_index = 0;
+                    }
+                }
+
                 if (so === 'true' && ref) {
                     // wait 3 seconds for TMI to connect to Twitch before loading clip and doing a shoutout
                     setTimeout(function () {
@@ -139,8 +165,9 @@ $(document).ready(function () {
                 }
             }
         });
-        // Plays clips when scene is active
+
     } else {
+        // Plays clips when scene is active
         if (so === 'true' && ref) {
             // wait 3 seconds for TMI to connect to Twitch before loading clip and doing a shoutout
             setTimeout(function () {
@@ -216,7 +243,7 @@ $(document).ready(function () {
 
             // Custom message. Replace {variable} with actual values
             if (customMsg) {
-                customMsg = getUrlParameter('customMsg').trim();
+                customMsg = getUrlParameter('customMsg');
                 customMsg = customMsg.replace('{channel}', so_json.data[0]['broadcaster_name']);
                 customMsg = customMsg.replace('{game}', so_json.data[0]['game_name']);
                 customMsg = customMsg.replace('{title}', so_json.data[0]['title']);
@@ -233,6 +260,11 @@ $(document).ready(function () {
     function nextClip() {
         // Remove element when the next clip plays
         $('#text-container').remove();
+
+        // If chat command contains a list of channel names ie: !reel @teklynk @mrcool @thatstreamer @gamer123
+        if (cmdArray.length > 0) {
+            channel = cmdArray;
+        }
 
         if (clip_index < channel.length - 1) {
             clip_index += 1;

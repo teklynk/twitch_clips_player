@@ -4,7 +4,11 @@
 
 This is a Twitch Clips Player, browser source overlay for OBS. 
 
-This grabs your Twitch clips and plays them one after the other in a loop. Keep your viewers entertained on your BRB or starting soon scenes. Track future development here: [https://github.com/teklynk/twitch_clips_player/projects/1](https://github.com/teklynk/twitch_clips_player/projects/1)
+This grabs your Twitch clips and plays them one after the other in a loop. Keep your viewers entertained on your BRB or starting soon scenes. 
+
+NEW FEATURES: Use a custom command to start the clips reel and restrict it to Mods only. You can also add type "!command @teklynk @coolstreamer @gamer123 @tekbot" which will play the clips reel for only those channels.
+
+Track future development here: [https://github.com/teklynk/twitch_clips_player/projects/1](https://github.com/teklynk/twitch_clips_player/projects/1)
 
 
 ### [Try it here](https://twitch-clips-player.pages.dev/)
