@@ -212,6 +212,7 @@ $(document).ready(function () {
         if (showText === 'true') {
             if (customText) {
                 // custom message to show on top of clip. includes {channel} name as a variable
+                customText = getUrlParameter('customText').trim();
                 customText = customText.replace("{channel}", clips_json.data[0]['broadcaster_name']);
                 $("<div id='text-container'><span class='title-text'>" + customText + "</span></div>").appendTo('#container');
             } else {
@@ -262,7 +263,9 @@ $(document).ready(function () {
 
     function nextClip() {
         // Remove element when the next clip plays
-        $('#text-container').remove();
+        if (document.getElementById("text-container")) {
+            document.getElementById("text-container").remove();
+        }
 
         // If chat command contains a list of channel names ie: !reel @teklynk @mrcool @thatstreamer @gamer123
         if (cmdArray.length > 0) {
