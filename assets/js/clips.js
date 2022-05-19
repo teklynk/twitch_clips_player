@@ -121,10 +121,21 @@ $(document).ready(function () {
         // triggers on message
         client.on('chat', (channel, user, message, self) => {
 
+            if (self || !message.startsWith('!')) return;
+
             if (user['message-type'] === 'chat' && message.startsWith('!' + command)) {
 
                 // Remove element before loading the clip
                 $('#text-container').remove();
+
+                // Get second command. ie: stop
+                let commandOption = message.split(' ')[1];
+
+                // Stop the clips player
+                if (commandOption === "stop") {
+                    // Reload browser source
+                    window.location.reload();
+                }
 
                 // Create an array of channel names
                 cmdArray = message.split('@').map(element => element.trim()); //Split channel names using the @ symbol
@@ -150,7 +161,7 @@ $(document).ready(function () {
                 }
 
                 if (so === 'true' && ref) {
-                    // wait 3 seconds for TMI to connect to Twitch before loading clip and doing a shoutout
+                    // wait 1 second for TMI to connect to Twitch before loading clip and doing a shoutout
                     setTimeout(function () {
                         // Play a clip
                         if (modOnly === 'true' && (user.mod || user.username === mainAccount)) {
@@ -158,7 +169,7 @@ $(document).ready(function () {
                         } else if (modOnly === 'false' || user.username === mainAccount) {
                             loadClip(channel[clip_index]);
                         }
-                    }, 3000);
+                    }, 1000);
                 } else {
                     if (modOnly === 'true' && (user.mod || user.username === mainAccount)) {
                         loadClip(channel[clip_index]);
@@ -172,11 +183,11 @@ $(document).ready(function () {
     } else {
         // Plays clips when scene is active
         if (so === 'true' && ref) {
-            // wait 3 seconds for TMI to connect to Twitch before loading clip and doing a shoutout
+            // wait 1 second for TMI to connect to Twitch before loading clip and doing a shoutout
             setTimeout(function () {
                 // Play a clip
                 loadClip(channel[clip_index]);
-            }, 3000);
+            }, 1000);
         } else {
             // Play a clip when scene is active
             loadClip(channel[clip_index]);
