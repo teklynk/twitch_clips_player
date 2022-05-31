@@ -11,11 +11,11 @@ This grabs your Twitch clips and plays them one after the other in a loop. Keep 
 Track future development here: [https://github.com/teklynk/twitch_clips_player/projects/1](https://github.com/teklynk/twitch_clips_player/projects/1)
 
 **NEW FEATURES:** 
-
+- Show clips from channels that you follow. Grabs the most recent 100 channels.
 - Use a custom command to start the clips reel and restrict it to Mods only.
-- Type "!command @teklynk @coolstreamer @gamer123 @tekbot" which will play the clips reel for only those channels. 
-- Type "!command" while the clips reel is playing to skip to the next clip. 
-- Type "!command stop" to stop the clips player.
+- Type "!mycommand @teklynk @coolstreamer @gamer123 @tekbot" which will play the clips reel for only those channels. 
+- Type "!mycommand" while the clips reel is playing to skip to the next clip. 
+- Type "!mycommand stop" to stop the clips player.
 
 ## URL Parameters
 
@@ -30,6 +30,8 @@ Track future development here: [https://github.com/teklynk/twitch_clips_player/p
 **so=true/false**  Say a Shout-out message in chat.
 
 **command=string**  Custom command to fire off the clips player. If Not set, clips player will play as soon as the scene is active.
+
+**showFollowing=true/false** Pulls clips from the latest 100 channels that you are following. 
 
 **customText=string**  Displays custom message on top of clips. Can include {channel}.
 

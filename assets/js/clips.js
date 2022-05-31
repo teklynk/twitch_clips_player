@@ -34,12 +34,18 @@ $(document).ready(function () {
     let customText = getUrlParameter('customText').trim();
     let command = getUrlParameter('command').trim();
     let modOnly = getUrlParameter('modOnly').trim();
+    let showFollowing = getUrlParameter('showFollowing').trim();
     let randomClip = 0; // Default random clip index
     let clip_index = 0; // Default clip index
     let cmdArray = [];
+    let following = "";
 
     if (!shuffle) {
         shuffle = "false"; //default
+    }
+
+    if (!showFollowing) {
+        showFollowing = "false"; //default
     }
 
     if (!so) {
@@ -56,14 +62,6 @@ $(document).ready(function () {
 
     if (!limit) {
         limit = "50"; //default
-    }
-
-    if (!channel) {
-        alert('channel is not set in the url');
-    }
-
-    if (so === 'true' && ref === '') {
-        alert('Twitch access token not set');
     }
 
     let client = '';
@@ -97,8 +95,30 @@ $(document).ready(function () {
 
     client.connect().catch(console.error);
 
-    // Convert string to an array/list
-    channel = channel.split(',').map(element => element.trim());
+    if (showFollowing === 'true') {
+
+        // Json following data - Ajax call
+        let following_json = JSON.parse($.getJSON({
+            'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100",
+            'async': false
+        }).responseText);
+
+        // Create a list/string of following channel names
+        $.each(following_json.data, function(i, val) {
+            following += val['to_login'] + ",";
+        });
+
+        // Remove the last comma from string
+        following = following.replace(/,\s*$/, "");
+
+        // Set channel to equal following list/string
+        channel = following.split(',').map(element => element.trim());
+
+    } else {
+
+        // Convert string to an array/list
+        channel = channel.split(',').map(element => element.trim());
+    }
 
     // Randomly grab a channel from the list to start from
     if (shuffle === 'true' && channel.length > 0) {

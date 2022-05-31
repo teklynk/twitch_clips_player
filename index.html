@@ -55,36 +55,31 @@
                 on your BRB or starting soon scenes.</p> 
             <span class="text-info">NEW FEATURES:</span> 
             <ul>
+                <li>Show clips from channels that you follow. Grabs the most recent 100 channels.</li>
                 <li>Use a custom command to start the clips reel and restrict it to Mods only.</li>
-                <li>Type "!command @teklynk @coolstreamer @gamer123 @tekbot" which will play the clips reel for only those channels.</li>
-                <li>Type "!command" while the clips reel is playing to skip to the next clip.</li>
-                <li>Type "!command stop" to stop the clips player.</li>
+                <li>Type "!mycommand @teklynk @coolstreamer @gamer123 @tekbot" which will play the clips reel for only those channels.</li>
+                <li>Type "!mycommand" while the clips reel is playing to skip to the next clip.</li>
+                <li>Type "!mycommand stop" to stop the clips player.</li>
             </ul>
         </div>
     </div>
     <br>
     <div class="form-label-group mb-2">
-        <label for="channel">Twitch channel(s)
+        <label for="command">Main Twitch Channel</label>
+        <input type="text" id="mainChannel" class="form-control" value="" placeholder="MrCoolStreamer" size="50">
+    </div>
+    <div class="form-label-group mb-2">
+        <label for="channel">Twitch channel(s) to pull clips from
             <small class="text-warning">* This can be a single channel or a comma separated list of channels</small>
         </label>
-        <textarea id="channel" class="form-control"
+        <textarea id="channel" rows="3" class="form-control" style="min-height: 100px;"
                placeholder="MrCoolStreamer,GamerGamingGames,StreamBean,AnotherStreamer,WillStreamForBeer"></textarea>
     </div>
     <h2>Options</h2>
-    <div class="form-check mb-2">
-        <input class="form-check-input" type="checkbox" value="" id="customCommand">
-        <label class="form-check-label" for="customCommand">
-            Custom Command <small class="text-warning">* If a custom command is Not set, the clips player will start playing as soon as the scene is active.</small>
-        </label>
-    </div>
-    <div class="form-label-group mb-4 ml-4 hide" id="customCommandOptions">
+    <div class="form-label-group mb-4" id="customCommandOptions">
         <div class="form-label-group mb-2">
-            <label for="command">Twitch Channel</label>
-            <input type="text" id="mainChannel2" class="form-control" value="" placeholder="MrCoolStreamer" size="50">
-        </div>
-        <div class="form-label-group mb-2">
-            <label for="command">Custom Command
-                <small>Optional (reel, clips, playclips. No need to include the ! symbol)</small>
+            <label for="command">Custom Command <small>(Optional)</small>
+                <small class="text-warning">* If a custom command is Not set, the clips player will start playing as soon as the scene is active.</small>&nbsp;<small class="text-info">* NEW *</small>
             </label>
             <input type="text" id="command" class="form-control" value="" placeholder="playclips" size="50">
         </div>
@@ -94,6 +89,12 @@
                 Mods Only
             </label>
         </div>
+    </div>
+    <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" value="" id="showFollowing">
+        <label class="form-check-label" for="showFollowing">
+            Show clips from channels that you follow <small class="text-info">* NEW *</small>
+        </label>
     </div>
     <div class="form-check mb-2">
         <input class="form-check-input" type="checkbox" value="" id="shuffle">
@@ -107,7 +108,7 @@
             Show channel name on top of video
         </label>
     </div>
-    <div class="form-label-group mt-2 mb-4 hide" id="showCustomText">
+    <div class="form-label-group mt-2 mb-4 ml-4 hide" id="showCustomText">
         <label for="customText">Custom message <small>(Optional)</small>
         </label>
         <input type="text" id="customText" class="form-control" value=""
@@ -128,14 +129,8 @@
             Show chat message: "Go check out {channel}! - They were playing: {game} - {title} - {url}"
             <small class="text-warning">* Requires Twitch Access Token</small>
         </label>
-        <div class="form-label-group mb-4 hide" id="access_token">
-            <div class="form-label-group mt-2">
-                <label for="mainChannel">Twitch Channel
-                </label>
-                <input type="text" id="mainChannel" class="form-control" value=""
-                       placeholder="MrCoolStreamer" size="50">
-            </div>
-            <div class="form-label-group mb-4 mt-2">
+        <div class="form-label-group mt-2 mb-4 ml-1 hide" id="access_token">
+            <div class="form-label-group mb-4">
                 <label for="customMsg">Custom Message
                     <small>(Optional)</small>
                 </label>
@@ -160,7 +155,7 @@
                     href="https://www.w3schools.com/Css/" target="_blank">CSS Tutorial</a>)
             </small>
         </label>
-        <textarea class="form-control" id="customCss" rows="3" style="height: 200px;" readonly>
+        <textarea class="form-control" id="customCss" rows="3" style="min-height: 200px;" readonly>
 #container {
     display: block;
     padding: 4px;
@@ -239,7 +234,6 @@ video {
         rangeSlider();
 
         document.getElementById("mainChannel").value = localStorage.getItem("TwitchClipsMainAccount");
-        document.getElementById("mainChannel2").value = localStorage.getItem("TwitchClipsMainAccount2");
         document.getElementById("ref").value = localStorage.getItem("TwitchClipsRef");
         document.getElementById("channel").value = localStorage.getItem("TwitchClipsChannel");
         document.getElementById("customMsg").value = localStorage.getItem("TwitchClipsCustomMsg");
@@ -249,16 +243,26 @@ video {
         if (document.getElementById("command").value !== "") {
             document.getElementById("modOnly").removeAttribute('disabled');
         }
+
+        // Auto grow textarea onload
+        document.getElementById("channel").style.height = "";
+        document.getElementById("channel").style.height = Math.min(document.getElementById("channel").scrollHeight, 300) + "px";
     }
+
+    // Auto grow textarea on input change
+    document.getElementById("channel").oninput = function() {
+        document.getElementById("channel").style.height = "";
+        document.getElementById("channel").style.height = Math.min(document.getElementById("channel").scrollHeight, 300) + "px";
+    };
 
     // Check if any input fields have changed
     $(":text,textarea,:checkbox,input[type=range]").on('change', function (e) {
         $("#overlaylink").addClass("hide");
     });
 
-    //show custom command
-    document.getElementById("customCommand").addEventListener("click", function (e) {
-        document.getElementById("customCommandOptions").classList.toggle('hide');
+    //show following
+    document.getElementById("showFollowing").addEventListener("click", function (e) {
+        document.getElementById("channel").toggleAttribute('disabled');
     }, false);
 
     //show chat message
@@ -295,24 +299,31 @@ video {
         let channel = document.getElementById("channel").value.trim();
         channel = channel.replace(/\s+/g, ","); // replace spaces with commas
         let mainChannel = document.getElementById("mainChannel").value.trim();
-        let mainChannel2 = document.getElementById("mainChannel2").value.trim();
         let ref = document.getElementById("ref").value.trim();
         let limit = document.getElementById("limit").value;
         let shuffle = document.getElementById("shuffle").checked;
         let showText = document.getElementById("showText").checked;
+        let showFollowing = document.getElementById("showFollowing").checked;
         let so = document.getElementById("showMsg").checked;
         let customMsg = document.getElementById("customMsg").value.trim();
         let modOnly = document.getElementById("modOnly").checked;
         let command = document.getElementById("command").value.trim();
+        command = command.replace('!', '');
         let customText = document.getElementById("customText").value.trim();
-        let getMainChannel = "";
+
+        localStorage.setItem("TwitchClipsMainAccount", mainChannel.toLowerCase().trim());
+        localStorage.setItem("TwitchClipsRef", ref.trim());
+        localStorage.setItem("TwitchClipsChannel", channel.toLowerCase().trim());
+        localStorage.setItem("TwitchClipsCustomMsg", customMsg.trim());
+        localStorage.setItem("TwitchClipsCommand", command.trim());
+        localStorage.setItem("TwitchClipsCustomText", customText.trim());
 
         if (!so) {
             ref = '';
         }
 
-        if (!channel) {
-            alert('Twitch channel(s) is not set');
+        if (showFollowing) {
+            channel = '';
         }
 
         if (so && !ref) {
@@ -323,35 +334,19 @@ video {
             alert('Twitch main channel is not set');
         }
 
-        if (command && !mainChannel2) {
+        if (command && !mainChannel) {
             alert('Twitch main channel is not set');
         }
 
-        localStorage.setItem("TwitchClipsMainAccount", mainChannel.toLowerCase().trim());
-        localStorage.setItem("TwitchClipsMainAccount2", mainChannel2.toLowerCase().trim());
-        localStorage.setItem("TwitchClipsRef", ref.trim());
-        localStorage.setItem("TwitchClipsChannel", channel.toLowerCase().trim());
-        localStorage.setItem("TwitchClipsCustomMsg", customMsg.trim());
-        localStorage.setItem("TwitchClipsCommand", command.trim());
-        localStorage.setItem("TwitchClipsCustomText", customText.trim());
-
-        if (mainChannel) {
-            getMainChannel = mainChannel;
-        } else if(mainChannel2) {
-            getMainChannel = mainChannel2;
-        } else {
-            getMainChannel = '';
-        }
-
         // build overlay url
-        if (channel) {
-            let srcURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
-            let fullUrl = srcURL + "clips.html?channel=" + channel.toLowerCase().trim() + "&limit=" + limit + "&shuffle=" + shuffle + "&showText=" + showText + "&customMsg=" + customMsg + "&mainAccount=" + getMainChannel + "&so=" + so + "&command=" + command + "&modOnly=" + modOnly + "&customText="+ customText +"&ref=" + btoa(ref);
-            fullUrl = fullUrl.replace("index.htmlclips.html", "clips.html");
-            document.getElementById("overlaylink").classList.remove("hide");
-            document.getElementById("overlaylink").innerHTML = "<p>Add this link as a browser source in OBS.<br>" +
-                "<a style='word-break:break-all;' href='" + fullUrl + "' target='_blank'>" + fullUrl + "</a><br><span class='text-warning'><small>* Never share this url with anyone or show it on stream!</small></span></p>";
-        }
+
+        let srcURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
+        let fullUrl = srcURL + "clips.html?channel=" + channel + "&limit=" + limit + "&shuffle=" + shuffle + "&showText=" + showText + "&customMsg=" + customMsg + "&mainAccount=" + mainChannel + "&so=" + so + "&command=" + command + "&modOnly=" + modOnly + "&customText="+ customText +"&showFollowing=" + showFollowing + "&ref=" + btoa(ref);
+        fullUrl = fullUrl.replace("index.htmlclips.html", "clips.html");
+        document.getElementById("overlaylink").classList.remove("hide");
+        document.getElementById("overlaylink").innerHTML = "<p>Add this link as a browser source in OBS.<br>" +
+            "<a style='word-break:break-all;' href='" + fullUrl + "' target='_blank'>" + fullUrl + "</a><br><span class='text-warning'><small>* Never share this url with anyone or show it on stream!</small></span></p>";
+
     });
 </script>
 <div class="text-right m-4">
