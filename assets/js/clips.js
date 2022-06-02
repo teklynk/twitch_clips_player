@@ -35,7 +35,6 @@ $(document).ready(function () {
     let command = getUrlParameter('command').trim();
     let modOnly = getUrlParameter('modOnly').trim();
     let showFollowing = getUrlParameter('showFollowing').trim();
-    let followingLimit = getUrlParameter('followingLimit').trim();
     let randomClip = 0; // Default random clip index
     let clip_index = 0; // Default clip index
     let cmdArray = [];
@@ -96,84 +95,99 @@ $(document).ready(function () {
 
     client.connect().catch(console.error);
 
-    if (showFollowing === 'true' && followingLimit > '') {
+    if (showFollowing === 'true') {
+
+        let followCount = 0;
 
         // Json following data - page 1
         let following_json = JSON.parse($.getJSON({
-            'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100",
+            'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=",
             'async': false
         }).responseText);
-
-        // Json following data - page 2
-        let following_json_page2 = JSON.parse($.getJSON({
-            'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=" + following_json.pagination['cursor'],
-            'async': false
-        }).responseText);
-
-        // Json following data - page 3
-        let following_json_page3 = JSON.parse($.getJSON({
-            'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=" + following_json_page2.pagination['cursor'],
-            'async': false
-        }).responseText);
-
-        // Json following data - page 4
-        let following_json_page4 = JSON.parse($.getJSON({
-            'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=" + following_json_page3.pagination['cursor'],
-            'async': false
-        }).responseText);
-
-        // Json following data - page 5
-        let following_json_page5 = JSON.parse($.getJSON({
-            'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=" + following_json_page4.pagination['cursor'],
-            'async': false
-        }).responseText);
-
-        let followCount = 1;
 
         // Create a list/string of following channel names
-        if (followingLimit <= "100" && following_json.pagination['cursor'] > '') {
-            $.each(following_json.data, function (i, val) {
-                following += val['to_login'] + ",";
-            });
-        }
+        $.each(following_json.data, function (i, val) {
+            following += val['to_login'] + ",";
+            followCount++;
+        });
 
-        // If pagination page1 value exists - pull the next 100 following
-        if (followingLimit > "100" && following_json.pagination['cursor'] > '') {
-            $.each(following_json_page2.data, function(i, val) {
+        // TODO: This is crazy. Refactor to use a while loop
+        if (following_json.pagination['cursor'] > '') {
+            let following_json_pagination_1 = JSON.parse($.getJSON({
+                'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=" + following_json.pagination['cursor'],
+                'async': false
+            }).responseText);
+
+            $.each(following_json_pagination_1.data, function (i, val) {
                 following += val['to_login'] + ",";
                 followCount++;
             });
-        }
 
-        // If pagination page2 value exists - pull the next 100 following
-        if (followingLimit >= "200" && following_json_page2.pagination['cursor'] > '') {
-            $.each(following_json_page3.data, function(i, val) {
-                following += val['to_login'] + ",";
-                followCount++;
-            });
-        }
+            if (following_json_pagination_1.pagination['cursor'] > '') {
+                let following_json_pagination_2 = JSON.parse($.getJSON({
+                    'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=" + following_json_pagination_1.pagination['cursor'],
+                    'async': false
+                }).responseText);
 
-        // If pagination page3 value exists - pull the next 100 following
-        if (followingLimit >= "300" && following_json_page3.pagination['cursor'] > '') {
-            $.each(following_json_page4.data, function(i, val) {
-                following += val['to_login'] + ",";
-                followCount++;
-            });
-        }
+                $.each(following_json_pagination_2.data, function (i, val) {
+                    following += val['to_login'] + ",";
+                    followCount++;
+                });
 
-        // If pagination page4 value exists - pull the next 100 following
-        if (followingLimit >= "400" && following_json_page4.pagination['cursor'] > '') {
-            $.each(following_json_page5.data, function(i, val) {
-                following += val['to_login'] + ",";
-                followCount++;
-            });
+                if (following_json_pagination_2.pagination['cursor'] > '') {
+                    let following_json_pagination_3 = JSON.parse($.getJSON({
+                        'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=" + following_json_pagination_2.pagination['cursor'],
+                        'async': false
+                    }).responseText);
+
+                    $.each(following_json_pagination_3.data, function (i, val) {
+                        following += val['to_login'] + ",";
+                        followCount++;
+                    });
+
+                    if (following_json_pagination_3.pagination['cursor'] > '') {
+                        let following_json_pagination_4 = JSON.parse($.getJSON({
+                            'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=" + following_json_pagination_3.pagination['cursor'],
+                            'async': false
+                        }).responseText);
+
+                        $.each(following_json_pagination_4.data, function (i, val) {
+                            following += val['to_login'] + ",";
+                            followCount++;
+                        });
+
+                        if (following_json_pagination_4.pagination['cursor'] > '') {
+                            let following_json_pagination_5 = JSON.parse($.getJSON({
+                                'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=" + following_json_pagination_4.pagination['cursor'],
+                                'async': false
+                            }).responseText);
+
+                            $.each(following_json_pagination_5.data, function (i, val) {
+                                following += val['to_login'] + ",";
+                                followCount++;
+                            });
+
+                            if (following_json_pagination_5.pagination['cursor'] > '') {
+                                let following_json_pagination_6 = JSON.parse($.getJSON({
+                                    'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=" + following_json_pagination_5.pagination['cursor'],
+                                    'async': false
+                                }).responseText);
+
+                                $.each(following_json_pagination_6.data, function (i, val) {
+                                    following += val['to_login'] + ",";
+                                    followCount++;
+                                });
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         // Remove the last comma from string
         following = following.replace(/,\s*$/, "");
 
-        console.log('following count: ' + followCount);
-        console.log('following: ' + following);
+        console.log('following (' + followCount + '):\n' + following);
 
         // Set channel to equal following list/string
         channel = following.split(',').map(element => element.trim());
