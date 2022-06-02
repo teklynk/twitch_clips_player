@@ -4,6 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Twitch Clips Player</title>
+    <meta name="description" content="This is a Twitch Clips Player, browser source overlay for OBS. Automatically play clips from your channel or other channels. Keep your viewers entertained on your BRB or starting soon scenes."" />
+    <meta name="keywords" content="Twitch, clips player, overlay" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Twitch Clips Player" />
+    <meta property="og:description" content="This is a Twitch Clips Player, browser source overlay for OBS. Automatically play clips from your channel or other channels. Keep your viewers entertained on your BRB or starting soon scenes." />
+    <meta property="og:url" content="" />
+    <meta property="og:site_name" content="Twitch Clips Player" />
     <script src="assets/js/jquery-3.6.0.min.js"></script>
     <script src="assets/js/bootstrap.bundle.js"></script>
     <link rel="stylesheet" href="assets/css/bootstrap452.min.css">
@@ -44,7 +51,7 @@
             <h1 class="h3 pt-4 pl-lg-4 text-center">Twitch Clips Player</h1>
         </div>
         <div class="col-2 text-center">
-            <img src="assets/images/robot.gif" style="width: 60px;" alt="">
+            <img src="assets/images/robot.gif" style="width: 60px;" alt="tekbot_v1" title="Hi, I'm tekbot_v1">
         </div>
     </div>
     <br>
@@ -53,7 +60,7 @@
             <h2>Twitch Clips Player Overlay</h2>
             <p>This grabs your Twitch clips and plays them one after the other in a loop. Keep your viewers entertained
                 on your BRB or starting soon scenes.</p> 
-            <span class="text-info">NEW FEATURES:</span> 
+            <span class="text-info">NEW FEATURES:</span>
             <ul>
                 <li>Show clips from channels that you follow. Grabs the most recent 100 channels.</li>
                 <li>Use a custom command to start the clips reel and restrict it to Mods only.</li>
@@ -75,7 +82,6 @@
         <textarea id="channel" rows="3" class="form-control" style="min-height: 100px;"
                placeholder="MrCoolStreamer,GamerGamingGames,StreamBean,AnotherStreamer,WillStreamForBeer"></textarea>
     </div>
-    <h2>Options</h2>
     <div class="form-label-group mb-4" id="customCommandOptions">
         <div class="form-label-group mb-2">
             <label for="command">Custom Command <small>(Optional)</small>
@@ -320,6 +326,7 @@ video {
 
         if (!so) {
             ref = '';
+            customMsg = '';
         }
 
         if (showFollowing) {
@@ -338,8 +345,11 @@ video {
             alert('Twitch main channel is not set');
         }
 
-        // build overlay url
+        if (showFollowing && !mainChannel) {
+            alert('Twitch main channel is not set');
+        }
 
+        // build overlay url
         let srcURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
         let fullUrl = srcURL + "clips.html?channel=" + channel + "&limit=" + limit + "&shuffle=" + shuffle + "&showText=" + showText + "&customMsg=" + customMsg + "&mainAccount=" + mainChannel + "&so=" + so + "&command=" + command + "&modOnly=" + modOnly + "&customText="+ customText +"&showFollowing=" + showFollowing + "&ref=" + btoa(ref);
         fullUrl = fullUrl.replace("index.htmlclips.html", "clips.html");
