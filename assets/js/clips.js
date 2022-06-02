@@ -39,6 +39,7 @@ $(document).ready(function () {
     let clip_index = 0; // Default clip index
     let cmdArray = [];
     let following = "";
+    let followCount = 0;
 
     if (!shuffle) {
         shuffle = "false"; //default
@@ -97,86 +98,59 @@ $(document).ready(function () {
 
     if (showFollowing === 'true') {
 
-        let followCount = 0;
-
-        // Json following data - page 1
-        let following_json = JSON.parse($.getJSON({
-            'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=",
-            'async': false
-        }).responseText);
-
-        // Create a list/string of following channel names
-        $.each(following_json.data, function (i, val) {
-            following += val['to_login'] + ",";
-            followCount++;
-        });
-
-        // TODO: This is crazy. Refactor to use a while loop
-        if (following_json.pagination['cursor'] > '') {
-            let following_json_pagination_1 = JSON.parse($.getJSON({
-                'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=" + following_json.pagination['cursor'],
+        function following_pagination(cursor) {
+            let $jsonParse = JSON.parse($.getJSON({
+                'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=" + cursor,
                 'async': false
             }).responseText);
 
-            $.each(following_json_pagination_1.data, function (i, val) {
+            return $jsonParse;
+        }
+
+        // Globals: following, followCount
+        function concatFollowing(jsonData) {
+            $.each(jsonData, function (i, val) {
                 following += val['to_login'] + ",";
                 followCount++;
             });
+        }
+
+        // Json following data - page 1
+        let following_json = following_pagination('');
+
+        concatFollowing(following_json.data);
+
+        // Start the Following pagination - Pull up to 700 channels from Twitch API
+        if (following_json.pagination['cursor'] > '') {
+
+            let following_json_pagination_1 = following_pagination(following_json.pagination['cursor']);
+
+            concatFollowing(following_json_pagination_1.data);
 
             if (following_json_pagination_1.pagination['cursor'] > '') {
-                let following_json_pagination_2 = JSON.parse($.getJSON({
-                    'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=" + following_json_pagination_1.pagination['cursor'],
-                    'async': false
-                }).responseText);
+                let following_json_pagination_2 = following_pagination(following_json_pagination_1.pagination['cursor']);
 
-                $.each(following_json_pagination_2.data, function (i, val) {
-                    following += val['to_login'] + ",";
-                    followCount++;
-                });
+                concatFollowing(following_json_pagination_2.data);
 
                 if (following_json_pagination_2.pagination['cursor'] > '') {
-                    let following_json_pagination_3 = JSON.parse($.getJSON({
-                        'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=" + following_json_pagination_2.pagination['cursor'],
-                        'async': false
-                    }).responseText);
+                    let following_json_pagination_3 = following_pagination(following_json_pagination_2.pagination['cursor']);
 
-                    $.each(following_json_pagination_3.data, function (i, val) {
-                        following += val['to_login'] + ",";
-                        followCount++;
-                    });
+                    concatFollowing(following_json_pagination_3.data);
 
                     if (following_json_pagination_3.pagination['cursor'] > '') {
-                        let following_json_pagination_4 = JSON.parse($.getJSON({
-                            'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=" + following_json_pagination_3.pagination['cursor'],
-                            'async': false
-                        }).responseText);
+                        let following_json_pagination_4 = following_pagination(following_json_pagination_3.pagination['cursor']);
 
-                        $.each(following_json_pagination_4.data, function (i, val) {
-                            following += val['to_login'] + ",";
-                            followCount++;
-                        });
+                        concatFollowing(following_json_pagination_4.data);
 
                         if (following_json_pagination_4.pagination['cursor'] > '') {
-                            let following_json_pagination_5 = JSON.parse($.getJSON({
-                                'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=" + following_json_pagination_4.pagination['cursor'],
-                                'async': false
-                            }).responseText);
+                            let following_json_pagination_5 = following_pagination(following_json_pagination_4.pagination['cursor']);
 
-                            $.each(following_json_pagination_5.data, function (i, val) {
-                                following += val['to_login'] + ",";
-                                followCount++;
-                            });
+                            concatFollowing(following_json_pagination_5.data);
 
                             if (following_json_pagination_5.pagination['cursor'] > '') {
-                                let following_json_pagination_6 = JSON.parse($.getJSON({
-                                    'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=" + following_json_pagination_5.pagination['cursor'],
-                                    'async': false
-                                }).responseText);
+                                let following_json_pagination_6 = following_pagination(following_json_pagination_5.pagination['cursor']);
 
-                                $.each(following_json_pagination_6.data, function (i, val) {
-                                    following += val['to_login'] + ",";
-                                    followCount++;
-                                });
+                                concatFollowing(following_json_pagination_6.data);
                             }
                         }
                     }
@@ -187,10 +161,11 @@ $(document).ready(function () {
         // Remove the last comma from string
         following = following.replace(/,\s*$/, "");
 
-        console.log('following (' + followCount + '):\n' + following);
-
         // Set channel to equal following list/string
         channel = following.split(',').map(element => element.trim());
+
+        // Print following count and following channel list for debugging
+        console.log('following (' + followCount + '):\n' + following);
 
     } else {
 
