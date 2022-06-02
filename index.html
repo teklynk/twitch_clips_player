@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Twitch Clips Player</title>
-    <meta name="description" content="This is a Twitch Clips Player, browser source overlay for OBS. Automatically play clips from your channel or other channels. Keep your viewers entertained on your BRB or starting soon scenes."" />
+    <meta name="description" content="This is a Twitch Clips Player, browser source overlay for OBS. Automatically play clips from your channel or other channels. Keep your viewers entertained on your BRB or starting soon scenes." />
     <meta name="keywords" content="Twitch, clips player, overlay" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Twitch Clips Player" />
@@ -62,7 +62,7 @@
                 on your BRB or starting soon scenes.</p> 
             <span class="text-info">NEW FEATURES:</span>
             <ul>
-                <li>Show clips from channels that you follow. Grabs the most recent 100 channels.</li>
+                <li>Show clips from channels that you follow. Grabs the most recent 400 channels.</li>
                 <li>Use a custom command to start the clips reel and restrict it to Mods only.</li>
                 <li>Type "!mycommand @teklynk @coolstreamer @gamer123 @tekbot" which will play the clips reel for only those channels.</li>
                 <li>Type "!mycommand" while the clips reel is playing to skip to the next clip.</li>
@@ -72,7 +72,7 @@
     </div>
     <br>
     <div class="form-label-group mb-2">
-        <label for="command">Main Twitch Channel</label>
+        <label for="mainChannel">Main Twitch Channel</label>
         <input type="text" id="mainChannel" class="form-control" value="" placeholder="MrCoolStreamer" size="50">
     </div>
     <div class="form-label-group mb-2">
@@ -81,6 +81,21 @@
         </label>
         <textarea id="channel" rows="3" class="form-control" style="min-height: 100px;"
                placeholder="MrCoolStreamer,GamerGamingGames,StreamBean,AnotherStreamer,WillStreamForBeer"></textarea>
+    </div>
+    <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" value="" id="showFollowing">
+        <label class="form-check-label" for="showFollowing">
+            Show clips from channels that you follow <small class="text-info">* NEW *</small>
+        </label>
+    </div>
+    <div class="form-group range-slider">
+        <label for="followingLimit">Number of followed channels to pull
+            <small>(Max is 400)</small>
+        </label>
+        <input type="range" max="400" min="100" step="100" class="form-control range-slider-range" id="followingLimit"
+               value="200" style="height: 0;" disabled>
+        <small class="text-muted range-slider-value"></small>
+        <small class="text-muted range-slider-value">Followed Channels</small>
     </div>
     <div class="form-label-group mb-4" id="customCommandOptions">
         <div class="form-label-group mb-2">
@@ -95,12 +110,6 @@
                 Mods Only
             </label>
         </div>
-    </div>
-    <div class="form-check mb-2">
-        <input class="form-check-input" type="checkbox" value="" id="showFollowing">
-        <label class="form-check-label" for="showFollowing">
-            Show clips from channels that you follow <small class="text-info">* NEW *</small>
-        </label>
     </div>
     <div class="form-check mb-2">
         <input class="form-check-input" type="checkbox" value="" id="shuffle">
@@ -120,7 +129,7 @@
         <input type="text" id="customText" class="form-control" value=""
                placeholder="Go check out {channel}" size="255">
     </div>
-    <div class="form-group range-slider">
+    <div class="form-group range-slider mt-4">
         <label for="limit">Number of clips to pull
             <small>(Max is 100)</small>
         </label>
@@ -269,6 +278,7 @@ video {
     //show following
     document.getElementById("showFollowing").addEventListener("click", function (e) {
         document.getElementById("channel").toggleAttribute('disabled');
+        document.getElementById("followingLimit").toggleAttribute('disabled');
     }, false);
 
     //show chat message
@@ -316,6 +326,7 @@ video {
         let command = document.getElementById("command").value.trim();
         command = command.replace('!', '');
         let customText = document.getElementById("customText").value.trim();
+        let followingLimit = document.getElementById("followingLimit").value.trim();
 
         localStorage.setItem("TwitchClipsMainAccount", mainChannel.toLowerCase().trim());
         localStorage.setItem("TwitchClipsRef", ref.trim());
@@ -331,6 +342,8 @@ video {
 
         if (showFollowing) {
             channel = '';
+        } else {
+            followingLimit = '';
         }
 
         if (so && !ref) {
@@ -351,7 +364,7 @@ video {
 
         // build overlay url
         let srcURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
-        let fullUrl = srcURL + "clips.html?channel=" + channel + "&limit=" + limit + "&shuffle=" + shuffle + "&showText=" + showText + "&customMsg=" + customMsg + "&mainAccount=" + mainChannel + "&so=" + so + "&command=" + command + "&modOnly=" + modOnly + "&customText="+ customText +"&showFollowing=" + showFollowing + "&ref=" + btoa(ref);
+        let fullUrl = srcURL + "clips.html?channel=" + channel + "&limit=" + limit + "&shuffle=" + shuffle + "&showText=" + showText + "&customMsg=" + customMsg + "&mainAccount=" + mainChannel + "&so=" + so + "&command=" + command + "&modOnly=" + modOnly + "&customText="+ customText +"&showFollowing=" + showFollowing + "&followingLimit=" + followingLimit + "&ref=" + btoa(ref);
         fullUrl = fullUrl.replace("index.htmlclips.html", "clips.html");
         document.getElementById("overlaylink").classList.remove("hide");
         document.getElementById("overlaylink").innerHTML = "<p>Add this link as a browser source in OBS.<br>" +
