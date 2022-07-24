@@ -26,6 +26,7 @@ $(document).ready(function () {
     let channel = getUrlParameter('channel').toLowerCase().trim();
     let mainAccount = getUrlParameter('mainAccount').toLowerCase().trim();
     let limit = getUrlParameter('limit').trim();
+    let delay = getUrlParameter('delay').trim();
     let shuffle = getUrlParameter('shuffle').trim();
     let showText = getUrlParameter('showText').trim();
     let so = getUrlParameter('so').trim();
@@ -63,6 +64,10 @@ $(document).ready(function () {
 
     if (!limit) {
         limit = "50"; //default
+    }
+
+    if (!delay) {
+        delay = "0"; //default
     }
 
     let client = '';
@@ -120,6 +125,7 @@ $(document).ready(function () {
 
         concatFollowing(following_json.data);
 
+        // TODO: Refactor this to ITERATE over following with a while loop. Make a function with a callback.
         // Start the Following pagination - Pull up to 700 channels from Twitch API
         if (following_json.pagination['cursor'] > '') {
 
@@ -278,7 +284,7 @@ $(document).ready(function () {
         // If no user clips exist, then skip to the next channel
         if (!clips_json.data || typeof clips_json.data === 'undefined' || clips_json.data.length === 0) {
             console.log('no clips exist for channel: ' + channelName);
-            nextClip();
+            nextClip(true); // skip clip
             return false;
         }
 
@@ -345,11 +351,18 @@ $(document).ready(function () {
         }
     }
 
-    function nextClip() {
+    function nextClip(skip = false) {
+
         // Remove element when the next clip plays
         if (document.getElementById("text-container")) {
             document.getElementById("text-container").remove();
         }
+
+        // Properly remove video source
+        let videoElement = document.querySelector("video");
+        videoElement.pause();
+        videoElement.removeAttribute("src"); // empty source
+        videoElement.load();
 
         // If chat command contains a list of channel names ie: !reel @teklynk @mrcool @thatstreamer @gamer123
         if (cmdArray.length > 0) {
@@ -362,8 +375,20 @@ $(document).ready(function () {
             clip_index = 0;
         }
 
-        loadClip(channel[clip_index]);
+        if (skip === true) {
+            // Skips to the next clip if a clip does not exist
+            console.log("Skipping clip");
+            loadClip(channel[clip_index]);
+            curr_clip.play();
+        } else {
+            console.log("Delay: " + parseInt(delay) * 1000);
+            // Adjust the delay in the url, else delay=0
+            setTimeout(function () {
+                // Play a clip
+                loadClip(channel[clip_index]);
+                curr_clip.play();
+            }, parseInt(delay) * 1000); // wait time
+        }
 
-        curr_clip.play();
     }
 });
