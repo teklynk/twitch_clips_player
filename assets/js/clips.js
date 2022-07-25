@@ -298,28 +298,30 @@ $(document).ready(function () {
             randomClip = 0;
         }
 
-        // Show channel name on top of video
-        if (showText === 'true') {
-            if (customText) {
-                // custom message to show on top of clip. includes {channel} name as a variable
-                customText = getUrlParameter('customText').trim();
-                customText = customText.replace("{channel}", clips_json.data[0]['broadcaster_name']);
-                $("<div id='text-container'><span class='title-text'>" + customText + "</span></div>").appendTo('#container');
-            } else {
-                $("<div id='text-container'><span class='title-text'>" + clips_json.data[0]['broadcaster_name'] + "</span></div>").appendTo('#container');
-            }
-        }
-
         // Parse thumbnail image to build the clip url
         let thumbPart = clips_json.data[randomClip]['thumbnail_url'].split("-preview-");
         thumbPart = thumbPart[0] + ".mp4";
 
-        // Load a new clip
+        // Create video element and load a new clip
         curr_clip.src = thumbPart;
         curr_clip.autoplay = true;
         curr_clip.controls = false;
         curr_clip.volume = 1.0;
         curr_clip.load();
+
+        // Show channel name on top of video
+        if (showText === 'true') {
+            setTimeout(function () {
+                if (customText) {
+                    // custom message to show on top of clip. includes {channel} name as a variable
+                    customText = getUrlParameter('customText').trim();
+                    customText = customText.replace("{channel}", clips_json.data[0]['broadcaster_name']);
+                    $("<div id='text-container'><span class='title-text'>" + customText + "</span></div>").appendTo('#container');
+                } else {
+                    $("<div id='text-container'><span class='title-text'>" + clips_json.data[0]['broadcaster_name'] + "</span></div>").appendTo('#container');
+                }
+            }, 600); // wait time
+        }
 
         // Debug
         console.log('channelName: ' + channelName);
