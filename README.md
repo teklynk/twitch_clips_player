@@ -37,6 +37,8 @@ Track future development here: [https://github.com/teklynk/twitch_clips_player/p
 
 **modOnly=true/false**  When command option is used, can limit command to Mods only.
 
+**delay=integer**  Adds a delay between clips. Great from showing a graphic that is behind the clips player. Default is 0.
+
 **mainAccount=channel**  The main channel that you want to send chat messages to.
 
 **ref=base64**  Access token
