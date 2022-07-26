@@ -309,6 +309,19 @@ $(document).ready(function () {
         curr_clip.volume = 1.0;
         curr_clip.load();
 
+        // Check video resolution/scale - Set body background color
+        curr_clip.addEventListener('loadedmetadata', event => {
+            console.log("Video Resolution: " + curr_clip.videoWidth + "w x " + curr_clip.videoHeight + "h");
+
+            let wideScreenResArr = [480,720,1080,1440];
+
+            if (wideScreenResArr.includes(curr_clip.videoHeight)) {
+                $("body").css("background-color", "transparent");
+            } else {
+                $("body").css("background-color", "black");
+            }
+        });
+
         // Show channel name on top of video
         if (showText === 'true') {
             setTimeout(function () {
