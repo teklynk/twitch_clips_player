@@ -273,6 +273,39 @@ $(document).ready(function () {
         }
     }
 
+    // TODO: Refactor this as options that the user can define/set
+    // Hard-coded commands to control the current clip. Limited to mods and streamer
+    // !clipskip, !clippause, !clipplay
+    // Triggers on message
+    client.on('chat', (channel, user, message, self) => {
+
+        if (self || !message.startsWith('!')) return;
+
+        if (user['message-type'] === 'chat' && message.startsWith('!')) {
+            if (user.mod || user.username === mainAccount) {
+
+                let videoElement = document.querySelector("video");
+
+                if (message === "!clipskip") {
+                    console.log("Skipping Clip");
+                    nextClip(true); // skip clip
+                    return false;
+                } else if (message === "!clippause") {
+                    console.log("Pausing Clip");
+                    videoElement.pause(); // pause clip
+                } else if (message === "!clipplay" && videoElement.paused) {
+                    console.log("Playing Clip");
+                    videoElement.play(); // continue playing clip if was paused
+                } else if (message === "!clipreload") {
+                    // Reload browser source
+                    window.location.reload();
+                }
+
+            }
+        }
+
+    });
+
     // Get and play the clip
     function loadClip(channelName) {
         // Json data - Ajax call

@@ -349,6 +349,12 @@ video {
             alert('Twitch main channel is not set');
         }
 
+        let hardCodedCommands = ['clipplay', 'clippause', 'clipskip', 'clipreload'];
+
+        if (hardCodedCommands.includes(command)) {
+            alert(command + ' can not be used. Please choose a different command name.');
+        }
+
         // build overlay url
         let srcURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
         let fullUrl = srcURL + "clips.html?channel=" + channel + "&limit=" + limit + "&shuffle=" + shuffle + "&showText=" + showText + "&customMsg=" + customMsg + "&mainAccount=" + mainChannel + "&so=" + so + "&command=" + command + "&modOnly=" + modOnly + "&customText="+ customText +"&showFollowing=" + showFollowing + "&ref=" + btoa(ref);
