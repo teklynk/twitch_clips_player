@@ -260,6 +260,7 @@ $(document).ready(function () {
         });
 
     } else {
+
         // Plays clips when scene is active
         if (so === 'true' && ref) {
             // wait 1 second for TMI to connect to Twitch before loading clip and doing a shoutout
@@ -282,26 +283,51 @@ $(document).ready(function () {
         if (self || !message.startsWith('!')) return;
 
         if (user['message-type'] === 'chat' && message.startsWith('!')) {
+
             if (user.mod || user.username === mainAccount) {
 
                 let videoElement = document.querySelector("video");
 
                 if (message === "!clipskip") {
+
                     console.log("Skipping Clip");
                     nextClip(true); // skip clip
                     return false;
+
                 } else if (message === "!clippause") {
+
                     console.log("Pausing Clip");
                     videoElement.pause(); // pause clip
+
                 } else if (message === "!clipplay" && videoElement.paused) {
+
                     console.log("Playing Clip");
                     videoElement.play(); // continue playing clip if was paused
+
                 } else if (message === "!clipreload") {
-                    // Reload browser source
-                    window.location.reload();
+
+                    window.location.reload(); // Reload browser source
+
+                } else if (message.startsWith('!clipso')) {
+
+                    let getChannel = message.substr(8);
+                    getChannel = getChannel.replace('@', '');
+                    getChannel = getChannel.trim();
+                    getChannel = getChannel.toLowerCase();
+
+                    console.log('shout-out: ' + getChannel);
+
+                    // Remove element when the next clip plays
+                    if (document.getElementById("text-container")) {
+                        document.getElementById("text-container").remove();
+                    }
+
+                    loadClip(getChannel); // play a clip from getChannel right away
+                    return false;
                 }
 
             }
+
         }
 
     });
