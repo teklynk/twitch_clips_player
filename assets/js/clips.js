@@ -357,12 +357,8 @@ $(document).ready(function () {
             randomClip = 0;
         }
 
-        // Parse thumbnail image to build the clip url
-        let thumbPart = clips_json.data[randomClip]['thumbnail_url'].split("-preview-");
-        thumbPart = thumbPart[0] + ".mp4";
-
         // Create video element and load a new clip
-        curr_clip.src = thumbPart;
+        curr_clip.src = clips_json.data[0]['clip_url'];
         curr_clip.autoplay = true;
         curr_clip.controls = false;
         curr_clip.volume = 1.0;
