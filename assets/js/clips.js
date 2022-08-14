@@ -358,7 +358,7 @@ $(document).ready(function () {
         }
 
         // Create video element and load a new clip
-        curr_clip.src = clips_json.data[0]['clip_url'];
+        curr_clip.src = clips_json.data[randomClip]['clip_url'];
         curr_clip.autoplay = true;
         curr_clip.controls = false;
         curr_clip.volume = 1.0;
