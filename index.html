@@ -51,7 +51,7 @@
             <h1 class="h3 pt-4 pl-lg-4 text-center">Twitch Clips Player</h1>
         </div>
         <div class="col-2 text-center">
-            <img src="assets/images/robot.gif" style="width: 60px;" alt="tekbot_v1" title="Hi, I'm tekbot_v1">
+            <img src="assets/images/robot.gif" style="width: 60px;" alt="tekbot_v1" title="Hi, I'm tekbot_v1" id="tekbotImg" onmouseover="onHover();" onmouseout="offHover();">
         </div>
     </div>
     <br>
@@ -371,8 +371,18 @@ video {
     <a class="btn btn-link" href="https://github.com/teklynk/twitch_clips_player/blob/main/README.md"
        target="_blank">Help</a>
     <a class="btn btn-link" href="https://github.com/teklynk/twitch_clips_player" target="_blank">Github</a>
+    <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
+    <script type='text/javascript'>kofiwidget2.init('Donate', '#191d21', 'O4O0BWF2E');kofiwidget2.draw();</script> 
 </div>
 <script>
+    // tekbot_v1 mouse hover action
+    function onHover() {
+        $("#tekbotImg").attr('src', 'assets/images/robot_loop.gif');
+    }
+    function offHover() {
+        $("#tekbotImg").attr('src', 'assets/images/robot.gif');
+    }
+
     // Json data - Ajax call
     let nav_json = JSON.parse($.getJSON({
         'url': "https://twitchapi.teklynk.com/getnav.php",
@@ -383,5 +393,21 @@ video {
         $('<a class="dropdown-item" href="' + val.url + '">' + val.name + '</a>').appendTo('#main-nav');
     });
 </script>
+<style>
+    .btn-container {
+        min-width: auto !important;
+        padding-left: 20px;
+    }
+    span.kofitext {
+        color: #adb5bd !important;
+    }
+    a.kofi-button {
+        border-radius: none;
+        box-shadow: none !important;
+        min-width: auto !important;
+        padding: 0 !important;
+        line-height: unset !important;
+    }
+</style>
 </body>
 </html>
