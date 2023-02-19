@@ -359,7 +359,7 @@ video {
 
         // build overlay url
         let srcURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
-        let fullUrl = srcURL + "clips.html?channel=" + channel + "&limit=" + limit + "&shuffle=" + shuffle + "&showText=" + showText + "&customMsg=" + customMsg + "&mainAccount=" + mainChannel + "&so=" + so + "&command=" + command + "&modOnly=" + modOnly + "&customText="+ customText +"&showFollowing=" + showFollowing + "&ref=" + btoa(ref);
+        let fullUrl = srcURL + "clips.html?channel=" + channel + "&limit=" + limit + "&shuffle=" + shuffle + "&showText=" + showText + "&customMsg=" + encodeURIComponent(customMsg) + "&mainAccount=" + mainChannel + "&so=" + so + "&command=" + command + "&modOnly=" + modOnly + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&ref=" + btoa(ref);
         fullUrl = fullUrl.replace("index.htmlclips.html", "clips.html");
         document.getElementById("overlaylink").classList.remove("hide");
         document.getElementById("overlaylink").innerHTML = "<p>Add this link as a browser source in OBS.<br>" +
