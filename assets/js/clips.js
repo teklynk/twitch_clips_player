@@ -369,9 +369,8 @@ $(document).ready(function () {
             setTimeout(function () {
                 if (customText) {
                     // custom message to show on top of clip. includes {channel} name as a variable
-                    customText = getUrlParameter('customText').trim();
                     customText = customText.replace("{channel}", clips_json.data[0]['broadcaster_name']);
-                    $("<div id='text-container'><span class='title-text'>" + customText + "</span></div>").appendTo('#container');
+                    $("<div id='text-container'><span class='title-text'>" + decodeURIComponent(customText) + "</span></div>").appendTo('#container');
                 } else {
                     $("<div id='text-container'><span class='title-text'>" + clips_json.data[0]['broadcaster_name'] + "</span></div>").appendTo('#container');
                 }
