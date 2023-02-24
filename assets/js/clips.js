@@ -67,7 +67,7 @@ $(document).ready(function () {
         limit = "50"; //default
     }
 
-    if (dateRange === "0") {
+    if (!dateRange || dateRange === "0") {
         dateRange = ""; //default
     } else {
         // Get client current date
