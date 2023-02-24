@@ -113,6 +113,14 @@
         <small class="text-muted range-slider-value"></small>
         <small class="text-muted range-slider-value">Clips</small>
     </div>
+    <div class="form-group range-slider mt-4">
+        <label for="dateRange">Date Range <small>(Optional)</small> <small class="text-warning">* 0 Day(s) = OFF</small>
+        </label>
+        <input type="range" max="365" min="0" step="1" class="form-control range-slider-range" id="dateRange"
+               value="0" style="height: 0;">
+        <small class="text-muted range-slider-value"></small>
+        <small class="text-muted range-slider-value">Day(s)</small>
+    </div>
     <div class="form-check mb-2">
         <input class="form-check-input" type="checkbox" value="" id="shuffle">
         <label class="form-check-label" for="shuffle">
@@ -239,8 +247,6 @@ video {
             });
         };
 
-        rangeSlider();
-
         document.getElementById("mainChannel").value = localStorage.getItem("TwitchClipsMainAccount");
         document.getElementById("ref").value = localStorage.getItem("TwitchClipsRef");
         document.getElementById("channel").value = localStorage.getItem("TwitchClipsChannel");
@@ -255,6 +261,8 @@ video {
         // Auto grow textarea onload
         document.getElementById("channel").style.height = "";
         document.getElementById("channel").style.height = Math.min(document.getElementById("channel").scrollHeight, 300) + "px";
+
+        rangeSlider();
     }
 
     // Auto grow textarea on input change
@@ -309,6 +317,7 @@ video {
         let mainChannel = document.getElementById("mainChannel").value.trim();
         let ref = document.getElementById("ref").value.trim();
         let limit = document.getElementById("limit").value;
+        let dateRange = document.getElementById("dateRange").value;
         let shuffle = document.getElementById("shuffle").checked;
         let showText = document.getElementById("showText").checked;
         let showFollowing = document.getElementById("showFollowing").checked;
@@ -359,7 +368,7 @@ video {
 
         // build overlay url
         let srcURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
-        let fullUrl = srcURL + "clips.html?channel=" + channel + "&limit=" + limit + "&shuffle=" + shuffle + "&showText=" + showText + "&customMsg=" + encodeURIComponent(customMsg) + "&mainAccount=" + mainChannel + "&so=" + so + "&command=" + command + "&modOnly=" + modOnly + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&ref=" + btoa(ref);
+        let fullUrl = srcURL + "clips.html?channel=" + channel + "&limit=" + limit + "&dateRange=" + dateRange + "&shuffle=" + shuffle + "&showText=" + showText + "&customMsg=" + encodeURIComponent(customMsg) + "&mainAccount=" + mainChannel + "&so=" + so + "&command=" + command + "&modOnly=" + modOnly + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&ref=" + btoa(ref);
         fullUrl = fullUrl.replace("index.htmlclips.html", "clips.html");
         document.getElementById("overlaylink").classList.remove("hide");
         document.getElementById("overlaylink").innerHTML = "<p>Add this link as a browser source in OBS.<br>" +

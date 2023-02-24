@@ -29,6 +29,8 @@ Track future development here: [https://github.com/teklynk/twitch_clips_player/p
 
 **limit=integer**  Max number of clips to pull from (max is 100).
 
+**dateRange=integer**  Only pull clips from a specific date range.
+
 **so=true/false**  Say a Shout-out message in chat.
 
 **command=string**  Custom command to fire off the clips player. If Not set, clips player will play as soon as the scene is active.

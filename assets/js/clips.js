@@ -26,6 +26,7 @@ $(document).ready(function () {
     let channel = getUrlParameter('channel').toLowerCase().trim();
     let mainAccount = getUrlParameter('mainAccount').toLowerCase().trim();
     let limit = getUrlParameter('limit').trim();
+    let dateRange = getUrlParameter('dateRange').trim();
     let delay = getUrlParameter('delay').trim();
     let shuffle = getUrlParameter('shuffle').trim();
     let showText = getUrlParameter('showText').trim();
@@ -64,6 +65,23 @@ $(document).ready(function () {
 
     if (!limit) {
         limit = "50"; //default
+    }
+
+    if (dateRange === "0") {
+        dateRange = ""; //default
+    } else {
+        // Get client current date
+        let todayDate = new Date();
+
+        // subtract dateRange from todayDate
+        let startDate = new Date(new Date().setDate(todayDate.getDate() - parseInt(dateRange)));
+
+        // format dates
+        startDate = startDate.toISOString().slice(0, 10);
+        todayDate = todayDate.toISOString().slice(0, 10);
+        
+        // set the daterange url parameter for the api endpoint
+        dateRange = "&start_date=" + startDate + "T00:00:00Z&end_date=" + todayDate + "T00:00:00Z";
     }
 
     if (!delay) {
@@ -336,7 +354,7 @@ $(document).ready(function () {
     function loadClip(channelName) {
         // Json data - Ajax call
         let clips_json = JSON.parse($.getJSON({
-            'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&limit=" + limit + "",
+            'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&limit=" + limit + "" + dateRange,
             'async': false
         }).responseText);
 
@@ -356,6 +374,8 @@ $(document).ready(function () {
         } else {
             randomClip = 0;
         }
+
+        console.log(clips_json.data);
 
         // Create video element and load a new clip
         curr_clip.src = clips_json.data[randomClip]['clip_url'];
