@@ -375,8 +375,6 @@ $(document).ready(function () {
             randomClip = 0;
         }
 
-        console.log(clips_json.data);
-
         // Create video element and load a new clip
         curr_clip.src = clips_json.data[randomClip]['clip_url'];
         curr_clip.autoplay = true;

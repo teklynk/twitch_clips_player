@@ -60,7 +60,7 @@
             <h2>Twitch Clips Player Overlay</h2>
             <p>This grabs your Twitch clips and plays them one after the other in a loop. Keep your viewers entertained
                 on your BRB or starting soon scenes.</p> 
-            <span class="text-info">NEW FEATURES:</span>
+            <span class="text-info">FEATURES:</span>
             <ul>
                 <li>!clipso @teklynk to play a clip from a channel while the clips reel is playing. This will immediately play the clip from the channel and then continue on with the rest of the clips reel.</li>
                 <li>Control the clips from Twitch chat. !clipskip, !clippause, !clipplay, !clipreload. Limited to Mods and Streamer.</li>
@@ -69,6 +69,7 @@
                 <li>Type "!mycommand @teklynk @coolstreamer @gamer123 @tekbot" which will play the clips reel for only those channels.</li>
                 <li>Type "!mycommand" while the clips reel is playing to skip to the next clip.</li>
                 <li>Type "!mycommand stop" to stop the clips player.</li>
+                <li><strong>Date Range option:</strong> This will grab a clip from within the last 5days, 10day, 30days... If no clips exist, then skip to the next channel.</li>
             </ul>
         </div>
     </div>
@@ -87,13 +88,13 @@
     <div class="form-check mb-4">
         <input class="form-check-input" type="checkbox" value="" id="showFollowing">
         <label class="form-check-label" for="showFollowing">
-            Show clips from channels that you follow <small class="text-info">* NEW *</small>
+            Show clips from channels that you follow
         </label>
     </div>
     <div class="form-label-group mb-4" id="customCommandOptions">
         <div class="form-label-group mb-2">
             <label for="command">Custom Command <small>(Optional)</small>
-                <small class="text-warning">* If a custom command is Not set, the clips player will start playing as soon as the scene is active.</small>&nbsp;<small class="text-info">* NEW *</small>
+                <small class="text-warning">* If a custom command is Not set, the clips player will start playing as soon as the scene is active.</small>
             </label>
             <input type="text" id="command" class="form-control" value="" placeholder="playclips" size="50">
         </div>
@@ -114,7 +115,7 @@
         <small class="text-muted range-slider-value">Clips</small>
     </div>
     <div class="form-group range-slider mt-4">
-        <label for="dateRange">Date Range <small>(Optional)</small> <small class="text-warning">* 0 Day(s) = OFF</small>
+        <label for="dateRange">Only show clips from within a Date Range <small>(Optional)</small> <small class="text-warning">* 0 Day(s) = OFF</small>
         </label>
         <input type="range" max="365" min="0" step="1" class="form-control range-slider-range" id="dateRange"
                value="0" style="height: 0;">
