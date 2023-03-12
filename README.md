@@ -25,7 +25,11 @@ Track future development here: [https://github.com/teklynk/twitch_clips_player/p
 
 **shuffle=true/false**  Play clips in a random order.
 
-**showText=true/false**  Displays the channel name on top of the video.
+**showText=true/false**  Enables the channel name on top of the video.
+
+**showDetails=true/false**  Enables the clips details panel on overlay.
+
+**detailsText=string**  Displays custom details about the clips. Can include {channel},{title},{game},{creator_name},{created_at}.
 
 **limit=integer**  Max number of clips to pull from (max is 100).
 
@@ -83,5 +87,38 @@ video {
     color: #fff;
     text-align: center;
     text-shadow: 2px 2px #000;
+}
+
+#details-container {
+    position: absolute;
+    top: 42vw;
+    background: #00000090;
+    padding: 12px 24px 12px 24px;
+    margin-right: 24px;
+    border-radius: 0px 24px 24px 0px;
+    width: auto;
+    animation: fadeout 15s forwards;
+}
+
+#details-container .details-text {
+    font-family: Basic, Helvetica, sans-serif;
+    font-weight: bold;
+    word-wrap: break-word;
+    color: #fff;
+    text-align: left;
+    text-shadow: 2px 2px #000;
+}
+
+#details-container .details-text.item-0 {
+    font-size: 3vw;
+}
+
+#details-container .details-text.item-1, #details-container .details-text.item-2 {
+    font-size: 2vw;
+}
+
+#details-container .details-text.item-3, #details-container .details-text.item-4 {
+    font-size: 1vw;
+    font-weight: normal;
 }
 ```

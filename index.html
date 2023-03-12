@@ -70,6 +70,7 @@
                 <li>Type "!mycommand" while the clips reel is playing to skip to the next clip.</li>
                 <li>Type "!mycommand stop" to stop the clips player.</li>
                 <li><strong>Date Range option:</strong> This will grab a clip from within the last 5days, 10day, 30days... If no clips exist, then skip to the next channel.</li>
+                <li><strong>Show clip details panel:</strong> This will display a panel in the lower third of the overlay that contains details about the clip. This can use variables:{channel},{title},{game},{creator_name},{created_at}.</li>
             </ul>
         </div>
     </div>
@@ -243,6 +244,11 @@ video {
 
 #details-container .details-text.item-1, #details-container .details-text.item-2 {
     font-size: 2vw;
+}
+
+#details-container .details-text.item-3 {
+    font-size: 1vw;
+    font-weight: normal;
 }
         </textarea>
     </div>
