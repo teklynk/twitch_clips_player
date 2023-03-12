@@ -6,6 +6,7 @@ html, body {
     padding: 0;
     margin: 0;
 }
+
 #container {
     display: block;
     padding: 4px;
@@ -77,4 +78,8 @@ video {
     0%   {opacity: 1;}
     90%  {opacity: 1;}
     100% {opacity: 0;}
+}
+
+@keyframes slide {
+    100% {left: 0;}
 }

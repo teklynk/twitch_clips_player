@@ -420,23 +420,28 @@ $(document).ready(function () {
         if (showDetails === 'true') {
             setTimeout(function () {
                 if (detailsText) {
+
+                    if (document.getElementById("details-container")) {
+                        document.getElementById("details-container").remove();
+                    }
+
                     // custom clip details text
                     detailsText = getUrlParameter('detailsText').trim();
-                    detailsText = detailsText.replace("{channel}", clips_json.data[0]['broadcaster_name']);
-                    detailsText = detailsText.replace("{title}", clips_json.data[0]['title']);
+                    detailsText = detailsText.replace("{channel}", clips_json.data[randomClip]['broadcaster_name']);
+                    detailsText = detailsText.replace("{title}", clips_json.data[randomClip]['title']);
 
                     // Get game name/title using the game_id from the clip's json data
                     if (detailsText.includes("{game}")) {
-                        let game = game_title(clips_json.data[0]['game_id']);
+                        let game = game_title(clips_json.data[randomClip]['game_id']);
                         detailsText = detailsText.replace("{game}", game.data[0]['name']);
                     }
 
                     // Format created_at date
                     if (detailsText.includes("{created_at}")) {
-                        detailsText = detailsText.replace("{created_at}", moment(clips_json.data[0]['created_at']).format("MMMM D, YYYY"));
+                        detailsText = detailsText.replace("{created_at}", moment(clips_json.data[randomClip]['created_at']).format("MMMM D, YYYY"));
                     }
                     
-                    detailsText = detailsText.replace("{creator_name}", clips_json.data[0]['creator_name']);
+                    detailsText = detailsText.replace("{creator_name}", clips_json.data[randomClip]['creator_name']);
 
                     let dText = "";
 
@@ -453,12 +458,13 @@ $(document).ready(function () {
                     
                     $("<div id='details-container'>" + dText + "</div>").appendTo('#container');
                 }
-            }, 500); // wait time
+            }, 700); // wait time
         }
 
         // Debug
         //console.log('channelName: ' + channelName);
         //console.log('clipNumber: ' + randomClip);
+        //console.log(clips_json.data[randomClip]['title']);
 
         // Move to the next clip when the current one finishes playing
         curr_clip.addEventListener("ended", nextClip);

@@ -10,7 +10,7 @@ This grabs your Twitch clips and plays them one after the other in a loop. Keep 
 
 Track future development here: [https://github.com/teklynk/twitch_clips_player/projects/1](https://github.com/teklynk/twitch_clips_player/projects/1)
 
-**NEW FEATURES:** 
+**FEATURES:** 
 - !clipso @teklynk to play a clip from a channel while the clips reel is playing. This will immediately play the clip from the channel and then continue on with the rest of the clips reel. 
 - Control the clips from Twitch chat. !clipskip, !clippause, !clipplay, !clipreload, !clipso @channelname. Limited to Mods and Streamer.
 - Show clips from channels that you follow. Grabs the most recent 700 channels.
@@ -18,6 +18,9 @@ Track future development here: [https://github.com/teklynk/twitch_clips_player/p
 - Type "!mycommand @teklynk @coolstreamer @gamer123 @tekbot" which will play the clips reel for only those channels. 
 - Type "!mycommand" while the clips reel is playing to skip to the next clip. 
 - Type "!mycommand stop" to stop the clips player.
+- Date Range option: This will grab a clip from within the last 5days, 10day, 30days... If no clips exist, then skip to the next channel.
+- Show clip details panel: This will display a panel in the lower third of the overlay that contains details about the clip. This can use variables:{channel},{title},{game},{creator_name},{created_at}.
+
 
 ## URL Parameters
 
@@ -55,7 +58,7 @@ Track future development here: [https://github.com/teklynk/twitch_clips_player/p
 
 ## Custom CSS
 
-Add this CSS to the OBS browser source and modify as needed.
+Optional: Add this CSS to the OBS browser source and modify as needed.
 
 ```css
 #container {
@@ -122,3 +125,48 @@ video {
     font-weight: normal;
 }
 ```
+If you want to add some flare to the clips info panel and channel name, try this CSS.
+
+```css
+#text-container {
+    background: #00008890;
+    box-shadow: 10px 10px #00000090;
+    max-width: 85%;
+    padding: 4px 0 8px 0;
+    border-radius: 0 24px 24px 0;
+    left: -1000px;
+    animation: slide 1s forwards;
+}
+#details-container {
+    top: 35vw;
+    border-radius: 24px;
+    transform: skew(5deg, -5deg);
+    margin-left: 20px;
+    background: #00008890;
+    border: solid 2px #00008898;
+    box-shadow: 10px 10px #00000090;
+    animation: fadeout 20s forwards;
+}
+#details-container .details-text.item-0 {
+    font-size: 3vw;
+    text-transform: uppercase;
+}
+
+#details-container .details-text.item-1 {
+    font-size: 2.5vw;
+}
+
+#details-container .details-text.item-2 {
+    font-size: 2vw;
+}
+
+#details-container .details-text.item-3 {
+    font-size: 1.5vw;
+}
+
+@keyframes slide {
+    100% {left: 0;}
+}
+```
+
+<img src="https://raw.githubusercontent.com/teklynk/twitch_clips_player/main/Screenshot01.png" width="500" />
