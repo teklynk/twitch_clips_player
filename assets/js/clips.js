@@ -30,10 +30,12 @@ $(document).ready(function () {
     let delay = getUrlParameter('delay').trim();
     let shuffle = getUrlParameter('shuffle').trim();
     let showText = getUrlParameter('showText').trim();
+    let showDetails = getUrlParameter('showDetails').trim();
     let so = getUrlParameter('so').trim();
     let ref = getUrlParameter('ref').trim();
     let customMsg = getUrlParameter('customMsg').trim();
     let customText = getUrlParameter('customText').trim();
+    let detailsText = getUrlParameter('detailsText').trim();
     let command = getUrlParameter('command').trim();
     let modOnly = getUrlParameter('modOnly').trim();
     let showFollowing = getUrlParameter('showFollowing').trim();
@@ -42,6 +44,10 @@ $(document).ready(function () {
     let cmdArray = [];
     let following = "";
     let followCount = 0;
+
+    if (!showDetails) {
+        showDetails = "false"; //default
+    }
 
     if (!shuffle) {
         shuffle = "false"; //default
@@ -118,6 +124,16 @@ $(document).ready(function () {
     }
 
     client.connect().catch(console.error);
+
+    // Get game details function
+    function game_title(game_id) {
+        let $jsonParse = JSON.parse($.getJSON({
+            'url': "https://twitchapi.teklynk.com/getgame.php?id=" + game_id,
+            'async': false
+        }).responseText);
+
+        return $jsonParse;
+    }
 
     if (showFollowing === 'true') {
 
@@ -224,6 +240,7 @@ $(document).ready(function () {
 
                 // Remove element before loading the clip
                 $('#text-container').remove();
+                $('#details-container').remove();
 
                 // Get second command. ie: stop
                 let commandOption = message.split(' ')[1];
@@ -339,6 +356,9 @@ $(document).ready(function () {
                     if (document.getElementById("text-container")) {
                         document.getElementById("text-container").remove();
                     }
+                    if (document.getElementById("details-container")) {
+                        document.getElementById("details-container").remove();
+                    }
 
                     loadClip(getChannel); // play a clip from getChannel right away
                     return false;
@@ -393,14 +413,54 @@ $(document).ready(function () {
                 } else {
                     $("<div id='text-container'><span class='title-text'>" + clips_json.data[0]['broadcaster_name'] + "</span></div>").appendTo('#container');
                 }
-            }, 600); // wait time
+            }, 500); // wait time
+        }
+
+        // Show clip details panel
+        if (showDetails === 'true') {
+            setTimeout(function () {
+                if (detailsText) {
+                    // custom clip details text
+                    detailsText = getUrlParameter('detailsText').trim();
+                    detailsText = detailsText.replace("{channel}", clips_json.data[0]['broadcaster_name']);
+                    detailsText = detailsText.replace("{title}", clips_json.data[0]['title']);
+
+                    // Get game name/title using the game_id from the clip's json data
+                    if (detailsText.includes("{game}")) {
+                        let game = game_title(clips_json.data[0]['game_id']);
+                        detailsText = detailsText.replace("{game}", game.data[0]['name']);
+                    }
+
+                    // Format created_at date
+                    if (detailsText.includes("{created_at}")) {
+                        detailsText = detailsText.replace("{created_at}", moment(clips_json.data[0]['created_at']).format("MMMM D, YYYY"));
+                    }
+                    
+                    detailsText = detailsText.replace("{creator_name}", clips_json.data[0]['creator_name']);
+
+                    let dText = "";
+
+                    // split on line breaks and create an array
+                    let separateLines = detailsText.split(/\r?\n|\r|\n/g);
+           
+                    // interate over separateLines array
+                    separateLines.forEach(lineBreaks);
+
+                    // generate html for each linebreak/item in array
+                    function lineBreaks(item, index) {
+                        dText += "<div class='details-text item-" + index + "'>" + item + "</div>"; 
+                    }
+                    
+                    $("<div id='details-container'>" + dText + "</div>").appendTo('#container');
+                }
+            }, 500); // wait time
         }
 
         // Debug
-        console.log('channelName: ' + channelName);
-        console.log('clipNumber: ' + randomClip);
+        //console.log('channelName: ' + channelName);
+        //console.log('clipNumber: ' + randomClip);
 
-        // Move to the next clip if the current one finishes playing
+        // Move to the next clip when the current one finishes playing
         curr_clip.addEventListener("ended", nextClip);
 
         // Do a shout-out for each clip
@@ -431,6 +491,9 @@ $(document).ready(function () {
         // Remove element when the next clip plays
         if (document.getElementById("text-container")) {
             document.getElementById("text-container").remove();
+        }
+        if (document.getElementById("details-container")) {
+            document.getElementById("details-container").remove();
         }
 
         // Properly remove video source

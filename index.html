@@ -140,6 +140,19 @@
         <input type="text" id="customText" class="form-control" value=""
                placeholder="Go check out {channel}" size="255">
     </div>
+    <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" value="" id="showDetails">
+        <label class="form-check-label" for="showDetails">
+            Show clip details panel
+        </label>
+    </div>
+    <div class="form-label-group mt-2 mb-4 ml-4 hide" id="showDetailsText">
+        <label for="detailsText">Custom clip details panel text <small>(Optional)</small>
+        </label>
+        <textarea class="form-control" id="detailsText" rows="4" placeholder="{title}
+While streaming {game}
+Clipped by {creator_name} {created_at}"></textarea>
+    </div>
     <div class="form-check mb-4">
         <input class="form-check-input" type="checkbox" value="" id="showMsg">
         <label class="form-check-label" for="showMsg">
@@ -202,6 +215,34 @@ video {
     color: #fff;
     text-align: center;
     text-shadow: 2px 2px #000;
+}
+
+#details-container {
+    position: absolute;
+    top: 42vw;
+    background: #00000090;
+    padding: 12px 24px 12px 24px;
+    margin-right: 24px;
+    border-radius: 0px 24px 24px 0px;
+    width: auto;
+    animation: fadeout 15s forwards;
+}
+
+#details-container .details-text {
+    font-family: Basic, Helvetica, sans-serif;
+    font-weight: bold;
+    word-wrap: break-word;
+    color: #fff;
+    text-align: left;
+    text-shadow: 2px 2px #000;
+}
+
+#details-container .details-text.item-0 {
+    font-size: 3vw;
+}
+
+#details-container .details-text.item-1, #details-container .details-text.item-2 {
+    font-size: 2vw;
 }
         </textarea>
     </div>
@@ -292,6 +333,11 @@ video {
         document.getElementById("showCustomText").classList.toggle('hide');
     }, false);
 
+    // show custom details input
+    document.getElementById("showDetails").addEventListener("click", function (e) {
+        document.getElementById("showDetailsText").classList.toggle('hide');
+    }, false);
+
     // check if command input has a value
     document.getElementById("command").addEventListener("keyup", function (e) {
         if (document.getElementById("command").value !== "") {
@@ -321,6 +367,7 @@ video {
         let dateRange = document.getElementById("dateRange").value;
         let shuffle = document.getElementById("shuffle").checked;
         let showText = document.getElementById("showText").checked;
+        let showDetails = document.getElementById("showDetails").checked;
         let showFollowing = document.getElementById("showFollowing").checked;
         let so = document.getElementById("showMsg").checked;
         let customMsg = document.getElementById("customMsg").value.trim();
@@ -328,6 +375,7 @@ video {
         let command = document.getElementById("command").value.trim();
         command = command.replace('!', '');
         let customText = document.getElementById("customText").value.trim();
+        let detailsText = document.getElementById("detailsText").value.trim();
 
         localStorage.setItem("TwitchClipsMainAccount", mainChannel.toLowerCase().trim());
         localStorage.setItem("TwitchClipsRef", ref.trim());
@@ -367,9 +415,13 @@ video {
             alert(command + ' can not be used. Please choose a different command name.');
         }
 
+        if (showDetails && !detailsText) {
+             detailsText = "{title}\nWhile streaming {game}\nClipped by {creator_name} {created_at}";
+        }
+
         // build overlay url
         let srcURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
-        let fullUrl = srcURL + "clips.html?channel=" + channel + "&limit=" + limit + "&dateRange=" + dateRange + "&shuffle=" + shuffle + "&showText=" + showText + "&customMsg=" + encodeURIComponent(customMsg) + "&mainAccount=" + mainChannel + "&so=" + so + "&command=" + command + "&modOnly=" + modOnly + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&ref=" + btoa(ref);
+        let fullUrl = srcURL + "clips.html?channel=" + channel + "&limit=" + limit + "&dateRange=" + dateRange + "&shuffle=" + shuffle + "&showText=" + showText + "&customMsg=" + encodeURIComponent(customMsg) + "&showDetails=" + showDetails + "&detailsText=" + encodeURIComponent(detailsText) + "&mainAccount=" + mainChannel + "&so=" + so + "&command=" + command + "&modOnly=" + modOnly + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&ref=" + btoa(ref);
         fullUrl = fullUrl.replace("index.htmlclips.html", "clips.html");
         document.getElementById("overlaylink").classList.remove("hide");
         document.getElementById("overlaylink").innerHTML = "<p>Add this link as a browser source in OBS.<br>" +

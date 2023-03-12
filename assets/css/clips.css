@@ -37,3 +37,39 @@ video {
     text-align: center;
     text-shadow: 2px 2px #000;
 }
+
+#details-container {
+    position: absolute;
+    top: 42vw;
+    background: #00000090;
+    padding: 12px 24px 12px 24px;
+    margin-right: 24px;
+    border-radius: 0px 24px 24px 0px;
+    width: auto;
+    animation: fadeout 15s forwards;
+}
+
+#details-container .details-text {
+    font-family: Basic, Helvetica, sans-serif;
+    font-weight: bold;
+    word-wrap: break-word;
+    color: #fff;
+    text-align: left;
+    text-shadow: 2px 2px #000;
+}
+
+#details-container .details-text.item-0 {
+    font-size: 2vw;
+    font-weight: bold;
+}
+
+#details-container .details-text.item-1, #details-container .details-text.item-2 {
+    font-size: 2vw;
+    font-weight: normal;
+}
+
+@keyframes fadeout {
+    0%   {opacity: 1;}
+    90%  {opacity: 1;}
+    100% {opacity: 0;}
+}
