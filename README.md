@@ -94,7 +94,7 @@ video {
 
 #details-container {
     position: absolute;
-    top: 42vw;
+    top: 36vw;
     background: #00000090;
     padding: 12px 24px 12px 24px;
     margin-right: 24px;
@@ -129,30 +129,40 @@ If you want to add some flare to the clips info panel and channel name, try this
 
 ```css
 #text-container {
+    top: 0;
     background: #00008890;
     box-shadow: 0 10px #00000090;
     max-width: 100%;
     padding: 4px 0 8px 0;
-    border-radius: 24px;
+    border-radius: 25px;
     left: -2000px;
-    animation: slide 3s forwards;
+    animation: slide 2s linear forwards;
 }
+
 #details-container {
-    top: 35vw;
-    border-radius: 24px;
-    transform: skew(5deg, -5deg);
-    margin-left: 20px;
+    top: 42vw;
+    border-radius: 25px;
+    transform: skew(6deg, -6deg);
+    margin-left: 0;
     background: #00008890;
-    border: solid 2px #00008898;
     box-shadow: 10px 10px #00000090;
-    animation: fadeout 20s forwards;
+    animation: fadeout 15s linear forwards;
 }
+
 #details-container .details-text.item-0 {
     font-size: 3vw;
+    overflow: hidden;
+    max-width: 50ch;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #details-container .details-text.item-1 {
     font-size: 2.5vw;
+    overflow: hidden;
+    max-width: 100ch;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #details-container .details-text.item-2 {

@@ -205,7 +205,7 @@ $(document).ready(function () {
         channel = following.split(',').map(element => element.trim());
 
         // Print following count and following channel list for debugging
-        console.log('following (' + followCount + '):\n' + following);
+        //console.log('following (' + followCount + '):\n' + following);
 
     } else {
 
@@ -428,12 +428,25 @@ $(document).ready(function () {
                     // custom clip details text
                     detailsText = getUrlParameter('detailsText').trim();
                     detailsText = detailsText.replace("{channel}", clips_json.data[randomClip]['broadcaster_name']);
-                    detailsText = detailsText.replace("{title}", clips_json.data[randomClip]['title']);
+                    
+                    // Show clip title if it exists
+                    if (detailsText.includes("{title}")) {
+                        if (clips_json.data[randomClip]['title']) {
+                            detailsText = detailsText.replace("{title}", clips_json.data[randomClip]['title']);
+                        } else {
+                            detailsText = detailsText.replace("{title}", "?");
+                        }
+                    }
 
                     // Get game name/title using the game_id from the clip's json data
                     if (detailsText.includes("{game}")) {
-                        let game = game_title(clips_json.data[randomClip]['game_id']);
-                        detailsText = detailsText.replace("{game}", game.data[0]['name']);
+                        // Show game title if it exists
+                        if (clips_json.data[randomClip]['game_id']) {
+                            let game = game_title(clips_json.data[randomClip]['game_id']);
+                            detailsText = detailsText.replace("{game}", game.data[0]['name']);
+                        } else {
+                            detailsText = detailsText.replace("{game}", "?");
+                        }
                     }
 
                     // Format created_at date
@@ -441,7 +454,9 @@ $(document).ready(function () {
                         detailsText = detailsText.replace("{created_at}", moment(clips_json.data[randomClip]['created_at']).format("MMMM D, YYYY"));
                     }
                     
-                    detailsText = detailsText.replace("{creator_name}", clips_json.data[randomClip]['creator_name']);
+                    if (detailsText.includes("{creator_name}")) {
+                        detailsText = detailsText.replace("{creator_name}", clips_json.data[randomClip]['creator_name']);
+                    }
 
                     let dText = "";
 
