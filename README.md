@@ -130,12 +130,12 @@ If you want to add some flare to the clips info panel and channel name, try this
 ```css
 #text-container {
     background: #00008890;
-    box-shadow: 10px 10px #00000090;
-    max-width: 85%;
+    box-shadow: 0 10px #00000090;
+    max-width: 100%;
     padding: 4px 0 8px 0;
-    border-radius: 0 24px 24px 0;
-    left: -1000px;
-    animation: slide 1s forwards;
+    border-radius: 24px;
+    left: -2000px;
+    animation: slide 3s forwards;
 }
 #details-container {
     top: 35vw;
@@ -149,7 +149,6 @@ If you want to add some flare to the clips info panel and channel name, try this
 }
 #details-container .details-text.item-0 {
     font-size: 3vw;
-    text-transform: uppercase;
 }
 
 #details-container .details-text.item-1 {
