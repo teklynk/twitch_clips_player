@@ -64,13 +64,18 @@ video {
     font-weight: bold;
 }
 
-#details-container .details-text.item-1, #details-container .details-text.item-2 {
+#details-container .details-text.item-1 {
+    font-size: 2.5vw;
+    font-weight: normal;
+}
+
+#details-container .details-text.item-2 {
     font-size: 2vw;
     font-weight: normal;
 }
 
-#details-container .details-text.item-3, #details-container .details-text.item-4 {
-    font-size: 1vw;
+#details-container .details-text.item-3 {
+    font-size: 1.5vw;
     font-weight: normal;
 }
 
