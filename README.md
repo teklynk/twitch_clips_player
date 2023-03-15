@@ -1,6 +1,7 @@
 # Twitch Clips Player Overlay
 
 ## What is this?
+[obs_capture_clipsreel.webm](https://user-images.githubusercontent.com/4500737/225194253-5e627224-c618-4731-8f0b-b098f0124f6b.webm)
 
 This is a Twitch Clips Player, browser source overlay for OBS. 
 
