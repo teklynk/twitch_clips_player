@@ -125,7 +125,7 @@ video {
     font-weight: normal;
 }
 ```
-If you want to add some flare to the clips info panel and channel name, try this CSS.
+## If you want to add some flare to the clips info panel and channel name, try this Fancy Slide-in, Slide-out effect.
 
 ```css
 #text-container {
@@ -136,7 +136,7 @@ If you want to add some flare to the clips info panel and channel name, try this
     padding: 4px 0 8px 0;
     border-radius: 25px;
     left: -2000px;
-    animation: slide 2s linear forwards;
+    animation: slide 1s ease forwards;
 }
 
 #details-container {
@@ -146,7 +146,7 @@ If you want to add some flare to the clips info panel and channel name, try this
     margin-left: 0;
     background: #00008890;
     box-shadow: 10px 10px #00000090;
-    animation: fadeout 15s linear forwards;
+    animation: movein 1s ease forwards, moveout 1s 15s ease forwards;
 }
 
 #details-container .details-text.item-0 {
@@ -175,6 +175,16 @@ If you want to add some flare to the clips info panel and channel name, try this
 
 @keyframes slide {
     100% {left: 0;}
+}
+
+@keyframes movein {
+  from { left: -2000px; }
+  to   { left: 0px; }
+}
+
+@keyframes moveout {
+  from { left: 0px; }
+  to   { left: -2000px; }
 }
 ```
 
