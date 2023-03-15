@@ -61,73 +61,7 @@ Track future development here: [https://github.com/teklynk/twitch_clips_player/p
 
 ## Custom CSS
 
-Optional: Add this CSS to the OBS browser source and modify as needed.
 
-```css
-#container {
-    display: block;
-    padding: 4px;
-    margin: 4px;
-    text-align: center;
-}
-
-video {
-    width: 100%;
-    height: auto;
-    max-height: 100%;
-    border-radius: 10px;
-}
-
-#text-container {
-    width: 100%;
-    margin: 40px 0;
-    position: absolute;
-    top: 10%;
-}
-
-.title-text {
-    font-family: Basic, Helvetica, sans-serif;
-    font-weight: bold;
-    font-size: 5vw;
-    word-wrap: break-word;
-    color: #fff;
-    text-align: center;
-    text-shadow: 2px 2px #000;
-}
-
-#details-container {
-    position: absolute;
-    top: 36vw;
-    background: #00000090;
-    padding: 12px 24px 12px 24px;
-    margin-right: 24px;
-    border-radius: 0px 24px 24px 0px;
-    width: auto;
-    animation: fadeout 15s forwards;
-}
-
-#details-container .details-text {
-    font-family: Basic, Helvetica, sans-serif;
-    font-weight: bold;
-    word-wrap: break-word;
-    color: #fff;
-    text-align: left;
-    text-shadow: 2px 2px #000;
-}
-
-#details-container .details-text.item-0 {
-    font-size: 3vw;
-}
-
-#details-container .details-text.item-1, #details-container .details-text.item-2 {
-    font-size: 2vw;
-}
-
-#details-container .details-text.item-3, #details-container .details-text.item-4 {
-    font-size: 1vw;
-    font-weight: normal;
-}
-```
 ## If you want to add some flare to the clips info panel and channel name, try this Fancy Slide-in, Slide-out effect.
 
 ```css
