@@ -44,6 +44,7 @@ $(document).ready(function () {
     let cmdArray = [];
     let following = "";
     let followCount = 0;
+    let playCount = 0;
 
     if (!showDetails) {
         showDetails = "false"; //default
@@ -372,6 +373,7 @@ $(document).ready(function () {
 
     // Get and play the clip
     function loadClip(channelName) {
+
         // Json data - Ajax call
         let clips_json = JSON.parse($.getJSON({
             'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&limit=" + limit + "" + dateRange,
@@ -392,7 +394,12 @@ $(document).ready(function () {
         if (shuffle === 'true') {
             randomClip = Math.floor((Math.random() * clips_json.data.length - 1) + 1);
         } else {
-            randomClip = 0;
+            // Play clips in sequential order
+            playCount++;
+            if (playCount - 1 === clips_json.data.length - 1) {
+                playCount = 0;
+            }
+            randomClip = playCount;
         }
 
         // Create video element and load a new clip
