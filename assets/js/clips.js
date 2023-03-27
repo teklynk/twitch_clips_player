@@ -390,17 +390,37 @@ $(document).ready(function () {
         // Sort array by created_at
         clips_json.data.sort(sortByProperty('created_at'));
 
-        // Grab a random clip index anywhere from 1 to the limit value. Else, grab the most recent popular clip.
+        // Grab a random clip index anywhere from 0 to the clips_json.data.length.
         if (shuffle === 'true') {
+
             randomClip = Math.floor((Math.random() * clips_json.data.length - 1) + 1);
+
         } else {
-            // Play clips in sequential order
-            playCount++;
-            if (playCount - 1 === clips_json.data.length - 1) {
-                playCount = 0;
+
+            // Play clips in the order they were created_at
+            if (clips_json.data.length === 1 || clips_json.data.length === playCount) {
+
+                playCount = 1;
+                randomClip = playCount - 1;
+
+            // If only one channel is being used with the clips player
+            } else if (channel.length === 1) {
+
+                playCount++;
+
+                if (playCount >= 1) {
+                    randomClip = playCount - 1;
+                }
+                
+            } else {
+                // Default
+                randomClip = 0;
+
             }
-            randomClip = playCount;
+
         }
+
+        console.log('Playing clip index: ' + randomClip);
 
         // Create video element and load a new clip
         curr_clip.src = clips_json.data[randomClip]['clip_url'];
