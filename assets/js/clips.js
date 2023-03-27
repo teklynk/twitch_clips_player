@@ -423,6 +423,12 @@ $(document).ready(function () {
         console.log('Playing clip index: ' + randomClip);
 
         // Create video element and load a new clip
+
+        // adding a poster will help reduce the gap between clips.
+        // set &delay=1 in the url if you want an intentional delay/gap between clips.
+        if (parseInt(delay) === 0) {
+            curr_clip.poster = clips_json.data[randomClip]['thumbnail_url'];
+        }
         curr_clip.src = clips_json.data[randomClip]['clip_url'];
         curr_clip.autoplay = true;
         curr_clip.controls = false;
@@ -567,13 +573,13 @@ $(document).ready(function () {
             loadClip(channel[clip_index]);
             curr_clip.play();
         } else {
-            console.log("Delay: " + parseInt(delay) * 1000);
+            console.log("Delay: " + parseInt(delay) * 1000 / 2);
             // Adjust the delay in the url, else delay=0
             setTimeout(function () {
                 // Play a clip
                 loadClip(channel[clip_index]);
                 curr_clip.play();
-            }, parseInt(delay) * 1000); // wait time
+            }, parseInt(delay) * 1000 / 2); // wait time
         }
 
     }
