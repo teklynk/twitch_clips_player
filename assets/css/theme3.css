@@ -1,0 +1,51 @@
+/* Outside the box */
+
+#container {
+    height: auto;
+    overflow: hidden;
+}
+
+video {
+    margin-top: 6vw;
+}
+
+#text-container {
+    top: 0;
+    display: block;
+    background: transparent;
+    box-shadow: none;
+    max-width: 100%;
+    padding: 4px 0 8px 0;
+    animation: none;
+}
+
+#details-container {
+    top: auto;
+    display: block;
+    background:transparent;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    bottom: 0;
+    height: auto;
+    width: 100%;
+    left: 0;
+    border-radius: 0;
+    animation: none;
+}
+
+#details-container .details-text.item-0 {
+    font-size: 3vw;
+    overflow: hidden;
+    max-width: 50ch;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#details-container .details-text.item-1 {
+    font-size: 2.5vw;
+    overflow: hidden;
+    max-width: 100ch;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

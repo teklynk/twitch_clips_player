@@ -39,6 +39,7 @@ $(document).ready(function () {
     let command = getUrlParameter('command').trim();
     let modOnly = getUrlParameter('modOnly').trim();
     let showFollowing = getUrlParameter('showFollowing').trim();
+    let themeOption = getUrlParameter('themeOption').trim();
     let randomClip = 0; // Default random clip index
     let clip_index = 0; // Default clip index
     let cmdArray = [];
@@ -96,6 +97,11 @@ $(document).ready(function () {
     }
 
     let client = '';
+
+    // Load theme css file if theme is set
+    if (parseInt(themeOption) > 0) {
+        $('head').append('<link rel="stylesheet" type="text/css" href="assets/css/theme' + themeOption + '.css">');
+    }
 
     // If Auth token is set, then connect to chat using oauth, else connect anonymously.
     if (so === 'true' && ref) {

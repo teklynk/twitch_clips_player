@@ -1,0 +1,58 @@
+/* Slide in basic */
+
+#text-container {
+    top: 0;
+    background: transparent;
+    box-shadow: 0;
+    max-width: 100%;
+    padding: 4px 0 8px 0;
+    left: -2000px;
+    animation: movein 1s ease forwards, moveout 1s 10s ease forwards;
+}
+
+#details-container {
+    top: 42vw;
+    border-radius: 0;
+    margin-left: 0;
+    background: #05050590;
+    box-shadow: 0;
+    animation: movein 1s ease forwards, moveout 1s 10s ease forwards;
+}
+
+#details-container .details-text.item-0 {
+    font-size: 3vw;
+    overflow: hidden;
+    max-width: 50ch;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#details-container .details-text.item-1 {
+    font-size: 2.5vw;
+    overflow: hidden;
+    max-width: 100ch;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#details-container .details-text.item-2 {
+    font-size: 2vw;
+}
+
+#details-container .details-text.item-3 {
+    font-size: 1.5vw;
+}
+
+@keyframes slide {
+    100% {left: 0;}
+}
+
+@keyframes movein {
+  from { left: -2000px; }
+  to   { left: 0px; }
+}
+
+@keyframes moveout {
+  from { left: 0px; }
+  to   { left: -2000px; }
+}
