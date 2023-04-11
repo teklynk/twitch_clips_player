@@ -27,6 +27,7 @@ $(document).ready(function () {
     let mainAccount = getUrlParameter('mainAccount').toLowerCase().trim();
     let limit = getUrlParameter('limit').trim();
     let dateRange = getUrlParameter('dateRange').trim();
+    let streamerOnly = getUrlParameter('streamerOnly').trim();
     let delay = getUrlParameter('delay').trim();
     let shuffle = getUrlParameter('shuffle').trim();
     let showText = getUrlParameter('showText').trim();
@@ -380,11 +381,20 @@ $(document).ready(function () {
     // Get and play the clip
     function loadClip(channelName) {
 
-        // Json data - Ajax call
-        let clips_json = JSON.parse($.getJSON({
-            'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&limit=" + limit + "" + dateRange,
-            'async': false
-        }).responseText);
+        let clips_json = "";
+
+        // Json data - Ajax calls
+        if (streamerOnly === 'true') {
+            clips_json = JSON.parse($.getJSON({
+                'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&creator_name=" + channelName + "&limit=" + limit + "" + dateRange,
+                'async': false
+            }).responseText);
+        } else {
+            clips_json = JSON.parse($.getJSON({
+                'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&limit=" + limit + "" + dateRange,
+                'async': false
+            }).responseText);
+        }
 
         // If no user clips exist, then skip to the next channel
         if (!clips_json.data || typeof clips_json.data === 'undefined' || clips_json.data.length === 0) {

@@ -47,6 +47,8 @@ Track future development here: [https://github.com/teklynk/twitch_clips_player/p
 
 **showFollowing=true/false** Pulls clips from the latest 100 channels that you are following. 
 
+**streamerOnly=true/false** Only shows clips created by the channel/streamer. 
+
 **customText=string**  Displays custom message on top of clips. Can include {channel}.
 
 **modOnly=true/false**  When command option is used, can limit command to Mods only.
