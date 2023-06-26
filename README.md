@@ -24,6 +24,9 @@ Track future development here: [https://github.com/teklynk/twitch_clips_player/p
 - Date Range option: This will grab a clip from within the last 5days, 10day, 30days... If no clips exist, then skip to the next channel.
 - Show clip details panel: This will display a panel in the lower third of the overlay that contains details about the clip. This can use variables:{channel},{title},{game},{creator_name},{created_at}.
 
+## Notes:
+In OBS, set the browser source to: "Shutdown source when not visible" and "Refresh browser when scene becomes active". This will prevent the clips player from playing in the background. It will also reload/refresh the clips player when the source becomes active.
+
 
 ## URL Parameters
 
