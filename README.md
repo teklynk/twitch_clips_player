@@ -64,6 +64,8 @@ In OBS, set the browser source to: "Shutdown source when not visible" and "Refre
 
 **customMsg=string**  Shout-out message. Uses variables like: {channel},{games},{tile},{url}
 
+**themeOption=integer** Various pre-made css themes top choose from.
+
 ## Custom CSS
 
 
