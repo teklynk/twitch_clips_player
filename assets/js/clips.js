@@ -47,6 +47,7 @@ $(document).ready(function () {
     let following = "";
     let followCount = 0;
     let playCount = 0;
+    let poster = '';
 
     if (!showDetails) {
         showDetails = "false"; //default
@@ -443,7 +444,10 @@ $(document).ready(function () {
         // adding a poster will help reduce the gap between clips.
         // set &delay=1 in the url if you want an intentional delay/gap between clips.
         if (parseInt(delay) === 0) {
-            curr_clip.poster = clips_json.data[randomClip]['thumbnail_url'];
+            // higher resolution thumbnail image for poster. Removes -480x272 from thumbnail url.
+            poster = clips_json.data[randomClip]['thumbnail_url'].replace('-480x272','');
+            curr_clip.poster = poster;
+
         }
         curr_clip.src = clips_json.data[randomClip]['clip_url'];
         curr_clip.autoplay = true;
