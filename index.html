@@ -388,7 +388,7 @@ video {
 
     document.getElementById("generate_button").addEventListener("click", function (e) {
         let channel = document.getElementById("channel").value.trim();
-        channel = channel.replace(/\s+/g, ","); // replace spaces with commas
+        channel = channel.replace(/\s+/g, ""); // remove white space
         let mainChannel = document.getElementById("mainChannel").value.trim();
         let ref = document.getElementById("ref").value.trim();
         let limit = document.getElementById("limit").value;
@@ -413,6 +413,9 @@ video {
         localStorage.setItem("TwitchClipsCustomMsg", customMsg.trim());
         localStorage.setItem("TwitchClipsCommand", command.trim());
         localStorage.setItem("TwitchClipsCustomText", customText.trim());
+
+        // reload the textarea with the cleaned up channel list (spaces removed).
+        document.getElementById("channel").value = localStorage.getItem("TwitchClipsChannel");
 
         if (!so) {
             ref = '';
