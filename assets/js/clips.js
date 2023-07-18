@@ -401,10 +401,17 @@ $(document).ready(function () {
         }
 
         // If no user clips exist, then skip to the next channel
+
         if (!clips_json.data || typeof clips_json.data === 'undefined' || clips_json.data.length === 0) {
             console.log('no clips exist for channel: ' + channelName);
-            nextClip(true); // skip clip
-            return false;
+            if (channel.length === 1) {
+                alert('No clips found for ' + channelName + ' :( Check date range option and the number of clips to pull from.');
+                return false;
+            } else {
+                nextClip(true); // skip clip
+                return false;
+            }
+
         }
 
         // Sort array by created_at
@@ -444,17 +451,18 @@ $(document).ready(function () {
         console.log('Playing clip Channel: ' + clips_json.data[randomClip]['broadcaster_name']);
         console.log('Playing clip index: ' + randomClip);
         console.log('Playing clip ID: ' + clips_json.data[randomClip]['id']);
+        console.log('data length: ' + clips_json.data.length)
 
         // Checks if clip_id in localStorage matches the clip id from the json data.
         // This helps prevent the same clip from playing again when using Random.
-        if (clips_json.data[randomClip]['id'] === localStorage.getItem('clip_id')) {
+        if (clips_json.data.length > 0 && clips_json.data[randomClip]['id'] === localStorage.getItem('clip_id')) {
             console.log('Clip was previously played. Skipping...');
             nextClip(true); // skip clip
             return false;
         }
 
         // If clip id exists, save it in localStorage
-        if (clips_json.data[randomClip]['id']) {
+        if (clips_json.data.length > 0 && clips_json.data[randomClip]['id']) {
             localStorage.setItem('clip_id', clips_json.data[randomClip]['id']);
         } else {
             localStorage.setItem('clip_id', '');
