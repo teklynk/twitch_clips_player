@@ -100,6 +100,9 @@ $(document).ready(function () {
 
     let client = '';
 
+    // onload set the local storage for clip_id to false.
+    localStorage.setItem('clip_id', '');
+
     // Load theme css file if theme is set
     if (parseInt(themeOption) > 0) {
         $('head').append('<link rel="stylesheet" type="text/css" href="assets/css/theme' + themeOption + '.css">');
@@ -437,7 +440,25 @@ $(document).ready(function () {
 
         }
 
+        // log output from each clip for debugging
+        console.log('Playing clip Channel: ' + clips_json.data[randomClip]['broadcaster_name']);
         console.log('Playing clip index: ' + randomClip);
+        console.log('Playing clip ID: ' + clips_json.data[randomClip]['id']);
+
+        // Checks if clip_id in localStorage matches the clip id from the json data.
+        // This helps prevent the same clip from playing again when using Random.
+        if (clips_json.data[randomClip]['id'] === localStorage.getItem('clip_id')) {
+            console.log('Clip was previously played. Skipping...');
+            nextClip(true); // skip clip
+            return false;
+        }
+
+        // If clip id exists, save it in localStorage
+        if (clips_json.data[randomClip]['id']) {
+            localStorage.setItem('clip_id', clips_json.data[randomClip]['id']);
+        } else {
+            localStorage.setItem('clip_id', '');
+        }
 
         // Create video element and load a new clip
 
