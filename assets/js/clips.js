@@ -41,6 +41,7 @@ $(document).ready(function () {
     let modOnly = getUrlParameter('modOnly').trim();
     let showFollowing = getUrlParameter('showFollowing').trim();
     let themeOption = getUrlParameter('themeOption').trim();
+    let gameTitle = getUrlParameter('gameTitle').trim();
     let randomClip = 0; // Default random clip index
     let clip_index = 0; // Default clip index
     let cmdArray = [];
@@ -48,6 +49,10 @@ $(document).ready(function () {
     let followCount = 0;
     let playCount = 0;
     let poster = '';
+
+    if (!gameTitle) {
+        gameTitle = ""; //default
+    }
 
     if (!showDetails) {
         showDetails = "false"; //default
@@ -138,13 +143,22 @@ $(document).ready(function () {
     client.connect().catch(console.error);
 
     // Get game details function
-    function game_title(game_id) {
+    function game_by_id(game_id) {
         let $jsonParse = JSON.parse($.getJSON({
             'url': "https://twitchapi.teklynk.com/getgame.php?id=" + game_id,
             'async': false
         }).responseText);
 
         return $jsonParse;
+    }
+
+    function game_by_title(game_title) {
+        let $game_by_title_jsonParse = JSON.parse($.getJSON({
+            'url': "https://twitchapi.teklynk.com/getgame.php?name=" + game_title,
+            'async': false
+        }).responseText);
+
+        return $game_by_title_jsonParse;
     }
 
     if (showFollowing === 'true') {
@@ -400,8 +414,18 @@ $(document).ready(function () {
             }).responseText);
         }
 
-        // If no user clips exist, then skip to the next channel
+        // Sort array by created_at
+        clips_json.data.sort(sortByProperty('created_at'));
 
+
+        // If gameTitle is set. Filter the clips_json based on game_id
+        if (gameTitle) {
+            let get_game_id = game_by_title(gameTitle);
+            let clips_data = clips_json.data.filter(element => element.game_id === get_game_id.data[0]['id']);
+            clips_json = {'data': clips_data};
+        }
+
+        // If no user clips exist, then skip to the next channel
         if (!clips_json.data || typeof clips_json.data === 'undefined' || clips_json.data.length === 0) {
             console.log('no clips exist for channel: ' + channelName);
             if (channel.length === 1) {
@@ -413,9 +437,6 @@ $(document).ready(function () {
             }
 
         }
-
-        // Sort array by created_at
-        clips_json.data.sort(sortByProperty('created_at'));
 
         // Grab a random clip index anywhere from 0 to the clips_json.data.length.
         if (shuffle === 'true') {
@@ -524,7 +545,7 @@ $(document).ready(function () {
                     if (detailsText.includes("{game}")) {
                         // Show game title if it exists
                         if (clips_json.data[randomClip]['game_id']) {
-                            let game = game_title(clips_json.data[randomClip]['game_id']);
+                            let game = game_by_id(clips_json.data[randomClip]['game_id']);
                             detailsText = detailsText.replace("{game}", game.data[0]['name']);
                         } else {
                             detailsText = detailsText.replace("{game}", "?");

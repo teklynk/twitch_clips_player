@@ -130,6 +130,10 @@
         <small class="text-muted range-slider-value"></small>
         <small class="text-muted range-slider-value">Day(s)</small>
     </div>
+    <div class="form-label-group mb-4">
+        <label for="gameTitle">Filter clips by Game Title or Category</label>
+        <input type="text" id="gameTitle" class="form-control" value="" placeholder="Retro" size="50">
+    </div>
     <div class="form-check mb-2">
         <input class="form-check-input" type="checkbox" value="" id="shuffle">
         <label class="form-check-label" for="shuffle">
@@ -323,6 +327,7 @@ video {
         document.getElementById("customMsg").value = localStorage.getItem("TwitchClipsCustomMsg");
         document.getElementById("command").value = localStorage.getItem("TwitchClipsCommand");
         document.getElementById("customText").value = localStorage.getItem("TwitchClipsCustomText");
+        document.getElementById("gameTitle").value = localStorage.getItem("TwitchClipsGameTitle");
 
         if (document.getElementById("command").value !== "") {
             document.getElementById("modOnly").removeAttribute('disabled');
@@ -406,6 +411,7 @@ video {
         command = command.replace('!', '');
         let customText = document.getElementById("customText").value.trim();
         let detailsText = document.getElementById("detailsText").value.trim();
+        let gameTitle = document.getElementById("gameTitle").value.trim();
 
         localStorage.setItem("TwitchClipsMainAccount", mainChannel.toLowerCase().trim());
         localStorage.setItem("TwitchClipsRef", ref.trim());
@@ -413,6 +419,7 @@ video {
         localStorage.setItem("TwitchClipsCustomMsg", customMsg.trim());
         localStorage.setItem("TwitchClipsCommand", command.trim());
         localStorage.setItem("TwitchClipsCustomText", customText.trim());
+        localStorage.setItem("TwitchClipsGameTitle", gameTitle.trim());
 
         // reload the textarea with the cleaned up channel list (spaces removed).
         document.getElementById("channel").value = localStorage.getItem("TwitchClipsChannel");
@@ -458,7 +465,7 @@ video {
 
         // build overlay url
         let srcURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
-        let fullUrl = srcURL + "clips.html?channel=" + channel + "&limit=" + limit + "&dateRange=" + dateRange + "&themeOption=" + themeOption + "&shuffle=" + shuffle + "&showText=" + showText + "&customMsg=" + encodeURIComponent(customMsg) + "&showDetails=" + showDetails + "&detailsText=" + encodeURIComponent(detailsText) + "&mainAccount=" + mainChannel + "&so=" + so + "&command=" + command + "&modOnly=" + modOnly + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&streamerOnly=" + streamerOnly + "&ref=" + btoa(ref);
+        let fullUrl = srcURL + "clips.html?channel=" + channel + "&limit=" + limit + "&dateRange=" + dateRange + "&themeOption=" + themeOption + "&shuffle=" + shuffle + "&showText=" + showText + "&customMsg=" + encodeURIComponent(customMsg) + "&showDetails=" + showDetails + "&detailsText=" + encodeURIComponent(detailsText) + "&mainAccount=" + mainChannel + "&so=" + so + "&command=" + command + "&modOnly=" + modOnly + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&streamerOnly=" + streamerOnly + "&gameTitle=" + gameTitle + "&ref=" + btoa(ref);
         fullUrl = fullUrl.replace("index.htmlclips.html", "clips.html");
         document.getElementById("overlaylink").classList.remove("hide");
         document.getElementById("overlaylink").innerHTML = "<p>Add this link as a browser source in OBS.<br>" +

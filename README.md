@@ -66,6 +66,8 @@ In OBS, set the browser source to: "Shutdown source when not visible" and "Refre
 
 **themeOption=integer** Various pre-made css themes top choose from.
 
+**gameTitle=string** Filter clips by Game Title. Only play clips from a specific game or category. This must be the exact title that Twitch uses. IE: Fortnite, Retro, DOOM II: Hell on Earth
+
 ## Custom CSS
 
 
