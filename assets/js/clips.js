@@ -427,15 +427,11 @@ $(document).ready(function () {
 
         // If no user clips exist, then skip to the next channel
         if (!clips_json.data || typeof clips_json.data === 'undefined' || clips_json.data.length === 0) {
-            console.log('no clips exist for channel: ' + channelName);
-            if (channel.length === 1) {
-                alert('No clips found for ' + channelName + ' :( Check date range option and the number of clips to pull from.');
-                return false;
-            } else {
-                nextClip(true); // skip clip
-                return false;
-            }
-
+            console.log('channel: ' + channel);
+            console.log('no clips exist for channel: ' + channel);
+            
+            nextClip(true); // skip clip
+            return false;
         }
 
         // Grab a random clip index anywhere from 0 to the clips_json.data.length.
