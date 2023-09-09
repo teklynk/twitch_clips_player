@@ -34,6 +34,7 @@ $(document).ready(function () {
     let showDetails = getUrlParameter('showDetails').trim();
     let so = getUrlParameter('so').trim();
     let ref = getUrlParameter('ref').trim();
+    let clientId = getUrlParameter('clientId').trim();
     let customMsg = getUrlParameter('customMsg').trim();
     let customText = getUrlParameter('customText').trim();
     let detailsText = getUrlParameter('detailsText').trim();
@@ -165,7 +166,7 @@ $(document).ready(function () {
 
         function following_pagination(cursor) {
             let $jsonParse = JSON.parse($.getJSON({
-                'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&after=" + cursor,
+                'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&ref=" + ref + "&clientId=" + clientId,
                 'async': false
             }).responseText);
 
@@ -175,13 +176,13 @@ $(document).ready(function () {
         // Globals: following, followCount
         function concatFollowing(jsonData) {
             $.each(jsonData, function (i, val) {
-                following += val['to_login'] + ",";
+                following += val['broadcaster_login'] + ",";
                 followCount++;
             });
         }
 
         // Json following data - page 1
-        let following_json = following_pagination('');
+        let following_json = following_pagination();
 
         concatFollowing(following_json.data);
 
