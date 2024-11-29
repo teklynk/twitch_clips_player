@@ -30,6 +30,7 @@ $(document).ready(function () {
     let streamerOnly = getUrlParameter('streamerOnly').trim();
     let delay = getUrlParameter('delay').trim();
     let shuffle = getUrlParameter('shuffle').trim();
+    let preferFeatured = getUrlParameter('preferFeatured').trim();
     let showText = getUrlParameter('showText').trim();
     let showDetails = getUrlParameter('showDetails').trim();
     let so = getUrlParameter('so').trim();
@@ -61,6 +62,10 @@ $(document).ready(function () {
 
     if (!shuffle) {
         shuffle = "false"; //default
+    }
+
+    if (!preferFeatured) {
+        preferFeatured = false; //default
     }
 
     if (!showFollowing) {
@@ -405,12 +410,12 @@ $(document).ready(function () {
         // Json data - Ajax calls
         if (streamerOnly === 'true') {
             clips_json = JSON.parse($.getJSON({
-                'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&creator_name=" + channelName + "&limit=" + limit + "" + dateRange,
+                'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&creator_name=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "" + dateRange,
                 'async': false
             }).responseText);
         } else {
             clips_json = JSON.parse($.getJSON({
-                'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&limit=" + limit + "" + dateRange,
+                'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "" + dateRange,
                 'async': false
             }).responseText);
         }

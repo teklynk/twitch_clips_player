@@ -36,6 +36,8 @@ In OBS, set the browser source to: "Shutdown source when not visible" and "Refre
 
 **shuffle=true/false**  Play clips in a random order.
 
+**preferFeatured=true/false**  Only pull featured clips.
+
 **showText=true/false**  Enables the channel name on top of the video.
 
 **showDetails=true/false**  Enables the clips details panel on overlay.
