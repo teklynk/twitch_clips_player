@@ -443,8 +443,8 @@ $(document).ready(function () {
 
         // If no user clips exist, then skip to the next channel
         if (!clips_json.data || typeof clips_json.data === 'undefined' || clips_json.data.length === 0) {
-            console.log('channel: ' + channel);
-            console.log('no clips exist for channel: ' + channel);
+            //console.log('channel: ' + channel);
+            //console.log('no clips exist for channel: ' + channel);
             
             nextClip(true); // skip clip
             return false;
