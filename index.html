@@ -102,11 +102,18 @@
         <textarea id="channel" rows="3" class="form-control" style="min-height: 100px;"
                placeholder="MrCoolStreamer,GamerGamingGames,StreamBean,AnotherStreamer,WillStreamForBeer"></textarea>
     </div>
-    <div class="form-check mb-4">
+    <div class="form-check mb-2">
         <input class="form-check-input" type="checkbox" value="" id="showFollowing">
         <label class="form-check-label" for="showFollowing">
             Show clips from channels that you follow <small class="text-warning">* Requires Twitch Access Token</small>
         </label>
+    </div>
+    <div class="form-label-group mb-2 hide" id="showExclude"> 
+        <label for="exclude">Exclude channels
+            <small class="text-warning">* Comma separated list of channels</small>
+        </label>
+        <textarea id="exclude" rows="3" class="form-control" style="min-height: 100px;"
+               placeholder="MrCoolStreamer,GamerGamingGames,StreamBean,AnotherStreamer,WillStreamForBeer"></textarea>
     </div>
     <div class="form-check mb-4">
         <input class="form-check-input" type="checkbox" value="" id="streamerOnly">
@@ -335,6 +342,7 @@ video {
         document.getElementById("mainChannel").value = localStorage.getItem("TwitchClipsMainAccount");
         document.getElementById("ref").value = localStorage.getItem("TwitchClipsRef");
         document.getElementById("channel").value = localStorage.getItem("TwitchClipsChannel");
+        document.getElementById("exclude").value = localStorage.getItem("TwitchClipsExclude");
         document.getElementById("customMsg").value = localStorage.getItem("TwitchClipsCustomMsg");
         document.getElementById("command").value = localStorage.getItem("TwitchClipsCommand");
         document.getElementById("customText").value = localStorage.getItem("TwitchClipsCustomText");
@@ -382,6 +390,11 @@ video {
         document.getElementById("showDetailsText").classList.toggle('hide');
     }, false);
 
+    // show custom details input
+    document.getElementById("showFollowing").addEventListener("click", function (e) {
+        document.getElementById("showExclude").classList.toggle('hide');
+    }, false);
+
     // check if command input has a value
     document.getElementById("command").addEventListener("keyup", function (e) {
         if (document.getElementById("command").value !== "") {
@@ -406,6 +419,8 @@ video {
         let channel = document.getElementById("channel").value.trim();
         channel = channel.replace(/\s+/g, ""); // remove white space
         let mainChannel = document.getElementById("mainChannel").value.trim();
+        let exclude = document.getElementById("exclude").value.trim();
+        exclude = exclude.replace(/\s+/g, ""); // remove white space
         let ref = document.getElementById("ref").value.trim();
         let limit = document.getElementById("limit").value;
         let dateRange = document.getElementById("dateRange").value;
@@ -430,6 +445,7 @@ video {
         localStorage.setItem("TwitchClipsRef", ref.trim());
         localStorage.setItem("TwitchClipsClientId", clientId.trim());
         localStorage.setItem("TwitchClipsChannel", channel.toLowerCase().trim());
+        localStorage.setItem("TwitchClipsExclude", exclude.toLowerCase().trim());
         localStorage.setItem("TwitchClipsCustomMsg", customMsg.trim());
         localStorage.setItem("TwitchClipsCommand", command.trim());
         localStorage.setItem("TwitchClipsCustomText", customText.trim());
@@ -486,7 +502,7 @@ video {
 
         // build overlay url
         let srcURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
-        let fullUrl = srcURL + "clips.html?channel=" + channel + "&limit=" + limit + "&dateRange=" + dateRange + "&themeOption=" + themeOption + "&shuffle=" + shuffle + "&preferFeatured=" + preferFeatured + "&showText=" + showText + "&customMsg=" + encodeURIComponent(customMsg) + "&showDetails=" + showDetails + "&detailsText=" + encodeURIComponent(detailsText) + "&mainAccount=" + mainChannel + "&so=" + so + "&command=" + command + "&modOnly=" + modOnly + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&streamerOnly=" + streamerOnly + "&gameTitle=" + gameTitle + "&ref=" + btoa(ref) + "&clientId=" + btoa(clientId);
+        let fullUrl = srcURL + "clips.html?channel=" + channel + "&exclude=" + exclude + "&limit=" + limit + "&dateRange=" + dateRange + "&themeOption=" + themeOption + "&shuffle=" + shuffle + "&preferFeatured=" + preferFeatured + "&showText=" + showText + "&customMsg=" + encodeURIComponent(customMsg) + "&showDetails=" + showDetails + "&detailsText=" + encodeURIComponent(detailsText) + "&mainAccount=" + mainChannel + "&so=" + so + "&command=" + command + "&modOnly=" + modOnly + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&streamerOnly=" + streamerOnly + "&gameTitle=" + gameTitle + "&ref=" + btoa(ref) + "&clientId=" + btoa(clientId);
         fullUrl = fullUrl.replace("index.htmlclips.html", "clips.html");
         document.getElementById("overlaylink").classList.remove("hide");
         document.getElementById("overlaylink").innerHTML = "<p>Add this link as a browser source in OBS.<br>" +

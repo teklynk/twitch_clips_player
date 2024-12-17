@@ -42,6 +42,7 @@ $(document).ready(function () {
     let command = getUrlParameter('command').trim();
     let modOnly = getUrlParameter('modOnly').trim();
     let showFollowing = getUrlParameter('showFollowing').trim();
+    let exclude = getUrlParameter('exclude').trim();
     let themeOption = getUrlParameter('themeOption').trim();
     let gameTitle = getUrlParameter('gameTitle').trim();
     let randomClip = 0; // Default random clip index
@@ -70,6 +71,10 @@ $(document).ready(function () {
 
     if (!showFollowing) {
         showFollowing = "false"; //default
+    }
+
+    if (!exclude) {
+        exclude = ""; //default
     }
 
     if (!so) {
@@ -233,11 +238,16 @@ $(document).ready(function () {
         // Remove the last comma from string
         following = following.replace(/,\s*$/, "");
 
-        // Set channel to equal following list/string
-        channel = following.split(',').map(element => element.trim());
+        // Exclude channels from following
+        let channelListArray = following.split(',');
+        let excludeArray = exclude.split(',');
+        channelListArray = channelListArray.filter(item => !excludeArray.includes(item));
+        followList = channelListArray.join(',');
 
-        // Print following count and following channel list for debugging
-        //console.log('following (' + followCount + '):\n' + following);
+        //console.log(followList);
+
+        // Set channel to equal following list/string
+        channel = followList.split(',').map(element => element.trim());
 
     } else {
 
