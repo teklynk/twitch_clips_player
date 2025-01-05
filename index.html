@@ -458,10 +458,6 @@ video {
             customMsg = '';
         }
 
-        if (!showFollowing) {
-            clientId = '';
-        }
-
         if (showFollowing) {
             channel = '';
         }
@@ -498,6 +494,17 @@ video {
 
         if (showDetails && !detailsText) {
              detailsText = "{title}\nWhile streaming {game}\nClipped by {creator_name} {created_at}";
+        }
+
+        console.log(so);
+
+        if (showFollowing === false && so === false) {
+            clientId = '';
+            ref = '';
+        }
+
+        if (showFollowing === false) {
+            exclude = '';
         }
 
         // build overlay url
