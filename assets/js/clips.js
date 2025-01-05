@@ -125,7 +125,7 @@ $(document).ready(function () {
     }
 
     // If Auth token is set, then connect to chat using oauth, else connect anonymously.
-    if (so === 'true' && ref > '' && clientId > '') {
+    if (so === 'true' && ref > '') {
         // Connect to twitch - needs auth token
         client = new tmi.Client({
             options: {
@@ -316,7 +316,7 @@ $(document).ready(function () {
                     }
                 }
 
-                if (so === 'true' && ref > '' && clientId > '') {
+                if (so === 'true' && ref > '') {
                     // wait 1 second for TMI to connect to Twitch before loading clip and doing a shoutout
                     setTimeout(function () {
                         // Play a clip
@@ -339,7 +339,7 @@ $(document).ready(function () {
     } else {
 
         // Plays clips when scene is active
-        if (so === 'true' && ref > '' && clientId > '') {
+        if (so === 'true' && ref > '') {
             // wait 1 second for TMI to connect to Twitch before loading clip and doing a shoutout
             setTimeout(function () {
                 // Play a clip
@@ -600,7 +600,7 @@ $(document).ready(function () {
         curr_clip.addEventListener("ended", nextClip);
 
         // Do a shout-out for each clip
-        if (so === 'true' && ref > '' && clientId > '') {
+        if (so === 'true' && ref > '') {
             let so_json = JSON.parse($.getJSON({
                 'url': "https://twitchapi.teklynk.com/getuserstatus.php?channel=" + channelName + "",
                 'async': false

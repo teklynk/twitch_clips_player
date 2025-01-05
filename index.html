@@ -496,8 +496,6 @@ video {
              detailsText = "{title}\nWhile streaming {game}\nClipped by {creator_name} {created_at}";
         }
 
-        console.log(so);
-
         if (showFollowing === false && so === false) {
             clientId = '';
             ref = '';
@@ -505,6 +503,11 @@ video {
 
         if (showFollowing === false) {
             exclude = '';
+            clientId = '';
+        }
+
+        if (so === false) {
+            customMsg = '';
         }
 
         // build overlay url
