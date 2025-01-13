@@ -456,6 +456,7 @@ $(document).ready(function () {
                     console.error('LocalStorage Quota Exceeded. Please free up some space by deleting unnecessary data.');
                     // automatically clear localstorage if it exceeds the quota
                     localStorage.clear();
+                    console.log('Cleared localStorage');
                     // set localstorage item
                     localStorage.setItem('clips_datetime_' + channelName, currentTime);
                 } else {
@@ -503,6 +504,7 @@ $(document).ready(function () {
                     console.error('LocalStorage Quota Exceeded. Please free up some space by deleting unnecessary data.');
                     // automatically clear localstorage if it exceeds the quota
                     localStorage.clear();
+                    console.log('Cleared localStorage');
                     // set localstorage items
                     localStorage.setItem(channelName, JSON.stringify(clips_json));
                     localStorage.setItem('clips_datetime_' + channelName, currentTime);
