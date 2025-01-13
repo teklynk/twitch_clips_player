@@ -471,9 +471,9 @@ $(document).ready(function () {
         if (storedTime) {
             let storedTimeMs = parseInt(storedTime, 10);
             let hoursDifference = (currentTime - storedTimeMs) / (1000 * 60 * 60);
-            // check if localstorage is 24 hours old
-            if (hoursDifference >= 24) {
-                console.log("24 hours has passed since last pull from api. Updating...");
+            // check if localstorage is 10 days old
+            if (hoursDifference >= 240) {
+                console.log("10 days has passed since last pull from api. Updating...");
                 storedTime_expired = true;
             } else {
                 storedTime_expired = false;
