@@ -449,7 +449,19 @@ $(document).ready(function () {
 
         // stored api pull date time to localstorage
         if (localStorage.getItem('clips_datetime_' + channelName) === null) {
-            localStorage.setItem('clips_datetime_' + channelName, currentTime);
+            try {
+                localStorage.setItem('clips_datetime_' + channelName, currentTime);
+            } catch (e) {
+                if (e.name === 'QuotaExceededError') {
+                    console.error('LocalStorage Quota Exceeded. Please free up some space by deleting unnecessary data.');
+                    // automatically clear localstorage if it exceeds the quota
+                    localStorage.clear();
+                    // set localstorage item
+                    localStorage.setItem('clips_datetime_' + channelName, currentTime);
+                } else {
+                    console.error('An error occurred:', e);
+                }
+            }
         }
 
         let storedTime = localStorage.getItem('clips_datetime_' + channelName);
@@ -482,10 +494,22 @@ $(document).ready(function () {
                 }).responseText);
             }
 
-            console.log('Set ' + channelName + ' in localStorage');
-            localStorage.setItem(channelName, JSON.stringify(clips_json));
-            localStorage.setItem('clips_datetime_' + channelName, currentTime);
-
+            try {
+                console.log('Set ' + channelName + ' in localStorage');
+                localStorage.setItem(channelName, JSON.stringify(clips_json));
+                localStorage.setItem('clips_datetime_' + channelName, currentTime);
+            } catch (e) {
+                if (e.name === 'QuotaExceededError') {
+                    console.error('LocalStorage Quota Exceeded. Please free up some space by deleting unnecessary data.');
+                    // automatically clear localstorage if it exceeds the quota
+                    localStorage.clear();
+                    // set localstorage items
+                    localStorage.setItem(channelName, JSON.stringify(clips_json));
+                    localStorage.setItem('clips_datetime_' + channelName, currentTime);
+                } else {
+                    console.error('An error occurred:', e);
+                }
+            }
         } else {
             // Retrieve the object from storage
             console.log('Pulling ' + channelName + ' from localStorage');
