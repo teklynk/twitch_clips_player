@@ -1,4 +1,30 @@
 $(document).ready(function () {
+
+    // Function to check and update the URL in localStorage
+    function checkAndUpdateUrl() {
+        // Get the current URL
+        const currentUrl = window.location.href;
+
+        // Retrieve the stored URL from localStorage
+        const storedUrl = localStorage.getItem("storedUrl");
+
+        if (storedUrl) {
+            if (storedUrl !== currentUrl) {
+                console.log("URL has changed. Updating localStorage...");
+                localStorage.clear();
+                localStorage.setItem("storedUrl", currentUrl);
+            }
+        } else {
+            // If no URL is stored, initialize with the current URL
+            console.log("No URL stored. Initializing...");
+            localStorage.clear();
+            localStorage.setItem("storedUrl", currentUrl);
+        }
+    }
+
+    // Call the function
+    checkAndUpdateUrl();
+
     function getUrlParameter(name) {
         name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
         let regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
@@ -105,7 +131,7 @@ $(document).ready(function () {
         // format dates
         startDate = startDate.toISOString().slice(0, 10);
         todayDate = todayDate.toISOString().slice(0, 10);
-        
+
         // set the daterange url parameter for the api endpoint
         dateRange = "&start_date=" + startDate + "T00:00:00Z&end_date=" + todayDate + "T00:00:00Z";
     }
@@ -132,7 +158,7 @@ $(document).ready(function () {
                 debug: true,
                 skipUpdatingEmotesets: true
             },
-            connection: {reconnect: true},
+            connection: { reconnect: true },
             identity: {
                 username: mainAccount,
                 password: 'oauth:' + atob(ref)
@@ -146,7 +172,7 @@ $(document).ready(function () {
                 debug: true,
                 skipUpdatingEmotesets: true
             },
-            connection: {reconnect: true},
+            connection: { reconnect: true },
             channels: [mainAccount]
         });
     }
@@ -415,37 +441,72 @@ $(document).ready(function () {
     // Get and play the clip
     function loadClip(channelName) {
 
+        let storedTime_expired = false;
+
         let clips_json = "";
 
+        let currentTime = Date.now(); // Get the current timestamp
+
+        // stored api pull date time to localstorage
+        if (localStorage.getItem('clips_datetime_' + channelName) === null) {
+            localStorage.setItem('clips_datetime_' + channelName, currentTime);
+        }
+
+        let storedTime = localStorage.getItem('clips_datetime_' + channelName);
+
+        // compare localstorage date/time with current date/time
+        if (storedTime) {
+            let storedTimeMs = parseInt(storedTime, 10);
+            let hoursDifference = (currentTime - storedTimeMs) / (1000 * 60 * 60);
+            // check if localstorage is 24 hours old
+            if (hoursDifference >= 24) {
+                console.log("24 hours has passed since last pull from api. Updating...");
+                storedTime_expired = true;
+            } else {
+                storedTime_expired = false;
+            }
+        }
+
         // Json data - Ajax calls
-        if (streamerOnly === 'true') {
-            clips_json = JSON.parse($.getJSON({
-                'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&creator_name=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "" + dateRange,
-                'async': false
-            }).responseText);
+        // if localstorage does not exist or datetime of last api pull has expired
+        if (localStorage.getItem(channelName) === null || storedTime_expired) {
+            if (streamerOnly === 'true') {
+                clips_json = JSON.parse($.getJSON({
+                    'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&creator_name=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "" + dateRange,
+                    'async': false
+                }).responseText);
+            } else {
+                clips_json = JSON.parse($.getJSON({
+                    'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "" + dateRange,
+                    'async': false
+                }).responseText);
+            }
+
+            console.log('Set ' + channelName + ' in localStorage');
+            localStorage.setItem(channelName, JSON.stringify(clips_json));
+            localStorage.setItem('clips_datetime_' + channelName, currentTime);
+
         } else {
-            clips_json = JSON.parse($.getJSON({
-                'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "" + dateRange,
-                'async': false
-            }).responseText);
+            // Retrieve the object from storage
+            console.log('Pulling ' + channelName + ' from localStorage');
+            clips_json = JSON.parse(localStorage.getItem(channelName));
         }
 
         // Sort array by created_at
         clips_json.data.sort(sortByProperty('created_at'));
 
-
         // If gameTitle is set. Filter the clips_json based on game_id
         if (gameTitle) {
             let get_game_id = game_by_title(gameTitle);
             let clips_data = clips_json.data.filter(element => element.game_id === get_game_id.data[0]['id']);
-            clips_json = {'data': clips_data};
+            clips_json = { 'data': clips_data };
         }
 
         // If no user clips exist, then skip to the next channel
         if (!clips_json.data || typeof clips_json.data === 'undefined' || clips_json.data.length === 0) {
             //console.log('channel: ' + channel);
             //console.log('no clips exist for channel: ' + channel);
-            
+
             nextClip(true); // skip clip
             return false;
         }
@@ -463,7 +524,7 @@ $(document).ready(function () {
                 playCount = 1;
                 randomClip = playCount - 1;
 
-            // If only one channel is being used with the clips player
+                // If only one channel is being used with the clips player
             } else if (channel.length === 1) {
 
                 playCount++;
@@ -471,7 +532,7 @@ $(document).ready(function () {
                 if (playCount >= 1) {
                     randomClip = playCount - 1;
                 }
-                
+
             } else {
                 // Default
                 randomClip = 0;
@@ -507,7 +568,7 @@ $(document).ready(function () {
         // set &delay=1 in the url if you want an intentional delay/gap between clips.
         if (parseInt(delay) === 0) {
             // higher resolution thumbnail image for poster. Removes -480x272 from thumbnail url.
-            poster = clips_json.data[randomClip]['thumbnail_url'].replace('-480x272','');
+            poster = clips_json.data[randomClip]['thumbnail_url'].replace('-480x272', '');
             curr_clip.poster = poster;
 
         }
@@ -543,7 +604,7 @@ $(document).ready(function () {
                     // custom clip details text
                     detailsText = getUrlParameter('detailsText').trim();
                     detailsText = detailsText.replace("{channel}", clips_json.data[randomClip]['broadcaster_name']);
-                    
+
                     // Show clip title if it exists
                     if (detailsText.includes("{title}")) {
                         if (clips_json.data[randomClip]['title']) {
@@ -568,7 +629,7 @@ $(document).ready(function () {
                     if (detailsText.includes("{created_at}")) {
                         detailsText = detailsText.replace("{created_at}", moment(clips_json.data[randomClip]['created_at']).format("MMMM D, YYYY"));
                     }
-                    
+
                     if (detailsText.includes("{creator_name}")) {
                         detailsText = detailsText.replace("{creator_name}", clips_json.data[randomClip]['creator_name']);
                     }
@@ -577,15 +638,15 @@ $(document).ready(function () {
 
                     // split on line breaks and create an array
                     let separateLines = detailsText.split(/\r?\n|\r|\n/g);
-           
+
                     // interate over separateLines array
                     separateLines.forEach(lineBreaks);
 
                     // generate html for each linebreak/item in array
                     function lineBreaks(item, index) {
-                        dText += "<div class='details-text item-" + index + "'>" + item + "</div>"; 
+                        dText += "<div class='details-text item-" + index + "'>" + item + "</div>";
                     }
-                    
+
                     $("<div id='details-container'>" + dText + "</div>").appendTo('#container');
                 }
             }, 700); // wait time
