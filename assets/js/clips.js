@@ -457,8 +457,8 @@ $(document).ready(function () {
                     // automatically clear localstorage if it exceeds the quota
                     localStorage.clear();
                     console.log('Cleared localStorage');
-                    // set localstorage item
-                    localStorage.setItem('clips_datetime_' + channelName, currentTime);
+                    nextClip(true);
+                    return false;
                 } else {
                     console.error('An error occurred:', e);
                 }
@@ -505,9 +505,8 @@ $(document).ready(function () {
                     // automatically clear localstorage if it exceeds the quota
                     localStorage.clear();
                     console.log('Cleared localStorage');
-                    // set localstorage items
-                    localStorage.setItem(channelName, JSON.stringify(clips_json));
-                    localStorage.setItem('clips_datetime_' + channelName, currentTime);
+                    nextClip(true);
+                    return false;
                 } else {
                     console.error('An error occurred:', e);
                 }
@@ -532,7 +531,6 @@ $(document).ready(function () {
         if (!clips_json.data || typeof clips_json.data === 'undefined' || clips_json.data.length === 0) {
             //console.log('channel: ' + channel);
             //console.log('no clips exist for channel: ' + channel);
-
             nextClip(true); // skip clip
             return false;
         }
