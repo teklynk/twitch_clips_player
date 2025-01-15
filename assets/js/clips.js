@@ -29,10 +29,9 @@ $(document).ready(function () {
         // Retrieve the stored URL from localStorage
         const storedUrl = localStorage.getItem("storedUrl");
 
-        // Parse the query parameters into an object
-        const storedParamsArray = parseQueryParamsToArray(storedUrl);
-
         if (storedUrl) {
+            // Parse the query parameters into an object
+            const storedParamsArray = parseQueryParamsToArray(storedUrl);
             if (storedUrl !== currentUrl) {
                 if (storedParamsArray['preferFeatured'] !== getUrlParameter('preferFeatured') || storedParamsArray['streamerOnly'] !== getUrlParameter('streamerOnly') || storedParamsArray['dateRange'] !== getUrlParameter('dateRange')) {
                     console.log("URL has changed. Updating localStorage...");
