@@ -1,5 +1,23 @@
 $(document).ready(function () {
 
+    // Function to randomly select a server and store it in localStorage
+    function setRandomServer() {
+        // set the api gateway servers 
+        const servers = ["https://twitchapi.teklynk.com","https://twitchapi.teklynk.dev"];
+        
+        // Randomly select a server
+        const randomIndex = Math.floor(Math.random() * servers.length);
+        const selectedServer = servers[randomIndex];
+        
+        // Store the selected server in localStorage
+        localStorage.setItem('randomServer', selectedServer);
+
+        return localStorage.getItem('randomServer');
+    }
+
+    // Call the function
+    const apiServer = setRandomServer();
+
     function getUrlParameter(name) {
         name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
         let regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
@@ -200,7 +218,7 @@ $(document).ready(function () {
     // Get game details function
     function game_by_id(game_id) {
         let $jsonParse = JSON.parse($.getJSON({
-            'url': "https://twitchapi.teklynk.com/getgame.php?id=" + game_id,
+            'url': apiServer + "/getgame.php?id=" + game_id,
             'async': false
         }).responseText);
 
@@ -209,7 +227,7 @@ $(document).ready(function () {
 
     function game_by_title(game_title) {
         let $game_by_title_jsonParse = JSON.parse($.getJSON({
-            'url': "https://twitchapi.teklynk.com/getgame.php?name=" + game_title,
+            'url':  apiServer + "/getgame.php?name=" + game_title,
             'async': false
         }).responseText);
 
@@ -220,7 +238,7 @@ $(document).ready(function () {
 
         function following_pagination(cursor) {
             let $jsonParse = JSON.parse($.getJSON({
-                'url': "https://twitchapi.teklynk.com/getuserfollowing.php?channel=" + mainAccount + "&limit=100&ref=" + ref + "&clientId=" + clientId,
+                'url':  apiServer + "/getuserfollowing.php?channel=" + mainAccount + "&limit=100&ref=" + ref + "&clientId=" + clientId,
                 'async': false
             }).responseText);
 
@@ -504,12 +522,12 @@ $(document).ready(function () {
             try {
                 if (streamerOnly === 'true') {
                     clips_json = JSON.parse($.getJSON({
-                        'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&creator_name=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "" + dateRange,
+                        'url':  apiServer + "/getuserclips.php?channel=" + channelName + "&creator_name=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "" + dateRange,
                         'async': false
                     }).responseText);
                 } else {
                     clips_json = JSON.parse($.getJSON({
-                        'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "" + dateRange,
+                        'url':  apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "" + dateRange,
                         'async': false
                     }).responseText);
                 }
@@ -707,7 +725,7 @@ $(document).ready(function () {
         // Do a shout-out for each clip
         if (so === 'true' && ref > '') {
             let so_json = JSON.parse($.getJSON({
-                'url': "https://twitchapi.teklynk.com/getuserstatus.php?channel=" + channelName + "",
+                'url':  apiServer + "/getuserstatus.php?channel=" + channelName + "",
                 'async': false
             }).responseText);
 
