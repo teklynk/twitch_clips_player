@@ -471,6 +471,33 @@ $(document).ready(function () {
 
     });
 
+    async function preloadNextClip(channelName) {
+        if (localStorage.getItem(channelName) === null && localStorage.getItem('clips_datetime_' + channelName) === null) {
+            console.log('Preloading next clip: ' + channelName);
+            let currentTime = Date.now(); // Get the current timestamp
+            
+            try {
+                // Construct the URL for the request
+                const url = streamerOnly === 'true' 
+                    ? `${apiServer}/getuserclips.php?channel=${channelName}&creator_name=${channelName}&prefer_featured=${preferFeatured}&limit=${limit}${dateRange}`
+                    : `${apiServer}/getuserclips.php?channel=${channelName}&prefer_featured=${preferFeatured}&limit=${limit}${dateRange}`;
+                
+                // Perform an asynchronous fetch request
+                const response = await fetch(url);
+                const clips_json = await response.json();  // Parse the JSON response
+        
+                if (clips_json.data.length > 0) {
+                    console.log('Set ' + channelName + ' in localStorage');
+                    // Store the data in localStorage
+                    localStorage.setItem(channelName, JSON.stringify(clips_json));
+                    localStorage.setItem('clips_datetime_' + channelName, currentTime);
+                }
+            } catch (error) {
+                console.error('Error while preloading clip:', error);
+            }
+        }
+    }
+
     // Get and play the clip
     function loadClip(channelName) {
 
@@ -481,7 +508,7 @@ $(document).ready(function () {
         let currentTime = Date.now(); // Get the current timestamp
 
         // stored api pull date time to localstorage
-        if (localStorage.getItem('clips_datetime_' + channelName) === null) {
+        if (localStorage.getItem(channelName) === null && localStorage.getItem('clips_datetime_' + channelName) === null) {
             try {
                 localStorage.setItem('clips_datetime_' + channelName, currentTime);
             } catch (e) {
@@ -775,6 +802,7 @@ $(document).ready(function () {
             loadClip(channel[clip_index]);
             curr_clip.play();
         } else {
+            preloadNextClip(channel[clip_index + 1]);
             console.log("Delay: " + parseInt(delay) * 1000 / 2);
             // Adjust the delay in the url, else delay=0
             setTimeout(function () {
