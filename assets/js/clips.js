@@ -8,11 +8,8 @@ $(document).ready(function () {
         // Randomly select a server
         const randomIndex = Math.floor(Math.random() * servers.length);
         const selectedServer = servers[randomIndex];
-        
-        // Store the selected server in localStorage
-        localStorage.setItem('randomServer', selectedServer);
 
-        return localStorage.getItem('randomServer');
+        return selectedServer;
     }
 
     // Call the function
