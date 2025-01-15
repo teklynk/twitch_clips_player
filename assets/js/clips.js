@@ -1,5 +1,26 @@
 $(document).ready(function () {
 
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        let regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        let results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+    // Function to parse a URL's query parameters into an array of key-value pairs
+    function parseQueryParamsToArray(url) {
+        const params = {};
+        const queryString = url.split('?')[1];
+        if (!queryString) return params;
+    
+        const pairs = queryString.split('&');
+        for (const pair of pairs) {
+            const [key, value] = pair.split('=');
+            params[decodeURIComponent(key)] = decodeURIComponent(value || '');
+        }
+        return params;
+    }
+
     // Function to check and update the URL in localStorage
     function checkAndUpdateUrl() {
         // Get the current URL
@@ -8,11 +29,16 @@ $(document).ready(function () {
         // Retrieve the stored URL from localStorage
         const storedUrl = localStorage.getItem("storedUrl");
 
+        // Parse the query parameters into an object
+        const storedParamsArray = parseQueryParamsToArray(storedUrl);
+
         if (storedUrl) {
             if (storedUrl !== currentUrl) {
-                console.log("URL has changed. Updating localStorage...");
-                localStorage.clear();
-                localStorage.setItem("storedUrl", currentUrl);
+                if (storedParamsArray['preferFeatured'] !== getUrlParameter('preferFeatured') || storedParamsArray['streamerOnly'] !== getUrlParameter('streamerOnly') || storedParamsArray['dateRange'] !== getUrlParameter('dateRange')) {
+                    console.log("URL has changed. Updating localStorage...");
+                    localStorage.clear();
+                    localStorage.setItem("storedUrl", currentUrl);
+                }
             }
         } else {
             // If no URL is stored, initialize with the current URL
@@ -24,13 +50,6 @@ $(document).ready(function () {
 
     // Call the function
     checkAndUpdateUrl();
-
-    function getUrlParameter(name) {
-        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-        let regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-        let results = regex.exec(location.search);
-        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-    }
 
     // Sort function
     function sortByProperty(property) {
@@ -483,22 +502,24 @@ $(document).ready(function () {
         // Json data - Ajax calls
         // if localstorage does not exist or datetime of last api pull has expired
         if (localStorage.getItem(channelName) === null || storedTime_expired) {
-            if (streamerOnly === 'true') {
-                clips_json = JSON.parse($.getJSON({
-                    'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&creator_name=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "" + dateRange,
-                    'async': false
-                }).responseText);
-            } else {
-                clips_json = JSON.parse($.getJSON({
-                    'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "" + dateRange,
-                    'async': false
-                }).responseText);
-            }
-
             try {
-                console.log('Set ' + channelName + ' in localStorage');
-                localStorage.setItem(channelName, JSON.stringify(clips_json));
-                localStorage.setItem('clips_datetime_' + channelName, currentTime);
+                if (streamerOnly === 'true') {
+                    clips_json = JSON.parse($.getJSON({
+                        'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&creator_name=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "" + dateRange,
+                        'async': false
+                    }).responseText);
+                } else {
+                    clips_json = JSON.parse($.getJSON({
+                        'url': "https://twitchapi.teklynk.com/getuserclips.php?channel=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "" + dateRange,
+                        'async': false
+                    }).responseText);
+                }
+
+                if (clips_json.data.length > 0) {
+                    console.log('Set ' + channelName + ' in localStorage');
+                    localStorage.setItem(channelName, JSON.stringify(clips_json));
+                    localStorage.setItem('clips_datetime_' + channelName, currentTime);
+                }
             } catch (e) {
                 if (e.name === 'QuotaExceededError') {
                     console.error('LocalStorage Quota Exceeded. Please free up some space by deleting unnecessary data.');
