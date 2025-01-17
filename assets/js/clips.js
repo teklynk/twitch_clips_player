@@ -1,9 +1,12 @@
 $(document).ready(function () {
+    // clear localStorage on load. Some clips have a expire time that needs to be refreshed and can not sit in localStorage for too long.
+    localStorage.clear();
+    console.log('Cleared localStorage');
 
-    // Function to randomly select a server and store it in localStorage
+    // Function to randomly select a api server
     function setRandomServer() {
         // set the api gateway servers 
-        const servers = ["https://twitchapi.teklynk.com","https://twitchapi.teklynk.dev"];
+        const servers = ["https://twitchapi.teklynk.com","https://twitchapi.teklynk.dev","https://twitchapi2.teklynk.dev"];
         
         // Randomly select a server
         const randomIndex = Math.floor(Math.random() * servers.length);
@@ -21,49 +24,6 @@ $(document).ready(function () {
         let results = regex.exec(location.search);
         return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
     }
-
-    // Function to parse a URL's query parameters into an array of key-value pairs
-    function parseQueryParamsToArray(url) {
-        const params = {};
-        const queryString = url.split('?')[1];
-        if (!queryString) return params;
-    
-        const pairs = queryString.split('&');
-        for (const pair of pairs) {
-            const [key, value] = pair.split('=');
-            params[decodeURIComponent(key)] = decodeURIComponent(value || '');
-        }
-        return params;
-    }
-
-    // Function to check and update the URL in localStorage
-    function checkAndUpdateUrl() {
-        // Get the current URL
-        const currentUrl = window.location.href;
-
-        // Retrieve the stored URL from localStorage
-        const storedUrl = localStorage.getItem("storedUrl");
-
-        if (storedUrl) {
-            // Parse the query parameters into an object
-            const storedParamsArray = parseQueryParamsToArray(storedUrl);
-            if (storedUrl !== currentUrl) {
-                if (storedParamsArray['preferFeatured'] !== getUrlParameter('preferFeatured') || storedParamsArray['streamerOnly'] !== getUrlParameter('streamerOnly') || storedParamsArray['dateRange'] !== getUrlParameter('dateRange')) {
-                    console.log("URL has changed. Updating localStorage...");
-                    localStorage.clear();
-                    localStorage.setItem("storedUrl", currentUrl);
-                }
-            }
-        } else {
-            // If no URL is stored, initialize with the current URL
-            console.log("No URL stored. Initializing...");
-            localStorage.clear();
-            localStorage.setItem("storedUrl", currentUrl);
-        }
-    }
-
-    // Call the function
-    checkAndUpdateUrl();
 
     // Sort function
     function sortByProperty(property) {
@@ -480,9 +440,8 @@ $(document).ready(function () {
     });
 
     async function preloadNextClip(channelName) {
-        if (localStorage.getItem(channelName) === null && localStorage.getItem('clips_datetime_' + channelName) === null) {
+        if (localStorage.getItem(channelName) === null) {
             console.log('Preloading next clip: ' + channelName);
-            let currentTime = Date.now(); // Get the current timestamp
             
             try {
                 // Construct the URL for the request
@@ -505,7 +464,6 @@ $(document).ready(function () {
                     console.log('Set ' + channelName + ' in localStorage');
                     // Store the data in localStorage
                     localStorage.setItem(channelName, JSON.stringify(clips_json));
-                    localStorage.setItem('clips_datetime_' + channelName, currentTime);
                 }
             } catch (error) {
                 console.error('Error while preloading clip:', error);
@@ -516,48 +474,11 @@ $(document).ready(function () {
     // Get and play the clip
     function loadClip(channelName) {
 
-        let storedTime_expired = false;
-
         let clips_json = "";
 
-        let currentTime = Date.now(); // Get the current timestamp
-
-        // stored api pull date time to localstorage
-        if (localStorage.getItem(channelName) === null && localStorage.getItem('clips_datetime_' + channelName) === null) {
-            try {
-                localStorage.setItem('clips_datetime_' + channelName, currentTime);
-            } catch (e) {
-                if (e.name === 'QuotaExceededError') {
-                    console.error('LocalStorage Quota Exceeded. Please free up some space by deleting unnecessary data.');
-                    // automatically clear localstorage if it exceeds the quota
-                    localStorage.clear();
-                    console.log('Cleared localStorage');
-                    nextClip(true);
-                    return false;
-                } else {
-                    console.error('An error occurred:', e);
-                }
-            }
-        }
-
-        let storedTime = localStorage.getItem('clips_datetime_' + channelName);
-
-        // compare localstorage date/time with current date/time
-        if (storedTime) {
-            let storedTimeMs = parseInt(storedTime, 10);
-            let hoursDifference = (currentTime - storedTimeMs) / (1000 * 60 * 60);
-            // check if localstorage is 10 days old
-            if (hoursDifference >= 240) {
-                console.log("10 days has passed since last pull from api. Updating...");
-                storedTime_expired = true;
-            } else {
-                storedTime_expired = false;
-            }
-        }
-
         // Json data - Ajax calls
-        // if localstorage does not exist or datetime of last api pull has expired
-        if (localStorage.getItem(channelName) === null || storedTime_expired) {
+        // if localstorage does not exist
+        if (localStorage.getItem(channelName) === null) {
             try {
                 if (streamerOnly === 'true') {
                     clips_json = JSON.parse($.getJSON({
@@ -584,7 +505,6 @@ $(document).ready(function () {
                 if (clips_json.data.length > 0) {
                     console.log('Set ' + channelName + ' in localStorage');
                     localStorage.setItem(channelName, JSON.stringify(clips_json));
-                    localStorage.setItem('clips_datetime_' + channelName, currentTime);
                 }
             } catch (e) {
                 if (e.name === 'QuotaExceededError') {
