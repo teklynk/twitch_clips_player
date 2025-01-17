@@ -392,6 +392,8 @@ $(document).ready(function () {
                         loadClip(channel[clip_index]);
                     }
                 }
+
+
             }
         });
 
@@ -401,10 +403,16 @@ $(document).ready(function () {
         if (so === 'true' && ref > '') {
             // wait 1 second for TMI to connect to Twitch before loading clip and doing a shoutout
             setTimeout(function () {
+                if (channel.length > 1 && typeof channel[clip_index + 1] !== 'undefined') {
+                    preloadNextClip(channel[clip_index + 1]);
+                }
                 // Play a clip
                 loadClip(channel[clip_index]);
             }, 1000);
         } else {
+            if (channel.length > 1 && typeof channel[clip_index + 1] !== 'undefined') {
+                preloadNextClip(channel[clip_index + 1]);
+            }
             // Play a clip when scene is active
             loadClip(channel[clip_index]);
         }
@@ -478,13 +486,20 @@ $(document).ready(function () {
             
             try {
                 // Construct the URL for the request
-                const url = streamerOnly === 'true' 
+                let asyncUrl = streamerOnly === 'true' 
                     ? `${apiServer}/getuserclips.php?channel=${channelName}&creator_name=${channelName}&prefer_featured=${preferFeatured}&limit=${limit}${dateRange}`
                     : `${apiServer}/getuserclips.php?channel=${channelName}&prefer_featured=${preferFeatured}&limit=${limit}${dateRange}`;
                 
                 // Perform an asynchronous fetch request
-                const response = await fetch(url);
-                const clips_json = await response.json();  // Parse the JSON response
+                let response = await fetch(asyncUrl);
+                let clips_json = await response.json();  // Parse the JSON response
+
+                // If dateRange or preferFeatured or streamerOnly is set but no clips are found. Try to pull any clip. 
+                if (clips_json.data.length === 0 && (dateRange > "" || preferFeatured !== false || streamerOnly === 'true')) {
+                    response = await fetch(`${apiServer}/getuserclips.php?channel=${channelName}&limit=${limit}`);
+                    clips_json = await response.json();  // Parse the JSON response
+                    console.log('No clips found matching dateRange or preferFeatured or streamerOnly filter. Now preloading all clips from: ' + channelName);
+                }
         
                 if (clips_json.data.length > 0) {
                     console.log('Set ' + channelName + ' in localStorage');
@@ -554,6 +569,16 @@ $(document).ready(function () {
                         'url':  apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "" + dateRange,
                         'async': false
                     }).responseText);
+                }
+
+                // If dateRange or preferFeatured is set but no clips are found. Try to pull any clip. 
+                if (clips_json.data.length === 0 && (dateRange > "" || preferFeatured !== false || streamerOnly === 'true')) {
+                    clips_json = JSON.parse($.getJSON({
+                        'url':  apiServer + "/getuserclips.php?channel=" + channelName + "&limit=" + limit,
+                        'async': false
+                    }).responseText);
+
+                    console.log('No clips found matching dateRange or preferFeatured or streamerOnly filter. Now pulling all clips from: ' + channelName);
                 }
 
                 if (clips_json.data.length > 0) {
@@ -802,7 +827,9 @@ $(document).ready(function () {
             loadClip(channel[clip_index]);
             curr_clip.play();
         } else {
-            preloadNextClip(channel[clip_index + 1]);
+            if (channel.length > 1 && typeof channel[clip_index + 1] !== 'undefined') {
+                preloadNextClip(channel[clip_index + 1]);
+            }
             console.log("Delay: " + parseInt(delay) * 1000 / 2);
             // Adjust the delay in the url, else delay=0
             setTimeout(function () {

@@ -118,7 +118,7 @@
     <div class="form-check mb-4">
         <input class="form-check-input" type="checkbox" value="" id="streamerOnly">
         <label class="form-check-label" for="streamerOnly">
-            Show clips created by the channel owner/streamer (this will reduce the number of clips that get played)
+            Show clips created by the channel owner/streamer (Creator clips if found. Else, play any clip.)
         </label>
     </div>
     <div class="form-label-group mb-4" id="customCommandOptions">
@@ -145,7 +145,7 @@
         <small class="text-muted range-slider-value">Clips</small>
     </div>
     <div class="form-group range-slider mt-4">
-        <label for="dateRange">Only show clips from within a Date Range <small>(Optional)</small> <small class="text-warning">* 0 Day(s) = OFF</small>
+        <label for="dateRange">Only show clips from within a Date Range (Date range clips if found. Else, play any clip.) <small class="text-warning">* 0 Day(s) = OFF</small>
         </label>
         <input type="range" max="365" min="0" step="1" class="form-control range-slider-range" id="dateRange"
                value="0" style="height: 0;">
@@ -165,7 +165,7 @@
     <div class="form-check mb-2">
         <input class="form-check-input" type="checkbox" value="" id="preferFeatured">
         <label class="form-check-label" for="preferFeatured">
-            Show featured clips only
+            Show featured clips only (Featured clips if found. Else, play any clip.)
         </label>
     </div>
     <div class="form-check mb-2">
@@ -217,84 +217,6 @@ Clipped by {creator_name} {created_at}"></textarea>
             <option value="2">Slide in basic</option>
             <option value="3">Outside the box</option>
         </select>
-    </div>
-    <div class="form-group purple-border">
-        <label for="customCss">Custom CSS
-            <small> (Copy and paste into the OBS browser source Custom CSS section and modify as needed. <a
-                    href="https://www.w3schools.com/Css/" target="_blank">CSS Tutorial</a>)
-            </small>
-        </label>
-        <textarea class="form-control" id="customCss" rows="3" style="min-height: 200px;" readonly>
-#container {
-    display: block;
-    padding: 4px;
-    margin: 4px;
-    text-align: center;
-}
-
-video {
-    width: 100%;
-    height: auto;
-    max-height: 100%;
-    border-radius: 10px;
-}
-
-#text-container {
-    width: 100%;
-    position: absolute;
-    top: 10vw;
-}
-
-.title-text {
-    font-family: Basic, Helvetica, sans-serif;
-    font-weight: bold;
-    font-size: 5vw;
-    word-wrap: break-word;
-    color: #fff;
-    text-align: center;
-    text-shadow: 2px 2px #000;
-}
-
-#details-container {
-    position: absolute;
-    top: 36vw;
-    background: #00000090;
-    padding: 12px 24px 12px 24px;
-    margin-right: 24px;
-    border-radius: 0px 24px 24px 0px;
-    width: auto;
-    animation: fadeout 15s forwards;
-}
-
-#details-container .details-text {
-    font-family: Basic, Helvetica, sans-serif;
-    font-weight: bold;
-    word-wrap: break-word;
-    color: #fff;
-    text-align: left;
-    text-shadow: 2px 2px #000;
-}
-
-#details-container .details-text.item-0 {
-    font-size: 3vw;
-    font-weight: bold;
-}
-
-#details-container .details-text.item-1 {
-    font-size: 2.5vw;
-    font-weight: normal;
-}
-
-#details-container .details-text.item-2 {
-    font-size: 2vw;
-    font-weight: normal;
-}
-
-#details-container .details-text.item-3 {
-    font-size: 1.5vw;
-    font-weight: normal;
-}
-        </textarea>
     </div>
     <br>
     <button class="btn btn-lg btn-success btn-block" id="generate_button" type="button">Generate Overlay Link</button>
@@ -504,6 +426,10 @@ video {
         if (showFollowing === false) {
             exclude = '';
             clientId = '';
+        }
+
+        if (showFollowing === true) {
+            gameTitle = '';
         }
 
         if (so === false) {
