@@ -291,6 +291,9 @@ $(document).ready(function () {
 
     //if command is set
     if (command) {
+
+        let cmdChannels = channel;
+        
         // If command is set
         // triggers on message
         client.on('chat', (channel, user, message, self) => {
@@ -321,14 +324,14 @@ $(document).ready(function () {
                 if (cmdArray.length > 0) {
 
                     // Redeclare channel array as cmdArray from the ! command
-                    channel = cmdArray;
+                    cmdChannels = cmdArray;
 
                     // Randomly grab a channel from the list to start from
-                    if (shuffle === 'true' && channel.length > 0) {
+                    if (shuffle === 'true' && cmdChannels.length > 0) {
                         // shuffle the list of channel names
-                        shuffleArray(channel);
+                        shuffleArray(cmdChannels);
                         // grab a random channel from the chanel list
-                        clip_index = Math.floor((Math.random() * channel.length - 1) + 1);
+                        clip_index = Math.floor((Math.random() * cmdChannels.length - 1) + 1);
                     } else {
                         // grab the first item in the list to start from
                         clip_index = 0;
@@ -340,16 +343,16 @@ $(document).ready(function () {
                     setTimeout(function () {
                         // Play a clip
                         if (modOnly === 'true' && (user.mod || user.username === mainAccount)) {
-                            loadClip(channel[clip_index]);
+                            loadClip(cmdChannels[clip_index]);
                         } else if (modOnly === 'false' || user.username === mainAccount) {
-                            loadClip(channel[clip_index]);
+                            loadClip(cmdChannels[clip_index]);
                         }
                     }, 1000);
                 } else {
                     if (modOnly === 'true' && (user.mod || user.username === mainAccount)) {
-                        loadClip(channel[clip_index]);
+                        loadClip(cmdChannels[clip_index]);
                     } else if (modOnly === 'false' || user.username === mainAccount) {
-                        loadClip(channel[clip_index]);
+                        loadClip(cmdChannels[clip_index]);
                     }
                 }
 
@@ -412,25 +415,6 @@ $(document).ready(function () {
 
                     window.location.reload(); // Reload browser source
 
-                } else if (message.startsWith('!clipso')) {
-
-                    let getChannel = message.substr(8);
-                    getChannel = getChannel.replace('@', '');
-                    getChannel = getChannel.trim();
-                    getChannel = getChannel.toLowerCase();
-
-                    console.log('shout-out: ' + getChannel);
-
-                    // Remove element when the next clip plays
-                    if (document.getElementById("text-container")) {
-                        document.getElementById("text-container").remove();
-                    }
-                    if (document.getElementById("details-container")) {
-                        document.getElementById("details-container").remove();
-                    }
-
-                    loadClip(getChannel); // play a clip from getChannel right away
-                    return false;
                 }
 
             }
