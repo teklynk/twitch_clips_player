@@ -426,8 +426,12 @@ $(document).ready(function () {
     async function preloadNextClip(channelName) {
         if (localStorage.getItem(channelName) === null) {
             console.log('Preloading next clip: ' + channelName);
+
+            const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
             
             try {
+                // Add a delay before the fetch operation
+                await sleep(3000); // 1000 milliseconds = 1 second
                 // Construct the URL for the request
                 let asyncUrl = streamerOnly === 'true' 
                     ? `${apiServer}/getuserclips.php?channel=${channelName}&creator_name=${channelName}&prefer_featured=${preferFeatured}&limit=${limit}${dateRange}`

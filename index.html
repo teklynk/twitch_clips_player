@@ -114,10 +114,16 @@
         <textarea id="exclude" rows="3" class="form-control" style="min-height: 100px;"
                placeholder="MrCoolStreamer,GamerGamingGames,StreamBean,AnotherStreamer,WillStreamForBeer"></textarea>
     </div>
-    <div class="form-check mb-4">
+    <div class="form-check mb-2">
         <input class="form-check-input" type="checkbox" value="" id="streamerOnly">
         <label class="form-check-label" for="streamerOnly">
             Show clips created by the channel owner/streamer (Creator clips if found. Else, play any clip.)
+        </label>
+    </div>
+    <div class="form-check mb-4">
+        <input class="form-check-input" type="checkbox" value="" id="preferFeatured">
+        <label class="form-check-label" for="preferFeatured">
+            Show featured clips only (Featured clips if found. Else, play any clip.)
         </label>
     </div>
     <div class="form-label-group mb-4" id="customCommandOptions">
@@ -159,12 +165,6 @@
         <input class="form-check-input" type="checkbox" value="" id="shuffle">
         <label class="form-check-label" for="shuffle">
             Randomize clips
-        </label>
-    </div>
-    <div class="form-check mb-2">
-        <input class="form-check-input" type="checkbox" value="" id="preferFeatured">
-        <label class="form-check-label" for="preferFeatured">
-            Show featured clips only (Featured clips if found. Else, play any clip.)
         </label>
     </div>
     <div class="form-check mb-2">
