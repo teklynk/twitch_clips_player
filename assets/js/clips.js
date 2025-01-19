@@ -174,32 +174,41 @@ $(document).ready(function () {
 
     // Get game details function
     function game_by_id(game_id) {
-        let $jsonParse = JSON.parse($.getJSON({
+        let jsonParse = JSON.parse($.getJSON({
             'url': apiServer + "/getgame.php?id=" + game_id,
             'async': false
         }).responseText);
 
-        return $jsonParse;
+        return jsonParse;
     }
 
     function game_by_title(game_title) {
-        let $game_by_title_jsonParse = JSON.parse($.getJSON({
+        let game_by_title_jsonParse = JSON.parse($.getJSON({
             'url':  apiServer + "/getgame.php?name=" + game_title,
             'async': false
         }).responseText);
 
-        return $game_by_title_jsonParse;
+        return game_by_title_jsonParse;
     }
 
     if (showFollowing === 'true' && ref > '' && clientId > '') {
 
         function following_pagination(cursor) {
-            let $jsonParse = JSON.parse($.getJSON({
-                'url':  apiServer + "/getuserfollowing.php?channel=" + mainAccount + "&limit=100&ref=" + ref + "&clientId=" + clientId,
-                'async': false
-            }).responseText);
+            let jsonParse;
 
-            return $jsonParse;
+            if (cursor) {
+                jsonParse = JSON.parse($.getJSON({
+                    'url':  apiServer + "/getuserfollowing.php?channel=" + mainAccount + "&limit=100&ref=" + ref + "&clientId=" + clientId + "&after=" + cursor,
+                    'async': false
+                }).responseText);
+            } else {
+                jsonParse = JSON.parse($.getJSON({
+                    'url':  apiServer + "/getuserfollowing.php?channel=" + mainAccount + "&limit=100&ref=" + ref + "&clientId=" + clientId,
+                    'async': false
+                }).responseText);
+            }
+
+            return jsonParse;
         }
 
         // Globals: following, followCount
@@ -284,6 +293,8 @@ $(document).ready(function () {
         // grab the first item in the list to start from
         clip_index = 0;
     }
+
+    console.log(channel);
 
     // Create new video element
     let curr_clip = document.createElement('video');
