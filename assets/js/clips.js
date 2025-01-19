@@ -195,18 +195,18 @@ $(document).ready(function () {
 
         function following_pagination(cursor) {
             let jsonParse;
+            let apiUrl;
 
             if (cursor) {
-                jsonParse = JSON.parse($.getJSON({
-                    'url':  apiServer + "/getuserfollowing.php?channel=" + mainAccount + "&limit=100&ref=" + ref + "&clientId=" + clientId + "&after=" + cursor,
-                    'async': false
-                }).responseText);
+                apiUrl = apiServer + "/getuserfollowing.php?channel=" + mainAccount + "&limit=100&ref=" + ref + "&clientId=" + clientId + "&after=" + cursor
             } else {
-                jsonParse = JSON.parse($.getJSON({
-                    'url':  apiServer + "/getuserfollowing.php?channel=" + mainAccount + "&limit=100&ref=" + ref + "&clientId=" + clientId,
-                    'async': false
-                }).responseText);
+                apiUrl = apiServer + "/getuserfollowing.php?channel=" + mainAccount + "&limit=100&ref=" + ref + "&clientId=" + clientId
             }
+
+            jsonParse = JSON.parse($.getJSON({
+                'url':  apiUrl,
+                'async': false
+            }).responseText);
 
             return jsonParse;
         }
