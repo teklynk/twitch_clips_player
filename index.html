@@ -75,7 +75,15 @@
         </div>
     </div>
     <br>
-    <div class="alert alert-dark" role="alert"><b>* NEW</b> <small>(September 2023)</small><br>Access Token is now required if you would like to show clips from channels that you follow or show a message in chat.<br>
+    <div class="alert alert-info">
+        <h2>DISCLAIMER:</h2>
+        <p>
+            <strong>Date range, featured clips, clips created by streamer:</strong> If you set a date range it will reduce the number of clips that play. If you set the clips player to play clips from your channel with a date range of 30 days, there is a chance that only one clip will play. Please keep this in mind. The same applies to featured clips and clips created by the streamer. Think about each option before you use them. Will a option conflict with another option and cause the player to only show one clip.
+        </p>
+        <p>This project is <strong>"AS-IS"</strong>. It is free to use, clone, fork, modify, make it your own. It is not perfect and never will be. It has issues.</p>
+    </div>
+    <br>
+    <div class="alert alert-dark" role="alert"><b>* NEW</b> <small>(September 2023)</small><br>Access Token is now required if you would like to show clips from channels that you follow and/or show a message in chat.<br>
         <div class="form-label-group mb-4 mt-2">
             <div class="mb-2 mt-2">
                 <a href="https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=cuql1zod4eeabjr3cnc6adjn9ezro4&redirect_uri=https://twitch-clips-player.pages.dev&scope=chat:read+chat:edit+user:read:follows+moderator:read:followers&force_verify=true"
@@ -117,13 +125,13 @@
     <div class="form-check mb-2">
         <input class="form-check-input" type="checkbox" value="" id="streamerOnly">
         <label class="form-check-label" for="streamerOnly">
-            Show clips created by the channel owner/streamer (Creator clips if found. Else, play any clip.)
+            Show clips created by the channel owner/streamer (Creator clips if found)
         </label>
     </div>
     <div class="form-check mb-4">
         <input class="form-check-input" type="checkbox" value="" id="preferFeatured">
         <label class="form-check-label" for="preferFeatured">
-            Show featured clips only (Featured clips if found. Else, play any clip.)
+            Show featured clips only (Featured clips if found)
         </label>
     </div>
     <div class="form-label-group mb-4" id="customCommandOptions">
@@ -150,7 +158,7 @@
         <small class="text-muted range-slider-value">Clips</small>
     </div>
     <div class="form-group range-slider mt-4">
-        <label for="dateRange">Only show clips from within a Date Range (Date range clips if found. Else, play any clip.) <small class="text-warning">* 0 Day(s) = OFF</small>
+        <label for="dateRange">Only show clips from within a Date Range (Date range clips if found) <small class="text-warning">* 0 Day(s) = OFF</small>
         </label>
         <input type="range" max="365" min="0" step="1" class="form-control range-slider-range" id="dateRange"
                value="0" style="height: 0;">
