@@ -6,8 +6,9 @@ $(document).ready(function () {
     // Function to randomly select a api server
     function setRandomServer() {
         // set the api gateway servers 
-        const servers = ["https://twitchapi.teklynk.com","https://twitchapi.teklynk.dev","https://twitchapi2.teklynk.dev"];
-        
+        //const servers = ["https://twitchapi.teklynk.com","https://twitchapi.teklynk.dev","https://twitchapi2.teklynk.dev"];
+        const servers = ["http://localhost:8080"];
+
         // Randomly select a server
         const randomIndex = Math.floor(Math.random() * servers.length);
         const selectedServer = servers[randomIndex];
@@ -64,6 +65,7 @@ $(document).ready(function () {
     let exclude = getUrlParameter('exclude').trim();
     let themeOption = getUrlParameter('themeOption').trim();
     let gameTitle = getUrlParameter('gameTitle').trim();
+    let ignore = getUrlParameter('ignore').trim();
     let randomClip = 0; // Default random clip index
     let clip_index = 0; // Default clip index
     let cmdArray = [];
@@ -445,8 +447,8 @@ $(document).ready(function () {
                 await sleep(3000); // 1000 milliseconds = 1 second
                 // Construct the URL for the request
                 let asyncUrl = streamerOnly === 'true' 
-                    ? `${apiServer}/getuserclips.php?channel=${channelName}&creator_name=${channelName}&prefer_featured=${preferFeatured}&limit=${limit}${dateRange}`
-                    : `${apiServer}/getuserclips.php?channel=${channelName}&prefer_featured=${preferFeatured}&limit=${limit}${dateRange}`;
+                    ? `${apiServer}/getuserclips.php?channel=${channelName}&creator_name=${channelName}&prefer_featured=${preferFeatured}&ignore=${ignore}&limit=${limit}${dateRange}`
+                    : `${apiServer}/getuserclips.php?channel=${channelName}&prefer_featured=${preferFeatured}&ignore=${ignore}&limit=${limit}${dateRange}`;
                 
                 // Perform an asynchronous fetch request
                 let response = await fetch(asyncUrl);
@@ -454,7 +456,7 @@ $(document).ready(function () {
 
                 // If dateRange or preferFeatured or streamerOnly is set but no clips are found. Try to pull any clip. 
                 if (clips_json.data.length === 0 && (dateRange > "" || preferFeatured !== false || streamerOnly === 'true')) {
-                    response = await fetch(`${apiServer}/getuserclips.php?channel=${channelName}&limit=${limit}`);
+                    response = await fetch(`${apiServer}/getuserclips.php?channel=${channelName}&ignore=${ignore}&limit=${limit}`);
                     clips_json = await response.json();  // Parse the JSON response
                     console.log('No clips found matching dateRange or preferFeatured or streamerOnly filter. Now preloading all clips from: ' + channelName);
                 }
@@ -481,12 +483,12 @@ $(document).ready(function () {
             try {
                 if (streamerOnly === 'true') {
                     clips_json = JSON.parse($.getJSON({
-                        'url':  apiServer + "/getuserclips.php?channel=" + channelName + "&creator_name=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "" + dateRange,
+                        'url':  apiServer + "/getuserclips.php?channel=" + channelName + "&creator_name=" + channelName + "&prefer_featured=" + preferFeatured + "&ignore=" + ignore + "&limit=" + limit + "" + dateRange,
                         'async': false
                     }).responseText);
                 } else {
                     clips_json = JSON.parse($.getJSON({
-                        'url':  apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "" + dateRange,
+                        'url':  apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=" + preferFeatured + "&ignore=" + ignore + "&limit=" + limit + "" + dateRange,
                         'async': false
                     }).responseText);
                 }
@@ -494,7 +496,7 @@ $(document).ready(function () {
                 // If dateRange or preferFeatured is set but no clips are found. Try to pull any clip. 
                 if (clips_json.data.length === 0 && (dateRange > "" || preferFeatured !== false || streamerOnly === 'true')) {
                     clips_json = JSON.parse($.getJSON({
-                        'url':  apiServer + "/getuserclips.php?channel=" + channelName + "&limit=" + limit,
+                        'url':  apiServer + "/getuserclips.php?channel=" + channelName + "ignore=" + ignore + "&limit=" + limit,
                         'async': false
                     }).responseText);
 
