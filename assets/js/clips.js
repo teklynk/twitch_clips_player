@@ -6,8 +6,7 @@ $(document).ready(function () {
     // Function to randomly select a api server
     function setRandomServer() {
         // set the api gateway servers 
-        //const servers = ["https://twitchapi.teklynk.com","https://twitchapi.teklynk.dev","https://twitchapi2.teklynk.dev"];
-        const servers = ["http://localhost:8080"];
+        const servers = ["https://twitchapi.teklynk.com","https://twitchapi.teklynk.dev","https://twitchapi2.teklynk.dev"];
 
         // Randomly select a server
         const randomIndex = Math.floor(Math.random() * servers.length);
