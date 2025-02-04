@@ -492,6 +492,8 @@ $(document).ready(function () {
                     }).responseText);
                 }
 
+                console.log('json data length: ' + clips_json.data.length);
+
                 // If dateRange or preferFeatured is set but no clips are found. Try to pull any clip. 
                 if (clips_json.data.length === 0 && (dateRange > "" || preferFeatured !== false || streamerOnly === 'true')) {
                     clips_json = JSON.parse($.getJSON({
@@ -505,8 +507,16 @@ $(document).ready(function () {
                 if (clips_json.data.length > 0) {
                     console.log('Set ' + channelName + ' in localStorage');
                     localStorage.setItem(channelName, JSON.stringify(clips_json));
+                } else {
+                    nextClip(true);
                 }
             } catch (e) {
+                // Sometimes the api returns an error. Usually when a channel no longer exists
+                if (e.name === 'TypeError' || e.name === 'SyntaxError') {
+                    console.error(e.name + ' found. Skipping...');
+                    nextClip(true);
+                    return false;
+                }
                 if (e.name === 'QuotaExceededError') {
                     console.error('LocalStorage Quota Exceeded. Please free up some space by deleting unnecessary data.');
                     // automatically clear localstorage if it exceeds the quota
