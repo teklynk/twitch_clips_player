@@ -497,7 +497,7 @@ $(document).ready(function () {
                 // If dateRange or preferFeatured is set but no clips are found. Try to pull any clip. 
                 if (clips_json.data.length === 0 && (dateRange > "" || preferFeatured !== false || streamerOnly === 'true')) {
                     clips_json = JSON.parse($.getJSON({
-                        'url':  apiServer + "/getuserclips.php?channel=" + channelName + "ignore=" + ignore + "&limit=" + limit,
+                        'url':  apiServer + "/getuserclips.php?channel=" + channelName + "&ignore=" + ignore + "&limit=" + limit,
                         'async': false
                     }).responseText);
 
