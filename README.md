@@ -9,9 +9,10 @@ This is a Twitch Clips Player, browser source overlay for OBS.
 
 This grabs your Twitch clips and plays them one after the other in a loop. Keep your viewers entertained on your BRB or starting soon scenes. 
 
-[Try it here](https://twitch-clips-player.pages.dev/)
+## DISCLAIMER:
+This project is "AS-IS". It is free to use, clone, fork, modify, make it your own. It is not perfect and never will be. It has issues.
 
-Track future development here: [https://github.com/teklynk/twitch_clips_player/projects/1](https://github.com/teklynk/twitch_clips_player/projects/1)
+[Try it here](https://twitch-clips-player.pages.dev/)
 
 **FEATURES:** 
 - !clipso @teklynk to play a clip from a channel while the clips reel is playing. This will immediately play the clip from the channel and then continue on with the rest of the clips reel. 
@@ -25,10 +26,11 @@ Track future development here: [https://github.com/teklynk/twitch_clips_player/p
 - Show clip details panel: This will display a panel in the lower third of the overlay that contains details about the clip. This can use variables:{channel},{title},{game},{creator_name},{created_at}.
 
 ## Notes:
-Access is now required if you would like to show clips from channels that you follow or show a message in chat.
+**Date range, featured clips, clips created by streamer:** The clips player will try to find and play clips that meet these options first. If no clips are found within these filters, then it will play a clip from the top most popular. Playing any clip is better than not playing a clip at all.
+
+Twitch authentication is now required if you would like to show clips from channels that you follow and/or show a message in chat.
 
 In OBS, set the browser source to: "Shutdown source when not visible" and "Refresh browser when scene becomes active". This will prevent the clips player from playing in the background. It will also reload/refresh the clips player when the source becomes active.
-
 
 ## URL Parameters
 
