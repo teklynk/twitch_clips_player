@@ -443,7 +443,7 @@ $(document).ready(function () {
             
             try {
                 // Add a delay before the fetch operation
-                await sleep(3000); // 1000 milliseconds = 1 second
+                await sleep(1000); // 1000 milliseconds = 1 second
                 // Construct the URL for the request
                 let asyncUrl = streamerOnly === 'true' 
                     ? `${apiServer}/getuserclips.php?channel=${channelName}&creator_name=${channelName}&prefer_featured=${preferFeatured}&ignore=${ignore}&limit=${limit}&shuffle=${shuffle}${dateRange}`
@@ -453,8 +453,8 @@ $(document).ready(function () {
                 let response = await fetch(asyncUrl);
                 let clips_json = await response.json();  // Parse the JSON response
 
-                // If dateRange or preferFeatured or streamerOnly is set but no clips are found. Try to pull any clip. 
-                if (clips_json.data.length === 0 && (dateRange > "" || preferFeatured !== false || streamerOnly === 'true')) {
+                // If dateRange or preferFeatured or streamerOnly is set but no clips are found or only 1 clip is found. Try to pull any clip. 
+                if (clips_json.data.length === 1 && (dateRange > "" || preferFeatured !== false || streamerOnly === 'true')) {
                     response = await fetch(`${apiServer}/getuserclips.php?channel=${channelName}&ignore=${ignore}&limit=${limit}&shuffle=${shuffle}`);
                     clips_json = await response.json();  // Parse the JSON response
                     console.log('No clips found matching dateRange or preferFeatured or streamerOnly filter. Now preloading all clips from: ' + channelName);
@@ -494,8 +494,8 @@ $(document).ready(function () {
 
                 console.log('json data length: ' + clips_json.data.length);
 
-                // If dateRange or preferFeatured is set but no clips are found. Try to pull any clip. 
-                if (clips_json.data.length === 0 && (dateRange > "" || preferFeatured !== false || streamerOnly === 'true')) {
+                // If dateRange or preferFeatured is set but no clips are found or only 1 clip is found. Try to pull any clip. 
+                if (clips_json.data.length === 1 && (dateRange > "" || preferFeatured !== false || streamerOnly === 'true')) {
                     clips_json = JSON.parse($.getJSON({
                         'url':  apiServer + "/getuserclips.php?channel=" + channelName + "&ignore=" + ignore + "&limit=" + limit + "&shuffle=" + shuffle,
                         'async': false
