@@ -3,23 +3,23 @@
 #text-container {
     top: 0;
     background: #00008890;
-    box-shadow: 0 10px #00000090;
+    box-shadow: 0 4px #00000090;
     max-width: 100%;
     padding: 4px 0 8px 0;
-    border-radius: 25px;
+    border-radius: 4px;
     left: -2000px;
-    animation: slide 1s ease forwards;
+    animation: slide 0s ease forwards;
 }
 
 #details-container {
     top: 42vw;
-    border-radius: 25px;
-    transform: skew(6deg, -6deg);
+    border-radius: 4px;
+    transform: skew(8deg, -8deg);
     margin-left: 0;
     background: #00008890;
-    box-shadow: 10px 10px #00000090;
+    box-shadow: 0 4px #00000090;
     position: absolute;
-    animation: movein 1s ease forwards, moveout 1s 15s ease forwards;
+    animation: movein 0s ease forwards, moveout 0s 10s ease forwards;
 }
 
 #details-container .details-text.item-0 {
