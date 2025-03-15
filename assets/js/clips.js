@@ -51,14 +51,11 @@ $(document).ready(function () {
     let preferFeatured = getUrlParameter('preferFeatured').trim();
     let showText = getUrlParameter('showText').trim();
     let showDetails = getUrlParameter('showDetails').trim();
-    let so = getUrlParameter('so').trim();
     let ref = getUrlParameter('ref').trim();
     let clientId = getUrlParameter('clientId').trim();
-    let customMsg = getUrlParameter('customMsg').trim();
     let customText = getUrlParameter('customText').trim();
     let detailsText = getUrlParameter('detailsText').trim();
     let command = getUrlParameter('command').trim();
-    let modOnly = getUrlParameter('modOnly').trim();
     let showFollowing = getUrlParameter('showFollowing').trim();
     let exclude = getUrlParameter('exclude').trim();
     let themeOption = getUrlParameter('themeOption').trim();
@@ -88,14 +85,6 @@ $(document).ready(function () {
 
     if (!exclude) {
         exclude = ""; //default
-    }
-
-    if (!so) {
-        so = "false"; //default
-    }
-
-    if (!modOnly) {
-        modOnly = "false"; //default
     }
 
     if (!showText) {
@@ -138,7 +127,7 @@ $(document).ready(function () {
     }
 
     // If Auth token is set, then connect to chat using oauth, else connect anonymously.
-    if (so === 'true' && ref > '') {
+    if (mainAccount > '' && ref > '') {
         // Connect to twitch - needs auth token
         client = new tmi.Client({
             options: {
@@ -152,7 +141,10 @@ $(document).ready(function () {
             },
             channels: [mainAccount]
         });
-    } else {
+
+        client.connect().catch(console.error);
+
+    } else if (mainAccount > '' && ref == '') {
         // Connect to twitch anonymously - does not need auth token
         client = new tmi.Client({
             options: {
@@ -162,9 +154,9 @@ $(document).ready(function () {
             connection: { reconnect: true },
             channels: [mainAccount]
         });
-    }
 
-    client.connect().catch(console.error);
+        client.connect().catch(console.error);
+    }
 
     // Get game details function
     function game_by_id(game_id) {
@@ -281,16 +273,14 @@ $(document).ready(function () {
 
     console.log(channel);
 
+    console.log('The clip index is: ' + clip_index);
+
     // Create new video element
     let curr_clip = document.createElement('video');
     $(curr_clip).appendTo('#container');
 
     //if command is set
     if (command) {
-
-        let cmdChannels = channel;
-        
-        // If command is set
         // triggers on message
         client.on('chat', (channel, user, message, self) => {
 
@@ -301,80 +291,41 @@ $(document).ready(function () {
                 // Remove element before loading the clip
                 $('#text-container').remove();
                 $('#details-container').remove();
+                // Properly remove video source
+                let videoElement = document.querySelector("video");
+                videoElement.pause();
+                videoElement.removeAttribute("src"); // empty source
+                videoElement.load();
 
                 // Get second command. ie: stop
                 let commandOption = message.split(' ')[1];
 
                 // Stop the clips player
                 if (commandOption === "stop") {
-                    // Reload browser source
+                    // Remove element before loading the clip
+                    $('#text-container').remove();
+                    $('#details-container').remove();
+                    // Properly remove video source
+                    let videoElement = document.querySelector("video");
+                    videoElement.pause();
+                    videoElement.removeAttribute("src"); // empty source
+                    videoElement.load();
                     window.location.reload();
                 }
+            }
 
-                // Create an array of channel names
-                cmdArray = message.split('@').map(element => element.trim()); //Split channel names using the @ symbol
-                cmdArray = cmdArray.slice(1);
-                cmdArray = cmdArray.filter(String);
-
-                // If command also contains @channel names
-                if (cmdArray.length > 0) {
-
-                    // Redeclare channel array as cmdArray from the ! command
-                    cmdChannels = cmdArray;
-
-                    // Randomly grab a channel from the list to start from
-                    if (shuffle === 'true' && cmdChannels.length > 0) {
-                        // shuffle the list of channel names
-                        shuffleArray(cmdChannels);
-                        // grab a random channel from the chanel list
-                        clip_index = Math.floor((Math.random() * cmdChannels.length - 1) + 1);
-                    } else {
-                        // grab the first item in the list to start from
-                        clip_index = 0;
-                    }
-                }
-
-                if (so === 'true' && ref > '') {
-                    // wait 1 second for TMI to connect to Twitch before loading clip and doing a shoutout
-                    setTimeout(function () {
-                        // Play a clip
-                        if (modOnly === 'true' && (user.mod || user.username === mainAccount)) {
-                            loadClip(cmdChannels[clip_index]);
-                        } else if (modOnly === 'false' || user.username === mainAccount) {
-                            loadClip(cmdChannels[clip_index]);
-                        }
-                    }, 1000);
-                } else {
-                    if (modOnly === 'true' && (user.mod || user.username === mainAccount)) {
-                        loadClip(cmdChannels[clip_index]);
-                    } else if (modOnly === 'false' || user.username === mainAccount) {
-                        loadClip(cmdChannels[clip_index]);
-                    }
-                }
-
-
+            if (user.mod || user.username === mainAccount) {
+                // Plays clips when command is used
+                loadClip(channel[clip_index]);
             }
         });
 
     } else {
-
         // Plays clips when scene is active
-        if (so === 'true' && ref > '') {
-            // wait 1 second for TMI to connect to Twitch before loading clip and doing a shoutout
-            setTimeout(function () {
-                if (channel.length > 1 && typeof channel[clip_index + 1] !== 'undefined') {
-                    preloadNextClip(channel[clip_index + 1]);
-                }
-                // Play a clip
-                loadClip(channel[clip_index]);
-            }, 1000);
-        } else {
-            if (channel.length > 1 && typeof channel[clip_index + 1] !== 'undefined') {
-                preloadNextClip(channel[clip_index + 1]);
-            }
-            // Play a clip when scene is active
-            loadClip(channel[clip_index]);
+        if (channel.length > 1 && typeof channel[clip_index + 1] !== 'undefined') {
+            preloadNextClip(channel[clip_index + 1]);
         }
+        loadClip(channel[clip_index]);
     }
 
     // TODO: Refactor this as options that the user can define/set
@@ -471,7 +422,6 @@ $(document).ready(function () {
         // if localstorage does not exist
         if (localStorage.getItem(channelName) === null) {
             try {
-
                 if (preferFeatured !== false) {
                     clips_json = JSON.parse($.getJSON({
                         'url':  apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "&shuffle=" + shuffle + "" + dateRange,
@@ -679,28 +629,6 @@ $(document).ready(function () {
 
         // Move to the next clip when the current one finishes playing
         curr_clip.addEventListener("ended", nextClip);
-
-        // Do a shout-out for each clip
-        if (so === 'true' && ref > '') {
-            let so_json = JSON.parse($.getJSON({
-                'url':  apiServer + "/getuserstatus.php?channel=" + channelName + "",
-                'async': false
-            }).responseText);
-
-            // Custom message. Replace {variable} with actual values
-            if (customMsg) {
-                customMsg = getUrlParameter('customMsg');
-                customMsg = customMsg.replace('{channel}', so_json.data[0]['broadcaster_name']);
-                customMsg = customMsg.replace('{game}', so_json.data[0]['game_name']);
-                customMsg = customMsg.replace('{title}', so_json.data[0]['title']);
-                customMsg = customMsg.replace('{url}', "https://twitch.tv/" + so_json.data[0]['broadcaster_login']);
-                // Say custom message
-                client.say(mainAccount, customMsg);
-            } else {
-                // Say default message
-                client.say(mainAccount, "Go check out " + so_json.data[0]['broadcaster_name'] + "! They were playing: " + so_json.data[0]['game_name'] + " - " + so_json.data[0]['title'] + " - https://twitch.tv/" + so_json.data[0]['broadcaster_login']);
-            }
-        }
     }
 
     function nextClip(skip = false) {
@@ -719,11 +647,6 @@ $(document).ready(function () {
         videoElement.removeAttribute("src"); // empty source
         videoElement.load();
 
-        // If chat command contains a list of channel names ie: !reel @teklynk @mrcool @thatstreamer @gamer123
-        if (cmdArray.length > 0) {
-            channel = cmdArray;
-        }
-
         if (clip_index < channel.length - 1) {
             clip_index += 1;
         } else {
@@ -736,10 +659,9 @@ $(document).ready(function () {
             loadClip(channel[clip_index]);
             curr_clip.play();
         } else {
-            if (channel.length > 1 && typeof channel[clip_index + 1] !== 'undefined') {
+            if (channel.length > 1 && channel[clip_index + 1] !== 'undefined') {
                 preloadNextClip(channel[clip_index + 1]);
             }
-            console.log("Delay: " + parseInt(delay) * 1000 / 2);
             // Adjust the delay in the url, else delay=0
             setTimeout(function () {
                 // Play a clip

@@ -15,13 +15,10 @@ This project is "AS-IS". It is free to use, clone, fork, modify, make it your ow
 [Try it here](https://twitch-clips-player.pages.dev/)
 
 **FEATURES:** 
-- !clipso @teklynk to play a clip from a channel while the clips reel is playing. This will immediately play the clip from the channel and then continue on with the rest of the clips reel. 
-- Control the clips from Twitch chat. !clipskip, !clippause, !clipplay, !clipreload, !clipso @channelname. Limited to Mods and Streamer.
+- Control the clips from Twitch chat. !clipskip, !clippause, !clipplay, !clipreload. Limited to Mods and Streamer.
 - Show clips from channels that you follow. Grabs the most recent 700 channels.
 - Use a custom command to start the clips reel and restrict it to Mods only.
-- Type "!mycommand @teklynk @coolstreamer @gamer123 @tekbot" which will play the clips reel for only those channels. 
-- Type "!mycommand" while the clips reel is playing to skip to the next clip. 
-- Type "!mycommand stop" to stop the clips player.
+- Type "!mycommand stop" in chat to stop the clips player.
 - Date Range option: This will grab a clip from within the last 5days, 10day, 30days... If no clips exist, then skip to the next channel.
 - Show clip details panel: This will display a panel in the lower third of the overlay that contains details about the clip. This can use variables:{channel},{title},{game},{creator_name},{created_at}.
 
@@ -50,23 +47,17 @@ In OBS, set the browser source to: "Shutdown source when not visible" and "Refre
 
 **dateRange=integer**  Only pull clips from a specific date range.
 
-**so=true/false**  Say a Shout-out message in chat.
-
 **command=string**  Custom command to fire off the clips player. If Not set, clips player will play as soon as the scene is active.
 
 **showFollowing=true/false** Pulls clips from the latest 100 channels that you are following. 
 
 **customText=string**  Displays custom message on top of clips. Can include {channel}.
 
-**modOnly=true/false**  When command option is used, can limit command to Mods only.
-
 **delay=integer**  Adds a delay between clips. Great from showing a graphic that is behind the clips player. Default is 0.
 
 **mainAccount=channel**  The main channel that you want to send chat messages to.
 
 **ref=base64**  Access token
-
-**customMsg=string**  Shout-out message. Uses variables like: {channel},{games},{tile},{url}
 
 **themeOption=integer** Various pre-made css themes top choose from.
 

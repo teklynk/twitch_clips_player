@@ -67,10 +67,8 @@
             <ul>
                 <li>Control the clips from Twitch chat. !clipskip, !clippause, !clipplay, !clipreload. Limited to Mods and Streamer.</li>
                 <li>Show clips from channels that you follow. Grabs the most recent 700 channels that you follow.</li>
-                <li>Use a custom command to start the clips reel and restrict it to Mods only.</li>
-                <li>Type "!mycommand @teklynk @coolstreamer @gamer123 @tekbot" which will play the clips reel for only those channels.</li>
-                <li>Type "!mycommand" while the clips reel is playing to skip to the next clip.</li>
-                <li>Type "!mycommand stop" to stop the clips player.</li>
+                <li>Use a custom command to start the clips reel. Command is restricted to Mods only.</li>
+                <li>Type "!mycommand stop" in chat to stop the clips player.</li>
                 <li><strong>Date Range option:</strong> This will grab a clip from within the last 5days, 10day, 30days... If no clips exist within the date range, then display a clip from the 100 most popular.</li>
                 <li><strong>Show clip details panel:</strong> This will display a panel in the lower third of the overlay that contains details about the clip. This can use variables:{channel},{title},{game},{creator_name},{created_at}.</li>
             </ul>
@@ -85,7 +83,7 @@
         <p>This project is <strong>"AS-IS"</strong>. It is free to use, clone, fork, modify, make it your own.</p>
     </div>
     <br>
-    <div class="alert alert-dark" role="alert"><b>* NEW</b> <small>(September 2023)</small><br>Access Token is now required if you would like to show clips from channels that you follow and/or show a message in chat.<br>
+    <div class="alert alert-dark" role="alert">Access Token is now required if you would like to show clips from channels that you follow.<br>
         <div class="form-label-group mb-4 mt-2">
             <div class="mb-2 mt-2">
                 <a href="https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=cuql1zod4eeabjr3cnc6adjn9ezro4&redirect_uri=https://twitch-clips-player.pages.dev&scope=chat:read+chat:edit+user:read:follows+moderator:read:followers&force_verify=true"
@@ -124,24 +122,12 @@
         <textarea id="exclude" rows="3" class="form-control" style="min-height: 100px;"
                placeholder="MrCoolStreamer,GamerGamingGames,StreamBean,AnotherStreamer,WillStreamForBeer"></textarea>
     </div>
-    <div class="form-check mb-4">
-        <input class="form-check-input" type="checkbox" value="" id="preferFeatured">
-        <label class="form-check-label" for="preferFeatured">
-            Prefer featured clips (Featured clips if found)
-        </label>
-    </div>
     <div class="form-label-group mb-4" id="customCommandOptions">
         <div class="form-label-group mb-2">
             <label for="command">Custom Command <small>(Optional)</small>
                 <small class="text-warning">* If a custom command is Not set, the clips player will start playing as soon as the scene is active.</small>
             </label>
             <input type="text" id="command" class="form-control" value="" placeholder="playclips" size="50">
-        </div>
-        <div class="form-check mb-2">
-            <input class="form-check-input" type="checkbox" value="" id="modOnly" disabled>
-            <label class="form-check-label" for="modOnly">
-                Mods Only
-            </label>
         </div>
     </div>
     <div class="form-group range-slider mt-4">
@@ -168,6 +154,12 @@
         </label>
     </div>
     <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" value="" id="preferFeatured">
+        <label class="form-check-label" for="preferFeatured">
+            Prefer featured clips (Featured clips if found)
+        </label>
+    </div>
+    <div class="form-check mb-2">
         <input class="form-check-input" type="checkbox" value="" id="showText">
         <label class="form-check-label" for="showText">
             Show channel name on top of video
@@ -191,22 +183,6 @@
         <textarea class="form-control" id="detailsText" rows="4" placeholder="{title}
 While streaming {game}
 Clipped by {creator_name} {created_at}"></textarea>
-    </div>
-    <div class="form-check mb-4">
-        <input class="form-check-input" type="checkbox" value="" id="showMsg">
-        <label class="form-check-label" for="showMsg">
-            Show chat message: "Go check out {channel}! - They were playing: {game} - {title} - {url}"
-            <small class="text-warning">* Requires Twitch Access Token</small>
-        </label>
-        <div class="form-label-group mt-2 mb-4 ml-1 hide" id="customMsgTxt">
-            <div class="form-label-group mb-4">
-                <label for="customMsg">Custom Message
-                    <small>(Optional)</small>
-                </label>
-                <input type="text" id="customMsg" class="form-control" value=""
-                       placeholder="Go check out {channel}! - They were playing: {game} - {title} - {url}" size="250">
-            </div>
-        </div>
     </div>
     <div class="form-group">
         <label for="themeOption">Theme options</label>
@@ -264,13 +240,8 @@ Clipped by {creator_name} {created_at}"></textarea>
         document.getElementById("ref").value = localStorage.getItem("TwitchClipsRef");
         document.getElementById("channel").value = localStorage.getItem("TwitchClipsChannel");
         document.getElementById("exclude").value = localStorage.getItem("TwitchClipsExclude");
-        document.getElementById("customMsg").value = localStorage.getItem("TwitchClipsCustomMsg");
         document.getElementById("command").value = localStorage.getItem("TwitchClipsCommand");
         document.getElementById("customText").value = localStorage.getItem("TwitchClipsCustomText");
-
-        if (document.getElementById("command").value !== "") {
-            document.getElementById("modOnly").removeAttribute('disabled');
-        }
 
         // Auto grow textarea onload
         document.getElementById("channel").style.height = "";
@@ -295,11 +266,6 @@ Clipped by {creator_name} {created_at}"></textarea>
         document.getElementById("channel").toggleAttribute('disabled');
     }, false);
 
-    //show chat message
-    document.getElementById("showMsg").addEventListener("click", function (e) {
-        document.getElementById("customMsgTxt").classList.toggle('hide');
-    }, false);
-
     // show custom text input
     document.getElementById("showText").addEventListener("click", function (e) {
         document.getElementById("showCustomText").classList.toggle('hide');
@@ -313,16 +279,6 @@ Clipped by {creator_name} {created_at}"></textarea>
     // show custom details input
     document.getElementById("showFollowing").addEventListener("click", function (e) {
         document.getElementById("showExclude").classList.toggle('hide');
-    }, false);
-
-    // check if command input has a value
-    document.getElementById("command").addEventListener("keyup", function (e) {
-        if (document.getElementById("command").value !== "") {
-            document.getElementById("modOnly").removeAttribute('disabled');
-        } else {
-            document.getElementById("modOnly").setAttribute('disabled', 'disabled');
-            document.getElementById("modOnly").checked = false;
-        }
     }, false);
 
     document.getElementById("show_ref").addEventListener("click", function (e) {
@@ -350,9 +306,6 @@ Clipped by {creator_name} {created_at}"></textarea>
         let showText = document.getElementById("showText").checked;
         let showDetails = document.getElementById("showDetails").checked;
         let showFollowing = document.getElementById("showFollowing").checked;
-        let so = document.getElementById("showMsg").checked;
-        let customMsg = document.getElementById("customMsg").value.trim();
-        let modOnly = document.getElementById("modOnly").checked;
         let command = document.getElementById("command").value.trim();
         command = command.replace('!', '');
         let customText = document.getElementById("customText").value.trim();
@@ -364,22 +317,17 @@ Clipped by {creator_name} {created_at}"></textarea>
         localStorage.setItem("TwitchClipsClientId", clientId.trim());
         localStorage.setItem("TwitchClipsChannel", channel.toLowerCase().trim());
         localStorage.setItem("TwitchClipsExclude", exclude.toLowerCase().trim());
-        localStorage.setItem("TwitchClipsCustomMsg", customMsg.trim());
         localStorage.setItem("TwitchClipsCommand", command.trim());
         localStorage.setItem("TwitchClipsCustomText", customText.trim());
 
         // reload the textarea with the cleaned up channel list (spaces removed).
         document.getElementById("channel").value = localStorage.getItem("TwitchClipsChannel");
 
-        if (!so) {
-            customMsg = '';
-        }
-
         if (showFollowing) {
             channel = '';
         }
 
-        if (so && !ref) {
+        if (!ref) {
             alert('Twitch access token is required if show chat message is checked!');
         }
 
@@ -387,7 +335,7 @@ Clipped by {creator_name} {created_at}"></textarea>
             alert('Twitch access token is required if show following is checked!');
         }
 
-        if (so && !mainChannel) {
+        if (!mainChannel) {
             alert('Twitch main channel is not set');
         }
 
@@ -413,7 +361,7 @@ Clipped by {creator_name} {created_at}"></textarea>
              detailsText = "{title}\nWhile streaming {game}\nClipped by {creator_name} {created_at}";
         }
 
-        if (showFollowing === false && so === false) {
+        if (showFollowing === false) {
             clientId = '';
             ref = '';
         }
@@ -423,13 +371,9 @@ Clipped by {creator_name} {created_at}"></textarea>
             clientId = '';
         }
 
-        if (so === false) {
-            customMsg = '';
-        }
-
         // build overlay url
         let srcURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
-        let fullUrl = srcURL + "clips.html?channel=" + channel + "&exclude=" + exclude + "&limit=" + limit + "&dateRange=" + dateRange + "&themeOption=" + themeOption + "&shuffle=" + shuffle + "&preferFeatured=" + preferFeatured + "&showText=" + showText + "&customMsg=" + encodeURIComponent(customMsg) + "&showDetails=" + showDetails + "&detailsText=" + encodeURIComponent(detailsText) + "&mainAccount=" + mainChannel + "&so=" + so + "&command=" + command + "&modOnly=" + modOnly + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&ref=" + btoa(ref) + "&clientId=" + btoa(clientId);
+        let fullUrl = srcURL + "clips.html?channel=" + channel + "&exclude=" + exclude + "&limit=" + limit + "&dateRange=" + dateRange + "&themeOption=" + themeOption + "&shuffle=" + shuffle + "&preferFeatured=" + preferFeatured + "&showText=" + showText + "&showDetails=" + showDetails + "&detailsText=" + encodeURIComponent(detailsText) + "&mainAccount=" + mainChannel + "&command=" + command + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&ref=" + btoa(ref) + "&clientId=" + btoa(clientId);
         fullUrl = fullUrl.replace("index.htmlclips.html", "clips.html");
         document.getElementById("overlaylink").classList.remove("hide");
         document.getElementById("overlaylink").innerHTML = "<p>Add this link as a browser source in OBS.<br>" +
