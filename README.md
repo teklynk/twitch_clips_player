@@ -10,7 +10,7 @@ This is a Twitch Clips Player, browser source overlay for OBS.
 This grabs your Twitch clips and plays them one after the other in a loop. Keep your viewers entertained on your BRB or starting soon scenes. 
 
 ## DISCLAIMER:
-This project is "AS-IS". It is free to use, clone, fork, modify, make it your own. It is not perfect and never will be. It has issues.
+This project is "AS-IS". It is free to use, clone, fork, modify, make it your own.
 
 [Try it here](https://twitch-clips-player.pages.dev/)
 
@@ -26,7 +26,7 @@ This project is "AS-IS". It is free to use, clone, fork, modify, make it your ow
 - Show clip details panel: This will display a panel in the lower third of the overlay that contains details about the clip. This can use variables:{channel},{title},{game},{creator_name},{created_at}.
 
 ## Notes:
-**Date range, featured clips, clips created by streamer:** The clips player will try to find and play clips that meet these options first. If no clips are found within these filters, then it will play a clip from the top most popular. Playing any clip is better than not playing a clip at all.
+**Date range, featured clips:** The clips player will try to find and play clips that meet these options first. If no clips are found within these filters, then it will play a clip from the top most popular. Playing any clip is better than not playing a clip at all.
 
 Twitch authentication is now required if you would like to show clips from channels that you follow and/or show a message in chat.
 
@@ -56,8 +56,6 @@ In OBS, set the browser source to: "Shutdown source when not visible" and "Refre
 
 **showFollowing=true/false** Pulls clips from the latest 100 channels that you are following. 
 
-**streamerOnly=true/false** Only shows clips created by the channel/streamer. 
-
 **customText=string**  Displays custom message on top of clips. Can include {channel}.
 
 **modOnly=true/false**  When command option is used, can limit command to Mods only.
@@ -72,72 +70,16 @@ In OBS, set the browser source to: "Shutdown source when not visible" and "Refre
 
 **themeOption=integer** Various pre-made css themes top choose from.
 
-**gameTitle=string** Filter clips by Game Title. Only play clips from a specific game or category. This must be the exact title that Twitch uses. IE: Fortnite, Retro, DOOM II: Hell on Earth
-
 ## Custom CSS
 
+## Optional: Set a fixed video width and height.
 
-## If you want to add some flare to the clips info panel and channel name, try this Fancy Slide-in, Slide-out effect.
+Add this to the OBS browser source CSS properties.
 
 ```css
-#text-container {
-    top: 0;
-    background: #00008890;
-    box-shadow: 0 10px #00000090;
-    max-width: 100%;
-    padding: 4px 0 8px 0;
-    border-radius: 25px;
-    left: -2000px;
-    animation: slide 1s ease forwards;
-}
-
-#details-container {
-    top: 42vw;
-    border-radius: 25px;
-    transform: skew(6deg, -6deg);
-    margin-left: 0;
-    background: #00008890;
-    box-shadow: 10px 10px #00000090;
-    animation: movein 1s ease forwards, moveout 1s 15s ease forwards;
-}
-
-#details-container .details-text.item-0 {
-    font-size: 3vw;
-    overflow: hidden;
-    max-width: 50ch;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-#details-container .details-text.item-1 {
-    font-size: 2.5vw;
-    overflow: hidden;
-    max-width: 100ch;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-#details-container .details-text.item-2 {
-    font-size: 2vw;
-}
-
-#details-container .details-text.item-3 {
-    font-size: 1.5vw;
-}
-
-@keyframes slide {
-    100% {left: 0;}
-}
-
-@keyframes movein {
-  from { left: -2000px; }
-  to   { left: 0px; }
-}
-
-@keyframes moveout {
-  from { left: 0px; }
-  to   { left: -2000px; }
+video {
+    width: 1280px !important;
+    height: 720px !important;
+    background-color: #000000;
 }
 ```
-
-<img src="https://raw.githubusercontent.com/teklynk/twitch_clips_player/main/Screenshot01.png" width="500" />
