@@ -82,4 +82,13 @@ video {
     height: 720px !important;
     background-color: #000000;
 }
+
+#container {
+    padding:0;
+    margin:0;
+}
+
+#details-container {
+    top: 44vw;
+}
 ```
