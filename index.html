@@ -210,8 +210,12 @@ Clipped by {creator_name} {created_at}"></textarea>
             })[0].split('=')[1];
             // fill input with token value
             document.getElementById("ref").value = access_token;
+            // Save token to localstorage
+            localStorage.setItem("TwitchClipsRef", access_token);
             // Redirect to default page after getting token
             window.location.href = "https://twitch-clips-player.pages.dev";
+        } else {
+            document.getElementById("ref").value = localStorage.getItem("TwitchClipsRef");
         }
 
         let rangeSlider = function rangeSlider() {
