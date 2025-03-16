@@ -148,36 +148,36 @@
         <small class="text-muted range-slider-value">Day(s)</small>
     </div>
     <div class="form-check mb-2">
-        <input class="form-check-input" type="checkbox" value="" id="shuffle">
+        <input class="form-check-input" type="checkbox" value="" id="shuffle" checked>
         <label class="form-check-label" for="shuffle">
             Randomize/shuffle clips and channels
         </label>
     </div>
     <div class="form-check mb-2">
-        <input class="form-check-input" type="checkbox" value="" id="preferFeatured">
+        <input class="form-check-input" type="checkbox" value="" id="preferFeatured" checked>
         <label class="form-check-label" for="preferFeatured">
             Prefer featured clips (Featured clips if found)
         </label>
     </div>
     <div class="form-check mb-2">
-        <input class="form-check-input" type="checkbox" value="" id="showText">
+        <input class="form-check-input" type="checkbox" value="" id="showText" checked>
         <label class="form-check-label" for="showText">
             Show channel name on top of video
         </label>
     </div>
-    <div class="form-label-group mt-2 mb-4 ml-4 hide" id="showCustomText">
+    <div class="form-label-group mt-2 mb-4 ml-4" id="showCustomText" checked>
         <label for="customText">Custom message <small>(Optional)</small>
         </label>
         <input type="text" id="customText" class="form-control" value=""
                placeholder="Go check out {channel}" size="255">
     </div>
     <div class="form-check mb-2">
-        <input class="form-check-input" type="checkbox" value="" id="showDetails">
+        <input class="form-check-input" type="checkbox" value="" id="showDetails" checked>
         <label class="form-check-label" for="showDetails">
             Show clip details panel
         </label>
     </div>
-    <div class="form-label-group mt-2 mb-4 ml-4 hide" id="showDetailsText">
+    <div class="form-label-group mt-2 mb-4 ml-4" id="showDetailsText" checked>
         <label for="detailsText">Custom clip details panel text <small>(Optional)</small>
         </label>
         <textarea class="form-control" id="detailsText" rows="4" placeholder="{title}
@@ -189,7 +189,7 @@ Clipped by {creator_name} {created_at}"></textarea>
         <select class="form-control" id="themeOption">
             <option value="0">None</option>
             <option value="1">Slide in fancy skewed</option>
-            <option value="2">Slide in basic</option>
+            <option value="2" selected>Slide in basic</option>
             <option value="3">Outside the box</option>
         </select>
     </div>
@@ -210,12 +210,8 @@ Clipped by {creator_name} {created_at}"></textarea>
             })[0].split('=')[1];
             // fill input with token value
             document.getElementById("ref").value = access_token;
-            // Save token to localstorage
-            localStorage.setItem("TwitchClipsRef", access_token);
             // Redirect to default page after getting token
             window.location.href = "https://twitch-clips-player.pages.dev";
-        } else {
-            document.getElementById("ref").value = localStorage.getItem("TwitchClipsRef");
         }
 
         let rangeSlider = function rangeSlider() {
@@ -235,13 +231,6 @@ Clipped by {creator_name} {created_at}"></textarea>
                 });
             });
         };
-
-        document.getElementById("mainChannel").value = localStorage.getItem("TwitchClipsMainAccount");
-        document.getElementById("ref").value = localStorage.getItem("TwitchClipsRef");
-        document.getElementById("channel").value = localStorage.getItem("TwitchClipsChannel");
-        document.getElementById("exclude").value = localStorage.getItem("TwitchClipsExclude");
-        document.getElementById("command").value = localStorage.getItem("TwitchClipsCommand");
-        document.getElementById("customText").value = localStorage.getItem("TwitchClipsCustomText");
 
         // Auto grow textarea onload
         document.getElementById("channel").style.height = "";
@@ -312,17 +301,6 @@ Clipped by {creator_name} {created_at}"></textarea>
         let detailsText = document.getElementById("detailsText").value.trim();
         let clientId = 'cuql1zod4eeabjr3cnc6adjn9ezro4';
 
-        localStorage.setItem("TwitchClipsMainAccount", mainChannel.toLowerCase().trim());
-        localStorage.setItem("TwitchClipsRef", ref.trim());
-        localStorage.setItem("TwitchClipsClientId", clientId.trim());
-        localStorage.setItem("TwitchClipsChannel", channel.toLowerCase().trim());
-        localStorage.setItem("TwitchClipsExclude", exclude.toLowerCase().trim());
-        localStorage.setItem("TwitchClipsCommand", command.trim());
-        localStorage.setItem("TwitchClipsCustomText", customText.trim());
-
-        // reload the textarea with the cleaned up channel list (spaces removed).
-        document.getElementById("channel").value = localStorage.getItem("TwitchClipsChannel");
-
         if (showFollowing) {
             channel = '';
         }
@@ -350,7 +328,7 @@ Clipped by {creator_name} {created_at}"></textarea>
         let hardCodedCommands = ['clipplay', 'clippause', 'clipskip', 'clipreload'];
 
         if (hardCodedCommands.includes(command)) {
-            alert(command + ' can not be used. Please choose a different command name.');
+            alert(command + ' can not be used. It is a reserved command. Please choose a different command name.');
         }
 
         if (showDetails && !detailsText) {
