@@ -61,7 +61,6 @@ $(document).ready(function () {
     let themeOption = getUrlParameter('themeOption').trim();
     let randomClip = 0; // Default random clip index
     let clip_index = 0; // Default clip index
-    let cmdArray = [];
     let following = "";
     let followCount = 0;
     let playCount = 0;
@@ -289,7 +288,7 @@ $(document).ready(function () {
         }
         loadClip(channel[clip_index]);
     }
-t
+
     // Hard-coded commands to control the current clip. Limited to mods and streamer
     // !clipskip, !clippause, !clipplay
     // Triggers on message
