@@ -201,43 +201,10 @@ $(document).ready(function () {
 
         concatFollowing(following_json.data);
 
-        // TODO: Refactor this to ITERATE over following with a while loop. Make a function with a callback.
-        // Start the Following pagination - Pull up to 700 channels from Twitch API
-        if (following_json.pagination['cursor'] > '') {
-
-            let following_json_pagination_1 = following_pagination(following_json.pagination['cursor']);
-
-            concatFollowing(following_json_pagination_1.data);
-
-            if (following_json_pagination_1.pagination['cursor'] > '') {
-                let following_json_pagination_2 = following_pagination(following_json_pagination_1.pagination['cursor']);
-
-                concatFollowing(following_json_pagination_2.data);
-
-                if (following_json_pagination_2.pagination['cursor'] > '') {
-                    let following_json_pagination_3 = following_pagination(following_json_pagination_2.pagination['cursor']);
-
-                    concatFollowing(following_json_pagination_3.data);
-
-                    if (following_json_pagination_3.pagination['cursor'] > '') {
-                        let following_json_pagination_4 = following_pagination(following_json_pagination_3.pagination['cursor']);
-
-                        concatFollowing(following_json_pagination_4.data);
-
-                        if (following_json_pagination_4.pagination['cursor'] > '') {
-                            let following_json_pagination_5 = following_pagination(following_json_pagination_4.pagination['cursor']);
-
-                            concatFollowing(following_json_pagination_5.data);
-
-                            if (following_json_pagination_5.pagination['cursor'] > '') {
-                                let following_json_pagination_6 = following_pagination(following_json_pagination_5.pagination['cursor']);
-
-                                concatFollowing(following_json_pagination_6.data);
-                            }
-                        }
-                    }
-                }
-            }
+        // Start the Following pagination
+        while(following_json.pagination['cursor']) {
+            following_json = following_pagination(following_json.pagination['cursor']);
+            concatFollowing(following_json.data);
         }
 
         // Remove the last comma from string
