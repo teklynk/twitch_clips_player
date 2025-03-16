@@ -264,13 +264,7 @@ $(document).ready(function () {
                 // Stop the clips player
                 if (commandOption === "stop") {
                     // Remove element before loading the clip
-                    $('#text-container').remove();
-                    $('#details-container').remove();
-                    // Properly remove video source
-                    let videoElement = document.querySelector("video");
-                    videoElement.pause();
-                    videoElement.removeAttribute("src"); // empty source
-                    videoElement.load();
+                    $('#container').empty();
                     window.location.reload();
                 }
             }
@@ -319,7 +313,8 @@ $(document).ready(function () {
                     videoElement.play(); // continue playing clip if was paused
 
                 } else if (message === "!clipreload") {
-
+                    // Remove element before loading the clip
+                    $('#container').empty();
                     window.location.reload(); // Reload browser source
 
                 }
@@ -493,10 +488,7 @@ $(document).ready(function () {
         // adding a poster will help reduce the gap between clips.
         // set &delay=1 in the url if you want an intentional delay/gap between clips.
         if (parseInt(delay) === 0) {
-            // higher resolution thumbnail image for poster. Removes -480x272 from thumbnail url.
-            poster = clips_json.data[randomClip]['thumbnail_url'].replace('-480x272', '');
-            curr_clip.poster = poster;
-
+            curr_clip.poster = clips_json.data[randomClip]['thumbnail_url'];
         }
         curr_clip.src = clips_json.data[randomClip]['clip_url'];
         curr_clip.autoplay = true;
