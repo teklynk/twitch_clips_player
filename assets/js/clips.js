@@ -25,17 +25,6 @@ $(document).ready(function () {
         return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
     }
 
-    // Sort function
-    function sortByProperty(property) {
-        return function (a, b) {
-            if (a[property] < b[property])
-                return 1;
-            else if (a[property] > b[property])
-                return -1;
-            return 0;
-        }
-    }
-
     // Array Shuffler
     function shuffleArray(arr) {
         arr.sort(() => Math.random() - 0.5);
@@ -47,7 +36,6 @@ $(document).ready(function () {
     let limit = getUrlParameter('limit').trim();
     let dateRange = getUrlParameter('dateRange').trim();
     let delay = getUrlParameter('delay').trim();
-    let shuffle = getUrlParameter('shuffle').trim();
     let preferFeatured = getUrlParameter('preferFeatured').trim();
     let showText = getUrlParameter('showText').trim();
     let showDetails = getUrlParameter('showDetails').trim();
@@ -64,18 +52,13 @@ $(document).ready(function () {
     let following = "";
     let followCount = 0;
     let playCount = 0;
-    let poster = '';
 
     if (!showDetails) {
         showDetails = "false"; //default
     }
 
-    if (!shuffle) {
-        shuffle = "false"; //default
-    }
-
     if (!preferFeatured) {
-        preferFeatured = false; //default
+        preferFeatured = "false"; //default
     }
 
     if (!showFollowing) {
@@ -225,7 +208,7 @@ $(document).ready(function () {
     }
 
     // Randomly grab a channel from the list to start from
-    if (shuffle === 'true' && channel.length > 0) {
+    if (channel.length > 0) {
         // shuffle the list of channel names
         shuffleArray(channel);
         clip_index = 0;
@@ -326,30 +309,31 @@ $(document).ready(function () {
     });
 
     async function preloadNextClip(channelName) {
-        if (localStorage.getItem(channelName) === null) {
+
+        if (localStorage.getItem(channelName) === null && typeof channelName !== 'undefined') {
             console.log('Preloading next clip: ' + channelName);
 
             const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+            let apiUrl;
             
             try {
                 // Add a delay before the fetch operation
                 await sleep(1000); // 1000 milliseconds = 1 second
 
-                if (preferFeatured !== false) {
-                    clips_json = JSON.parse($.getJSON({
-                        'url':  apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "&shuffle=" + shuffle + "" + dateRange,
-                        'async': false
-                    }).responseText);
+                if (preferFeatured !== "false") {
+                    apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=true&limit=" + limit + "&shuffle=true" + dateRange;
                 } else {
-                    clips_json = JSON.parse($.getJSON({
-                        'url':  apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=false&limit=" + limit + "&shuffle=" + shuffle + "" + dateRange,
-                        'async': false
-                    }).responseText);
+                    apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=false&limit=" + limit + "&shuffle=true" + dateRange;
                 }
+
+                clips_json = JSON.parse($.getJSON({
+                    'url':  apiUrl,
+                    'async': false
+                }).responseText);
                 
                 // If dateRange or preferFeatured is set but no clips are found or only 1 clip is found. Try to pull any clip. 
-                if (clips_json.data.length === 0 && (dateRange > "" || preferFeatured !== false)) {
-                    asyncResponse = await fetch(`${apiServer}/getuserclips.php?channel=${channelName}&limit=${limit}&shuffle=${shuffle}`);
+                if (clips_json.data.length === 0 && (dateRange > "" || preferFeatured !== "false")) {
+                    asyncResponse = await fetch(`${apiServer}/getuserclips.php?channel=${channelName}&limit=${limit}&shuffle=true`);
                     clips_json = await asyncResponse.json();  // Parse the JSON response
                     console.log('No clips found matching dateRange or preferFeatured filter. PULL ANY Clip found from: ' + channelName);
                 }
@@ -369,27 +353,27 @@ $(document).ready(function () {
     function loadClip(channelName) {
 
         let clips_json = "";
+        let apiUrl;
 
         // Json data - Ajax calls
         // if localstorage does not exist
-        if (localStorage.getItem(channelName) === null) {
+        if (localStorage.getItem(channelName) === null && typeof channelName !== 'undefined') {
             try {
-                if (preferFeatured !== false) {
-                    clips_json = JSON.parse($.getJSON({
-                        'url':  apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=" + preferFeatured + "&limit=" + limit + "&shuffle=" + shuffle + "" + dateRange,
-                        'async': false
-                    }).responseText);
+                if (preferFeatured !== "false") {
+                    apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=true&limit=" + limit + "&shuffle=true" + dateRange;
                 } else {
-                    clips_json = JSON.parse($.getJSON({
-                        'url':  apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=false&limit=" + limit + "&shuffle=" + shuffle + "" + dateRange,
-                        'async': false
-                    }).responseText);
+                    apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=false&limit=" + limit + "&shuffle=true" + dateRange;
                 }
 
+                clips_json = JSON.parse($.getJSON({
+                    'url':  apiUrl,
+                    'async': false
+                }).responseText);
+
                 // If dateRange or preferFeatured is set but no clips are found or only 1 clip is found. Try to pull any clip. 
-                if (clips_json.data.length === 0 && (dateRange > "" || preferFeatured !== false)) {
+                if (clips_json.data.length === 0 && (dateRange > "" || preferFeatured !== "false")) {
                     clips_json = JSON.parse($.getJSON({
-                        'url':  apiServer + "/getuserclips.php?channel=" + channelName + "&limit=" + limit + "&shuffle=" + shuffle,
+                        'url':  apiServer + "/getuserclips.php?channel=" + channelName + "&limit=" + limit + "&shuffle=true",
                         'async': false
                     }).responseText);
 
@@ -426,11 +410,6 @@ $(document).ready(function () {
             clips_json = JSON.parse(localStorage.getItem(channelName));
         }
 
-        if (shuffle !== 'true') {
-            // Sort array by created_at
-            clips_json.data.sort(sortByProperty('created_at'));
-        }
-
         // If no user clips exist, then skip to the next channel
         if (!clips_json.data || typeof clips_json.data === 'undefined' || clips_json.data.length === 0) {
             console.log('NO CLIPS found. Skipping');
@@ -439,7 +418,7 @@ $(document).ready(function () {
         }
 
         // Grab a random clip index anywhere from 0 to the clips_json.data.length.
-        if (shuffle === 'true' && channel.length > 1) {
+        if (channel.length > 1) {
 
             console.log('Using random selection logic instead of shuffle');
             randomClip = Math.floor((Math.random() * clips_json.data.length - 1) + 1);
@@ -452,7 +431,7 @@ $(document).ready(function () {
                 playCount = 1;
                 randomClip = playCount - 1;
 
-                // If only one channel is being used with the clips player
+            // If only one channel is being used with the clips player
             } else if (channel.length === 1) {
 
                 playCount++;
@@ -567,7 +546,7 @@ $(document).ready(function () {
 
                     $("<div id='details-container'>" + dText + "</div>").appendTo('#container');
                 }
-            }, 700); // wait time
+            }, 500); // wait time
         }
 
         // Move to the next clip when the current one finishes playing
@@ -602,7 +581,7 @@ $(document).ready(function () {
             loadClip(channel[clip_index]);
             curr_clip.play();
         } else {
-            if (channel.length > 1 && channel[clip_index + 1] !== 'undefined') {
+            if (channel.length > 1 && typeof channel[clip_index + 1] !== 'undefined') {
                 preloadNextClip(channel[clip_index + 1]);
             }
             // Adjust the delay in the url, else delay=0
