@@ -216,8 +216,6 @@ $(document).ready(function () {
         channelListArray = channelListArray.filter(item => !excludeArray.includes(item));
         followList = channelListArray.join(',');
 
-        //console.log(followList);
-
         // Set channel to equal following list/string
         channel = followList.split(',').map(element => element.trim());
 
@@ -231,16 +229,13 @@ $(document).ready(function () {
     if (shuffle === 'true' && channel.length > 0) {
         // shuffle the list of channel names
         shuffleArray(channel);
-        // grab a random channel from the chanel list
-        clip_index = Math.floor((Math.random() * channel.length - 1) + 1);
+        clip_index = 0;
     } else {
         // grab the first item in the list to start from
         clip_index = 0;
     }
 
     console.log(channel);
-
-    console.log('The clip index is: ' + clip_index);
 
     // Create new video element
     let curr_clip = document.createElement('video');
@@ -294,8 +289,7 @@ $(document).ready(function () {
         }
         loadClip(channel[clip_index]);
     }
-
-    // TODO: Refactor this as options that the user can define/set
+t
     // Hard-coded commands to control the current clip. Limited to mods and streamer
     // !clipskip, !clippause, !clipplay
     // Triggers on message
@@ -342,8 +336,6 @@ $(document).ready(function () {
             console.log('Preloading next clip: ' + channelName);
 
             const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-            console.log('preferFeatured: ' + preferFeatured);
             
             try {
                 // Add a delay before the fetch operation
@@ -365,8 +357,7 @@ $(document).ready(function () {
                 if (clips_json.data.length === 0 && (dateRange > "" || preferFeatured !== false)) {
                     asyncResponse = await fetch(`${apiServer}/getuserclips.php?channel=${channelName}&limit=${limit}&shuffle=${shuffle}`);
                     clips_json = await asyncResponse.json();  // Parse the JSON response
-                    console.log('No clips found matching dateRange or preferFeatured filter. Now preloading all clips from: ' + channelName);
-                    console.log('PULL ANY Clip found from: ' + channelName);
+                    console.log('No clips found matching dateRange or preferFeatured filter. PULL ANY Clip found from: ' + channelName);
                 }
         
                 if (clips_json.data.length > 0) {
@@ -408,8 +399,7 @@ $(document).ready(function () {
                         'async': false
                     }).responseText);
 
-                    console.log('No clips found matching dateRange or preferFeatured filter. Now pulling all clips from: ' + channelName);
-                    console.log('PULL ANY Clip found from: ' + channelName);
+                    console.log('No clips found matching dateRange or preferFeatured filter. PULL ANY Clip found from: ' + channelName);
                 }
 
                 if (clips_json.data.length > 0) {
@@ -462,7 +452,7 @@ $(document).ready(function () {
 
         } else {
 
-            // Play clips in the order they were created_at
+            // Play clips in the order they were recieved
             if (clips_json.data.length === 1 || clips_json.data.length === playCount) {
 
                 playCount = 1;
@@ -490,7 +480,7 @@ $(document).ready(function () {
         console.log('Playing clip Index: ' + randomClip);
         console.log('Playing clip Item: ' + clips_json.data[randomClip]['item']);
         console.log('Playing clip ID: ' + clips_json.data[randomClip]['id']);
-        console.log('data length: ' + clips_json.data.length)
+        console.log('Data length: ' + clips_json.data.length)
 
         // If clip id exists, save it in localStorage
         if (clips_json.data.length > 0 && clips_json.data[randomClip]['id']) {
@@ -589,11 +579,6 @@ $(document).ready(function () {
             }, 700); // wait time
         }
 
-        // Debug
-        //console.log('channelName: ' + channelName);
-        //console.log('clipNumber: ' + randomClip);
-        //console.log(clips_json.data[randomClip]['title']);
-
         // Move to the next clip when the current one finishes playing
         curr_clip.addEventListener("ended", nextClip);
     }
@@ -622,7 +607,7 @@ $(document).ready(function () {
 
         if (skip === true) {
             // Skips to the next clip if a clip does not exist
-            console.log("Skipping clip");
+            console.log("Skipping clip...");
             loadClip(channel[clip_index]);
             curr_clip.play();
         } else {
