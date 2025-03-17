@@ -233,14 +233,12 @@ $(document).ready(function () {
             if (user['message-type'] === 'chat' && message.startsWith('!' + command)) {
 
                 // Remove element before loading the clip
-                if (document.getElementById("text-container")) {
-                    let textContainer = document.querySelectorAll("#text-container");
-                    textContainer.forEach((element) => textContainer.remove());
-                }
-                if (document.getElementById("details-container")) {
-                    let textContainer = document.querySelectorAll("#details-container");
-                    textContainer.forEach((element) => textContainer.remove());
-                }
+                const textContainer = document.querySelectorAll("#text-container");
+                Array.from(textContainer).forEach((element) => element?.remove());
+
+                const detailsContainer = document.querySelectorAll("#details-container");
+                Array.from(detailsContainer).forEach((element) => element?.remove());
+
                 // Properly remove video source
                 let videoElement = document.querySelector("video");
                 videoElement.pause();
@@ -487,16 +485,13 @@ $(document).ready(function () {
                 }
             }, 500); // wait time
         } else {
-            // Remove elements when the next clip plays
-            if (document.getElementById("text-container")) {
-                let textContainer = document.querySelectorAll("#text-container");
-                textContainer.forEach((element) => textContainer.remove());
-            }
-            if (document.getElementById("details-container")) {
-                let textContainer = document.querySelectorAll("#details-container");
-                textContainer.forEach((element) => textContainer.remove());
-            }
-        }
+            // Remove element before loading the clip
+            const textContainer = document.querySelectorAll("#text-container");
+            Array.from(textContainer).forEach((element) => element?.remove());
+
+            const detailsContainer = document.querySelectorAll("#details-container");
+            Array.from(detailsContainer).forEach((element) => element?.remove());
+    }
 
         // Show clip details panel
         if (showDetails === 'true' && typeof clips_json.data[randomClip]['broadcaster_name'] !== 'undefined') {
@@ -557,15 +552,12 @@ $(document).ready(function () {
                 }
             }, 500); // wait time
         } else {
-            // Remove elements when the next clip plays
-            if (document.getElementById("text-container")) {
-                let textContainer = document.querySelectorAll("#text-container");
-                textContainer.forEach((element) => textContainer.remove());
-            }
-            if (document.getElementById("details-container")) {
-                let textContainer = document.querySelectorAll("#details-container");
-                textContainer.forEach((element) => textContainer.remove());
-            }
+            // Remove element before loading the clip
+            const textContainer = document.querySelectorAll("#text-container");
+            Array.from(textContainer).forEach((element) => element?.remove());
+
+            const detailsContainer = document.querySelectorAll("#details-container");
+            Array.from(detailsContainer).forEach((element) => element?.remove());
         }
 
         // Move to the next clip when the current one finishes playing
@@ -574,15 +566,12 @@ $(document).ready(function () {
 
     function nextClip(skip = false) {
 
-        // Remove elements when the next clip plays
-        if (document.getElementById("text-container")) {
-            let textContainer = document.querySelectorAll("#text-container");
-            textContainer.forEach((element) => textContainer.remove());
-        }
-        if (document.getElementById("details-container")) {
-            let textContainer = document.querySelectorAll("#details-container");
-            textContainer.forEach((element) => textContainer.remove());
-        }
+        // Remove element before loading the clip
+        const textContainer = document.querySelectorAll("#text-container");
+        Array.from(textContainer).forEach((element) => element?.remove());
+
+        const detailsContainer = document.querySelectorAll("#details-container");
+        Array.from(detailsContainer).forEach((element) => element?.remove());
 
         // Properly remove video source
         let videoElement = document.querySelector("video");
