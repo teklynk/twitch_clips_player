@@ -6,7 +6,7 @@ $(document).ready(function () {
     // Function to randomly select a api server
     function setRandomServer() {
         // set the api gateway servers 
-        const servers = ["https://twitchapi.teklynk.com","https://twitchapi.teklynk.dev","https://twitchapi2.teklynk.dev"];
+        const servers = ["https://twitchapi.teklynk.com", "https://twitchapi.teklynk.dev", "https://twitchapi2.teklynk.dev"];
 
         // Randomly select a server
         const randomIndex = Math.floor(Math.random() * servers.length);
@@ -163,7 +163,7 @@ $(document).ready(function () {
             }
 
             jsonParse = JSON.parse($.getJSON({
-                'url':  apiUrl,
+                'url': apiUrl,
                 'async': false
             }).responseText);
 
@@ -184,7 +184,7 @@ $(document).ready(function () {
         concatFollowing(following_json.data);
 
         // Start the Following pagination
-        while(following_json.pagination['cursor']) {
+        while (following_json.pagination['cursor']) {
             following_json = following_pagination(following_json.pagination['cursor']);
             concatFollowing(following_json.data);
         }
@@ -315,7 +315,7 @@ $(document).ready(function () {
 
             const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
             let apiUrl;
-            
+
             try {
                 // Add a delay before the fetch operation
                 await sleep(1000); // 1000 milliseconds = 1 second
@@ -327,17 +327,17 @@ $(document).ready(function () {
                 }
 
                 clips_json = JSON.parse($.getJSON({
-                    'url':  apiUrl,
+                    'url': apiUrl,
                     'async': false
                 }).responseText);
-                
+
                 // If dateRange or preferFeatured is set but no clips are found or only 1 clip is found. Try to pull any clip. 
                 if (clips_json.data.length === 0 && (dateRange > "" || preferFeatured !== "false")) {
                     asyncResponse = await fetch(`${apiServer}/getuserclips.php?channel=${channelName}&limit=${limit}&shuffle=true`);
                     clips_json = await asyncResponse.json();  // Parse the JSON response
                     console.log('No clips found matching dateRange or preferFeatured filter. PULL ANY Clip found from: ' + channelName);
                 }
-        
+
                 if (clips_json.data.length > 0) {
                     console.log('Set ' + channelName + ' in localStorage');
                     // Store the data in localStorage
@@ -366,14 +366,14 @@ $(document).ready(function () {
                 }
 
                 clips_json = JSON.parse($.getJSON({
-                    'url':  apiUrl,
+                    'url': apiUrl,
                     'async': false
                 }).responseText);
 
                 // If dateRange or preferFeatured is set but no clips are found or only 1 clip is found. Try to pull any clip. 
                 if (clips_json.data.length === 0 && (dateRange > "" || preferFeatured !== "false")) {
                     clips_json = JSON.parse($.getJSON({
-                        'url':  apiServer + "/getuserclips.php?channel=" + channelName + "&limit=" + limit + "&shuffle=true",
+                        'url': apiServer + "/getuserclips.php?channel=" + channelName + "&limit=" + limit + "&shuffle=true",
                         'async': false
                     }).responseText);
 
@@ -431,7 +431,7 @@ $(document).ready(function () {
                 playCount = 1;
                 randomClip = playCount - 1;
 
-            // If only one channel is being used with the clips player
+                // If only one channel is being used with the clips player
             } else if (channel.length === 1) {
 
                 playCount++;
@@ -454,13 +454,6 @@ $(document).ready(function () {
         console.log('Playing clip Item: ' + clips_json.data[randomClip]['item']);
         console.log('Playing clip ID: ' + clips_json.data[randomClip]['id']);
         console.log('Data length: ' + clips_json.data.length)
-
-        // If clip id exists, save it in localStorage
-        if (clips_json.data.length > 0 && clips_json.data[randomClip]['id']) {
-            localStorage.setItem('clip_id', clips_json.data[randomClip]['id']);
-        } else {
-            localStorage.setItem('clip_id', '');
-        }
 
         // Create video element and load a new clip
 
