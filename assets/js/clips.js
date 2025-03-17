@@ -30,9 +30,13 @@ $(document).ready(function () {
         arr.sort(() => Math.random() - 0.5);
     }
 
-    // Get elements
-    const textContainer = document.querySelectorAll("#text-container");
-    const detailsContainer = document.querySelectorAll("#details-container");
+    // Get elements and remove elements
+    function removeElements() {
+        const textContainer = document.querySelectorAll("#text-container");
+        const detailsContainer = document.querySelectorAll("#details-container");
+        Array.from(textContainer).forEach((element) => element.remove());
+        Array.from(detailsContainer).forEach((element) => element.remove());
+    }
 
     // URL values
     let channel = getUrlParameter('channel').toLowerCase().trim();
@@ -237,8 +241,7 @@ $(document).ready(function () {
             if (user['message-type'] === 'chat' && message.startsWith('!' + command)) {
 
                 // Remove element before loading the clip
-                Array.from(textContainer).forEach((element) => element?.remove());
-                Array.from(detailsContainer).forEach((element) => element?.remove());
+                removeElements();
 
                 // Properly remove video source
                 let videoElement = document.querySelector("video");
@@ -487,8 +490,7 @@ $(document).ready(function () {
             }, 500); // wait time
         } else {
             // Remove element before loading the clip
-            Array.from(textContainer).forEach((element) => element?.remove());
-            Array.from(detailsContainer).forEach((element) => element?.remove());
+            removeElements();
     }
 
         // Show clip details panel
@@ -551,8 +553,7 @@ $(document).ready(function () {
             }, 500); // wait time
         } else {
             // Remove element before loading the clip
-            Array.from(textContainer).forEach((element) => element?.remove());
-            Array.from(detailsContainer).forEach((element) => element?.remove());
+            removeElements();
         }
 
         // Move to the next clip when the current one finishes playing
@@ -562,8 +563,7 @@ $(document).ready(function () {
     function nextClip(skip = false) {
 
         // Remove element before loading the clip
-        Array.from(textContainer).forEach((element) => element?.remove());
-        Array.from(detailsContainer).forEach((element) => element?.remove());
+        removeElements();
 
         // Properly remove video source
         let videoElement = document.querySelector("video");
