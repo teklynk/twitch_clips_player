@@ -477,7 +477,7 @@ $(document).ready(function () {
         curr_clip.load();
 
         // Show channel name on top of video
-        if (showText === 'true' && typeof clips_json.data[randomClip]['broadcaster_name'] !== 'undefined') {
+        if (showText === 'true') {
             setTimeout(function () {
                 if (customText) {
                     // custom message to show on top of clip. includes {channel} name as a variable
@@ -494,7 +494,7 @@ $(document).ready(function () {
     }
 
         // Show clip details panel
-        if (showDetails === 'true' && typeof clips_json.data[randomClip]['broadcaster_name'] !== 'undefined') {
+        if (showDetails === 'true') {
             setTimeout(function () {
                 if (detailsText) {
 
