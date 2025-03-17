@@ -233,8 +233,14 @@ $(document).ready(function () {
             if (user['message-type'] === 'chat' && message.startsWith('!' + command)) {
 
                 // Remove element before loading the clip
-                $('#text-container').remove();
-                $('#details-container').remove();
+                if (document.getElementById("text-container")) {
+                    let textContainer = document.querySelectorAll("#text-container");
+                    textContainer.forEach((element) => textContainer.remove());
+                }
+                if (document.getElementById("details-container")) {
+                    let textContainer = document.querySelectorAll("#details-container");
+                    textContainer.forEach((element) => textContainer.remove());
+                }
                 // Properly remove video source
                 let videoElement = document.querySelector("video");
                 videoElement.pause();
@@ -481,7 +487,15 @@ $(document).ready(function () {
                 }
             }, 500); // wait time
         } else {
-            $("<div id='text-container'><span class='title-text'></span></div>").appendTo('#container');
+            // Remove elements when the next clip plays
+            if (document.getElementById("text-container")) {
+                let textContainer = document.querySelectorAll("#text-container");
+                textContainer.forEach((element) => textContainer.remove());
+            }
+            if (document.getElementById("details-container")) {
+                let textContainer = document.querySelectorAll("#details-container");
+                textContainer.forEach((element) => textContainer.remove());
+            }
         }
 
         // Show clip details panel
@@ -543,7 +557,15 @@ $(document).ready(function () {
                 }
             }, 500); // wait time
         } else {
-            $("<div id='details-container'></div>").appendTo('#container');
+            // Remove elements when the next clip plays
+            if (document.getElementById("text-container")) {
+                let textContainer = document.querySelectorAll("#text-container");
+                textContainer.forEach((element) => textContainer.remove());
+            }
+            if (document.getElementById("details-container")) {
+                let textContainer = document.querySelectorAll("#details-container");
+                textContainer.forEach((element) => textContainer.remove());
+            }
         }
 
         // Move to the next clip when the current one finishes playing
@@ -552,12 +574,14 @@ $(document).ready(function () {
 
     function nextClip(skip = false) {
 
-        // Remove element when the next clip plays
+        // Remove elements when the next clip plays
         if (document.getElementById("text-container")) {
-            document.getElementById("text-container").remove();
+            let textContainer = document.querySelectorAll("#text-container");
+            textContainer.forEach((element) => textContainer.remove());
         }
         if (document.getElementById("details-container")) {
-            document.getElementById("details-container").remove();
+            let textContainer = document.querySelectorAll("#details-container");
+            textContainer.forEach((element) => textContainer.remove());
         }
 
         // Properly remove video source
