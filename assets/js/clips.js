@@ -469,7 +469,7 @@ $(document).ready(function () {
         curr_clip.load();
 
         // Show channel name on top of video
-        if (showText === 'true') {
+        if (showText === 'true' && typeof clips_json.data[randomClip]['broadcaster_name'] !== 'undefined') {
             setTimeout(function () {
                 if (customText) {
                     // custom message to show on top of clip. includes {channel} name as a variable
@@ -480,10 +480,12 @@ $(document).ready(function () {
                     $("<div id='text-container'><span class='title-text'>" + clips_json.data[randomClip]['broadcaster_name'] + "</span></div>").appendTo('#container');
                 }
             }, 500); // wait time
+        } else {
+            $("<div id='text-container'><span class='title-text'></span></div>").appendTo('#container');
         }
 
         // Show clip details panel
-        if (showDetails === 'true') {
+        if (showDetails === 'true' && typeof clips_json.data[randomClip]['broadcaster_name'] !== 'undefined') {
             setTimeout(function () {
                 if (detailsText) {
 
@@ -540,6 +542,8 @@ $(document).ready(function () {
                     $("<div id='details-container'>" + dText + "</div>").appendTo('#container');
                 }
             }, 500); // wait time
+        } else {
+            $("<div id='details-container'></div>").appendTo('#container');
         }
 
         // Move to the next clip when the current one finishes playing
