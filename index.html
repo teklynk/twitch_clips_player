@@ -61,31 +61,38 @@
             <a class="github-button" href="https://github.com/teklynk/twitch_clips_player/fork" data-color-scheme="no-preference: light; light: light; dark: dark;" data-size="large" data-show-count="true" aria-label="">Fork</a>
             <a class="github-button" href="https://github.com/teklynk/twitch_clips_player" data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="">Star</a>
             <h2>Twitch Clips Player Overlay</h2>
-            <p>This grabs your Twitch clips and plays them one after the other in a loop. Keep your viewers entertained
-                on your BRB or starting soon scenes.</p> 
+            <p>This grabs your Twitch clips and plays them one after the other in a loop. Keep your viewers entertained on your BRB or starting soon scenes.</p> 
             <span class="text-info">FEATURES:</span>
             <ul>
-                <li>Control the clips from Twitch chat. !clipskip, !clippause, !clipplay, !clipreload. Limited to Mods and Streamer.</li>
-                <li>Show clips from channels that you follow. Grabs the most recent 700 channels that you follow.</li>
-                <li>Use a custom command to start the clips reel. Command is restricted to Mods only.</li>
-                <li>Type "!mycommand stop" in chat to stop the clips player.</li>
-                <li><strong>Date Range option:</strong> This will grab a clip from within the last 5days, 10day, 30days... If no clips exist within the date range, then display a clip from the 100 most popular.</li>
-                <li><strong>Show clip details panel:</strong> This will display a panel in the lower third of the overlay that contains details about the clip. This can use variables:{channel},{title},{game},{creator_name},{created_at}.</li>
+                <li><strong>Control your clips:</strong> Use !clipskip, !clippause, !clipplay, or !clipreload. Only mods and streamer can use these commands.</li>
+                <li><strong>Show clips from channels that you follow.</strong></li>
+                <li><strong>Custom command:</strong> Start or stop the clip reel with a custom command. Command is restricted to mods and streamer only.</li>
+                <li><strong>Type "!mycommand stop" in chat:</strong> Stop the clip reel without background play</li>
+                <li><strong>Show clip details panel:</strong> Open a panel displaying clip details about your favorite clip. Use variables: {channel}, {title}, {game}, {creator_name}, {created_at} to change the default text.</li>
             </ul>
-            <p>In OBS, set the browser source to: "Shutdown source when not visible" and "Refresh browser when scene becomes active". This will prevent the clips player from playing in the background. It will also reload/refresh the clips player when the source becomes active.</p>
+            <span class="text-info">Date Range:</span>
+            <ul>
+                <li>Select from 10 days, 30 days, 90 days... If no clips are found, show a clip from the top most popular clips.</li>
+            </ul>
+            <span class="text-info">For OBS:</span>
+            <ul>
+                <li><strong>Shutdown source:</strong> Set to "Stop video when not visible"</li>
+                <li><strong>Refresh:</strong> Refresh browser when scene becomes active</li>
+            </ul>
         </div>
     </div>
     <br>
-    <div class="alert alert-info">
-        <h2>DISCLAIMER:</h2>
-        <p>This clips player works best when playing clips from your own channel. The clips player will be slow and possibly freeze between clips if you use the "Show clips from channels that you follow" or set multiple channels.</p>
-        <p><strong>Date range and featured clips:</strong> The clips player will try to find and play clips that meet these options first. If no clips are found within these filters, then it will play a clip from the top most popular. Playing any clip is better than not playing a clip at all.</p>
-        <p>This project is <strong>"AS-IS"</strong>. It is free to use, clone, fork, modify, make it your own.</p>
+    <div class="alert alert-info mt-0 mb-0">
+        <span class="text-info">Disclaimer:</span>
+        <ul>
+            <li>The clips player may not function smoothly if you use multiple channels, which could result in temporary slowness between clips.</li>
+            <li><strong>Date range and featured clips:</strong> The clips player will try to find and play clips that meet these criteria first. If no clips are identified within the specified criteria, then it will attempt to display clips from the top most popular. Keep in mind that if you set a date range and/or limit to featured clips, there may be a possibility of displaying only a small number of clips.</li>
+        </ul>
     </div>
     <br>
     <div class="alert alert-dark" role="alert">Access Token is now required if you would like to show clips from channels that you follow.<br>
-        <div class="form-label-group mb-4 mt-2">
-            <div class="mb-2 mt-2">
+        <div class="form-label-group mb-4">
+            <div class="mb-2">
                 <a href="https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=cuql1zod4eeabjr3cnc6adjn9ezro4&redirect_uri=https://twitch-clips-player.pages.dev&scope=chat:read+chat:edit+user:read:follows+moderator:read:followers&force_verify=true"
                    target="_self"><img src="assets/images/connect.png"></a>
             </div>
@@ -131,10 +138,10 @@
         </div>
     </div>
     <div class="form-group range-slider mt-4">
-        <label for="limit">Number of clips to pull
+        <label for="limit">Max Number of clips to pull
             <small>(Max is 100)</small>
         </label>
-        <input type="range" max="100" min="1" step="1" class="form-control range-slider-range" id="limit"
+        <input type="range" max="100" min="0" step="10" class="form-control range-slider-range" id="limit"
                value="20" style="height: 0;">
         <small class="text-muted range-slider-value"></small>
         <small class="text-muted range-slider-value">Clips</small>
@@ -142,7 +149,7 @@
     <div class="form-group range-slider mt-4">
         <label for="dateRange">Only show clips from within a Date Range (Date range clips if found) <small class="text-warning">* 0 Day(s) = OFF</small>
         </label>
-        <input type="range" max="365" min="0" step="1" class="form-control range-slider-range" id="dateRange"
+        <input type="range" max="360" min="0" step="10" class="form-control range-slider-range" id="dateRange"
                value="0" style="height: 0;">
         <small class="text-muted range-slider-value"></small>
         <small class="text-muted range-slider-value">Day(s)</small>

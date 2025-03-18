@@ -81,8 +81,8 @@ $(document).ready(function () {
         showText = "false"; //default
     }
 
-    if (!limit) {
-        limit = "20"; //default
+    if (!limit || limit === "0") {
+        limit = "10"; //default
     }
 
     if (!dateRange || dateRange === "0") {
