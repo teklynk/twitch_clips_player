@@ -363,6 +363,9 @@ $(document).ready(function () {
         let clips_json = "";
         let apiUrl;
 
+        // Remove element before loading the clip
+        removeElements();
+
         // Json data - Ajax calls
         // if localstorage does not exist
         if (localStorage.getItem(channelName) === null && typeof channelName !== 'undefined') {
@@ -418,13 +421,6 @@ $(document).ready(function () {
             clips_json = JSON.parse(localStorage.getItem(channelName));
         }
 
-        // If no user clips exist, then skip to the next channel
-        if (!clips_json.data || typeof clips_json.data === 'undefined' || clips_json.data.length === 0) {
-            console.log('NO CLIPS found. Skipping');
-            nextClip(true); // skip clip
-            return false;
-        }
-
         // Grab a random clip index anywhere from 0 to the clips_json.data.length.
         if (channel.length > 1) {
 
@@ -477,7 +473,7 @@ $(document).ready(function () {
         curr_clip.load();
 
         // Show channel name on top of video
-        if (showText === 'true') {
+        if (showText === 'true' && typeof clips_json.data[randomClip]['broadcaster_name'] !== 'undefined') {
             setTimeout(function () {
                 if (customText) {
                     // custom message to show on top of clip. includes {channel} name as a variable
@@ -561,9 +557,6 @@ $(document).ready(function () {
     }
 
     function nextClip(skip = false) {
-
-        // Remove element before loading the clip
-        removeElements();
 
         // Properly remove video source
         let videoElement = document.querySelector("video");
