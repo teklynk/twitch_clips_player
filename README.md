@@ -33,8 +33,6 @@ In OBS, set the browser source to: "Shutdown source when not visible" and "Refre
 
 **channel=Your channel name or a comma separated list of channels** (user1,user2,user3,user4)
 
-**shuffle=true/false**  Play clips in a random order.
-
 **preferFeatured=true/false**  Only pull featured clips.
 
 **showText=true/false**  Enables the channel name on top of the video.
@@ -53,8 +51,6 @@ In OBS, set the browser source to: "Shutdown source when not visible" and "Refre
 
 **customText=string**  Displays custom message on top of clips. Can include {channel}.
 
-**delay=integer**  Adds a delay between clips. Great from showing a graphic that is behind the clips player. Default is 0.
-
 **mainAccount=channel**  The main channel that you want to send chat messages to.
 
 **ref=base64**  Access token
@@ -65,7 +61,7 @@ In OBS, set the browser source to: "Shutdown source when not visible" and "Refre
 
 ## Optional: Set a fixed video width and height.
 
-Add this to the OBS browser source CSS properties.
+Add this to the OBS browser source CSS properties (optional).
 
 ```css
 video {
