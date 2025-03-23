@@ -43,7 +43,6 @@ $(document).ready(function () {
     let mainAccount = getUrlParameter('mainAccount').toLowerCase().trim();
     let limit = getUrlParameter('limit').trim();
     let dateRange = getUrlParameter('dateRange').trim();
-    let delay = getUrlParameter('delay').trim();
     let preferFeatured = getUrlParameter('preferFeatured').trim();
     let showText = getUrlParameter('showText').trim();
     let showDetails = getUrlParameter('showDetails').trim();
@@ -100,10 +99,6 @@ $(document).ready(function () {
 
         // set the daterange url parameter for the api endpoint
         dateRange = "&start_date=" + startDate + "T00:00:00Z&end_date=" + todayDate + "T00:00:00Z";
-    }
-
-    if (!delay) {
-        delay = "0"; //default
     }
 
     let client = '';
@@ -462,10 +457,6 @@ $(document).ready(function () {
         // Create video element and load a new clip
 
         // adding a poster will help reduce the gap between clips.
-        // set &delay=1 in the url if you want an intentional delay/gap between clips.
-        if (parseInt(delay) === 0) {
-            curr_clip.poster = clips_json.data[randomClip]['thumbnail_url'];
-        }
         curr_clip.src = clips_json.data[randomClip]['clip_url'];
         curr_clip.autoplay = true;
         curr_clip.controls = false;
@@ -579,13 +570,9 @@ $(document).ready(function () {
             if (channel.length > 1 && typeof channel[clip_index + 1] !== 'undefined') {
                 preloadNextClip(channel[clip_index + 1]);
             }
-            // Adjust the delay in the url, else delay=0
-            setTimeout(function () {
-                // Play a clip
-                loadClip(channel[clip_index]);
-                curr_clip.play();
-            }, parseInt(delay) * 1000 / 2); // wait time
+            // Play a clip
+            loadClip(channel[clip_index]);
+            curr_clip.play();
         }
-
     }
 });
