@@ -457,6 +457,7 @@ $(document).ready(function () {
         // Create video element and load a new clip
 
         // adding a poster will help reduce the gap between clips.
+        curr_clip.poster = clips_json.data[randomClip]['thumbnail_url'];
         curr_clip.src = clips_json.data[randomClip]['clip_url'];
         curr_clip.autoplay = true;
         curr_clip.controls = false;
