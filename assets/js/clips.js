@@ -328,11 +328,10 @@ $(document).ready(function () {
                 } else {
                     apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=false&limit=" + limit + "&shuffle=true" + dateRange;
                 }
-
-                clips_json = JSON.parse($.getJSON({
-                    'url': apiUrl,
-                    'async': false
-                }).responseText);
+         
+                // Perform an asynchronous fetch request
+                let response = await fetch(apiUrl);
+                let clips_json = await response.json();  // Parse the JSON response
 
                 // If dateRange or preferFeatured is set but no clips are found or only 1 clip is found. Try to pull any clip. 
                 if (clips_json.data.length === 0 && (dateRange > "" || preferFeatured !== "false")) {
