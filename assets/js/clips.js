@@ -59,6 +59,9 @@ $(document).ready(function () {
     let following = "";
     let followCount = 0;
     let playCount = 0;
+    let clips_json = "";
+    let apiUrl;
+    let asyncResponse;
 
     if (!showDetails) {
         showDetails = "false"; //default
@@ -317,7 +320,6 @@ $(document).ready(function () {
             console.log('Preloading next clip: ' + channelName);
 
             const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-            let apiUrl;
 
             try {
                 // Add a delay before the fetch operation
@@ -330,8 +332,8 @@ $(document).ready(function () {
                 }
          
                 // Perform an asynchronous fetch request
-                let response = await fetch(apiUrl);
-                let clips_json = await response.json();  // Parse the JSON response
+                asyncResponse = await fetch(apiUrl);
+                clips_json = await asyncResponse.json();  // Parse the JSON response
 
                 // If dateRange or preferFeatured is set but no clips are found or only 1 clip is found. Try to pull any clip. 
                 if (clips_json.data.length === 0 && (dateRange > "" || preferFeatured !== "false")) {
@@ -353,9 +355,6 @@ $(document).ready(function () {
 
     // Get and play the clip
     function loadClip(channelName) {
-
-        let clips_json = "";
-        let apiUrl;
 
         // Remove element before loading the clip
         removeElements();
