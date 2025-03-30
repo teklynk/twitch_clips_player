@@ -218,9 +218,6 @@ $(document).ready(function () {
         // shuffle the list of channel names
         shuffleArray(channel);
         clip_index = 0;
-    } else {
-        // grab the first item in the list to start from
-        clip_index = 0;
     }
 
     console.log(channel);
@@ -319,12 +316,7 @@ $(document).ready(function () {
         if (localStorage.getItem(channelName) === null && typeof channelName !== 'undefined') {
             console.log('Preloading next clip: ' + channelName);
 
-            const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
             try {
-                // Add a delay before the fetch operation
-                await sleep(1000); // 1000 milliseconds = 1 second
-
                 if (preferFeatured !== "false") {
                     apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=true&limit=" + limit + "&shuffle=true" + dateRange;
                 } else {
@@ -397,6 +389,7 @@ $(document).ready(function () {
                     nextClip(true);
                     return false;
                 }
+
                 if (e.name === 'QuotaExceededError') {
                     console.error('LocalStorage Quota Exceeded. Please free up some space by deleting unnecessary data.');
                     // automatically clear localstorage if it exceeds the quota
@@ -453,7 +446,6 @@ $(document).ready(function () {
         console.log('Data length: ' + clips_json.data.length)
 
         // Create video element and load a new clip
-
         // adding a poster will help reduce the gap between clips.
         curr_clip.poster = clips_json.data[randomClip]['thumbnail_url'];
         curr_clip.src = clips_json.data[randomClip]['clip_url'];
@@ -463,17 +455,15 @@ $(document).ready(function () {
         curr_clip.load();
 
         // Show channel name on top of video
-        if (showText === 'true' && typeof clips_json.data[randomClip]['broadcaster_name'] !== 'undefined') {
-            setTimeout(function () {
-                if (customText) {
-                    // custom message to show on top of clip. includes {channel} name as a variable
-                    customText = getUrlParameter('customText').trim();
-                    customText = customText.replace("{channel}", clips_json.data[randomClip]['broadcaster_name']);
-                    $("<div id='text-container'><span class='title-text'>" + decodeURIComponent(customText) + "</span></div>").appendTo('#container');
-                } else {
-                    $("<div id='text-container'><span class='title-text'>" + clips_json.data[randomClip]['broadcaster_name'] + "</span></div>").appendTo('#container');
-                }
-            }, 500); // wait time
+        if (showText === 'true') {
+            if (customText) {
+                // custom message to show on top of clip. includes {channel} name as a variable
+                customText = getUrlParameter('customText').trim();
+                customText = customText.replace("{channel}", clips_json.data[randomClip]['broadcaster_name']);
+                $("<div id='text-container'><span class='title-text'>" + decodeURIComponent(customText) + "</span></div>").appendTo('#container');
+            } else {
+                $("<div id='text-container'><span class='title-text'>" + clips_json.data[randomClip]['broadcaster_name'] + "</span></div>").appendTo('#container');
+            }
         } else {
             // Remove element before loading the clip
             removeElements();
@@ -481,62 +471,60 @@ $(document).ready(function () {
 
         // Show clip details panel
         if (showDetails === 'true') {
-            setTimeout(function () {
-                if (detailsText) {
+            if (detailsText) {
 
-                    if (document.getElementById("details-container")) {
-                        document.getElementById("details-container").remove();
-                    }
-
-                    // custom clip details text
-                    detailsText = getUrlParameter('detailsText').trim();
-                    detailsText = detailsText.replace("{channel}", clips_json.data[randomClip]['broadcaster_name']);
-
-                    // Show clip title if it exists
-                    if (detailsText.includes("{title}")) {
-                        if (clips_json.data[randomClip]['title']) {
-                            detailsText = detailsText.replace("{title}", clips_json.data[randomClip]['title']);
-                        } else {
-                            detailsText = detailsText.replace("{title}", "?");
-                        }
-                    }
-
-                    // Get game name/title using the game_id from the clip's json data
-                    if (detailsText.includes("{game}")) {
-                        // Show game title if it exists
-                        if (clips_json.data[randomClip]['game_id']) {
-                            let game = game_by_id(clips_json.data[randomClip]['game_id']);
-                            detailsText = detailsText.replace("{game}", game.data[0]['name']);
-                        } else {
-                            detailsText = detailsText.replace("{game}", "?");
-                        }
-                    }
-
-                    // Format created_at date
-                    if (detailsText.includes("{created_at}")) {
-                        detailsText = detailsText.replace("{created_at}", moment(clips_json.data[randomClip]['created_at']).format("MMMM D, YYYY"));
-                    }
-
-                    if (detailsText.includes("{creator_name}")) {
-                        detailsText = detailsText.replace("{creator_name}", clips_json.data[randomClip]['creator_name']);
-                    }
-
-                    let dText = "";
-
-                    // split on line breaks and create an array
-                    let separateLines = detailsText.split(/\r?\n|\r|\n/g);
-
-                    // interate over separateLines array
-                    separateLines.forEach(lineBreaks);
-
-                    // generate html for each linebreak/item in array
-                    function lineBreaks(item, index) {
-                        dText += "<div class='details-text item-" + index + "'>" + item + "</div>";
-                    }
-
-                    $("<div id='details-container'>" + dText + "</div>").appendTo('#container');
+                if (document.getElementById("details-container")) {
+                    document.getElementById("details-container").remove();
                 }
-            }, 500); // wait time
+
+                // custom clip details text
+                detailsText = getUrlParameter('detailsText').trim();
+                detailsText = detailsText.replace("{channel}", clips_json.data[randomClip]['broadcaster_name']);
+
+                // Show clip title if it exists
+                if (detailsText.includes("{title}")) {
+                    if (clips_json.data[randomClip]['title']) {
+                        detailsText = detailsText.replace("{title}", clips_json.data[randomClip]['title']);
+                    } else {
+                        detailsText = detailsText.replace("{title}", "?");
+                    }
+                }
+
+                // Get game name/title using the game_id from the clip's json data
+                if (detailsText.includes("{game}")) {
+                    // Show game title if it exists
+                    if (clips_json.data[randomClip]['game_id']) {
+                        let game = game_by_id(clips_json.data[randomClip]['game_id']);
+                        detailsText = detailsText.replace("{game}", game.data[0]['name']);
+                    } else {
+                        detailsText = detailsText.replace("{game}", "?");
+                    }
+                }
+
+                // Format created_at date
+                if (detailsText.includes("{created_at}")) {
+                    detailsText = detailsText.replace("{created_at}", moment(clips_json.data[randomClip]['created_at']).format("MMMM D, YYYY"));
+                }
+
+                if (detailsText.includes("{creator_name}")) {
+                    detailsText = detailsText.replace("{creator_name}", clips_json.data[randomClip]['creator_name']);
+                }
+
+                let dText = "";
+
+                // split on line breaks and create an array
+                let separateLines = detailsText.split(/\r?\n|\r|\n/g);
+
+                // interate over separateLines array
+                separateLines.forEach(lineBreaks);
+
+                // generate html for each linebreak/item in array
+                function lineBreaks(item, index) {
+                    dText += "<div class='details-text item-" + index + "'>" + item + "</div>";
+                }
+
+                $("<div id='details-container'>" + dText + "</div>").appendTo('#container');
+            }
         } else {
             // Remove element before loading the clip
             removeElements();
