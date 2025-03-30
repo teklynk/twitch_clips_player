@@ -106,9 +106,6 @@ $(document).ready(function () {
 
     let client = '';
 
-    // onload set the local storage for clip_id to false.
-    localStorage.setItem('clip_id', '');
-
     // Load theme css file if theme is set
     if (parseInt(themeOption) > 0) {
         $('head').append('<link rel="stylesheet" type="text/css" href="assets/css/theme' + themeOption + '.css">');
