@@ -276,37 +276,34 @@ $(document).ready(function () {
 
         if (self || !message.startsWith('!')) return;
 
-        if (user['message-type'] === 'chat' && message.startsWith('!')) {
-
-            if (user.mod || user.username === mainAccount) {
-
-                let videoElement = document.querySelector("video");
-
-                if (message === "!clipskip") {
-
+        if (user['message-type'] === 'chat' && message.startsWith('!') && (user.mod || user.username === mainAccount)) {
+            let videoElement = document.querySelector("video");
+            const command = message.toLowerCase();
+        
+            switch (command) {
+                case "!clipskip":
                     console.log("Skipping Clip");
                     nextClip(true); // skip clip
-                    return false;
-
-                } else if (message === "!clippause") {
-
+                    break;
+                case "!clippause":
                     console.log("Pausing Clip");
                     videoElement.pause(); // pause clip
-
-                } else if (message === "!clipplay" && videoElement.paused) {
-
-                    console.log("Playing Clip");
-                    videoElement.play(); // continue playing clip if was paused
-
-                } else if (message === "!clipreload") {
+                    break;
+                case "!clipplay":
+                    if (videoElement.paused) {
+                        console.log("Playing Clip");
+                        videoElement.play(); // continue playing clip if was paused
+                    }
+                    break;
+                case "!clipreload":
                     // Remove element before loading the clip
                     $('#container').empty();
                     window.location.reload(); // Reload browser source
-
-                }
-
+                    break;
+                default:
+                    console.log(`Unknown command: ${command}`);
+                    break;
             }
-
         }
 
     });
