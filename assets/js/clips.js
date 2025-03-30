@@ -279,7 +279,7 @@ $(document).ready(function () {
         if (user['message-type'] === 'chat' && message.startsWith('!') && (user.mod || user.username === mainAccount)) {
             let videoElement = document.querySelector("video");
             const command = message.toLowerCase();
-        
+
             switch (command) {
                 case "!clipskip":
                     console.log("Skipping Clip");
@@ -319,7 +319,7 @@ $(document).ready(function () {
                 } else {
                     apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=false&limit=" + limit + "&shuffle=true" + dateRange;
                 }
-         
+
                 // Perform an asynchronous fetch request
                 asyncResponse = await fetch(apiUrl);
                 clips_json = await asyncResponse.json();  // Parse the JSON response
@@ -464,7 +464,7 @@ $(document).ready(function () {
         } else {
             // Remove element before loading the clip
             removeElements();
-    }
+        }
 
         // Show clip details panel
         if (showDetails === 'true') {
