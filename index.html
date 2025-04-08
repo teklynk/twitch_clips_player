@@ -34,6 +34,26 @@
     .hide {
         display: none;
     }
+    .ml-0 {
+        margin-left: 0 !important;
+    }
+    .ml-4 {
+        margin-left: 1.5rem !important;
+    }
+    .pl-0 {
+        padding-left: 0 !important;
+    }
+    .pr-0 {
+        padding-right: 0 !important;
+    }
+    .dark-blue {
+        background-color: #1b2836 !important;
+        color: #fff !important;
+    }
+    .light-blue {
+        background-color: #354e69 !important;
+        color: #fff !important;
+    }
 </style>
 <body onload="onInit()">
 <div class="container">
@@ -82,12 +102,52 @@
         </div>
     </div>
     <br>
-    <div class="alert alert-info mt-0 mb-0">
-        <span class="text-info">Disclaimer:</span>
-        <ul>
-            <li>The clips player may not function smoothly if you use multiple channels, which could result in temporary slowness between clips.</li>
-            <li><strong>Date range and featured clips:</strong> The clips player will try to find and play clips that meet these criteria first. If no clips are identified within the specified criteria, then it will attempt to display clips from the top most popular. Keep in mind that if you set a date range and/or limit to featured clips, there may be a possibility of displaying only a small number of clips.</li>
-        </ul>
+    <div class="card dark-blue">
+        <div class="card-body">
+            <h5 class="card-title">Supporting This Project</h5>
+            <p class="card-text">
+                As a volunteer developer, I'm proud to maintain and improve this open-source project. To continue providing a reliable and feature-rich experience, I need your help. Our backend server, which fetches API data, incurs costs that need to be covered.
+            </p>
+            <p>
+                If you find this project valuable and enjoy using it, please consider making a donation to help offset these expenses. Your contribution will directly support the project's growth and ensure its continued availability.
+            </p>
+            <span class="text-info">Your Donation Will Help</span>
+            <ul>
+                <li>Keep the server running smoothly</li>
+                <li>Cover costs and maintenance</li>
+                <li>Support ongoing development and improvements</li>
+                <li>Ensure a reliable experience for all users</li>
+            </ul>
+            <p>
+                Thank you for your support, and I'm grateful for your enthusiasm for this project.
+            </p>
+            <p>
+                If you need more details on how to donate or have any questions, feel free to ask.
+            </p>
+            <div class="text-left mt-4">
+                <div class="btn-container ml-0 pl-0">
+                    <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
+                    <script type='text/javascript'>kofiwidget2.init('Donate', '#191d21', 'O4O0BWF2E');kofiwidget2.draw();</script>
+                </div>
+                <div class="btn-container">
+                    <script type='text/javascript' src="https://liberapay.com/teklynkliberapay/widgets/button.js"></script>
+                    <noscript><a href="https://liberapay.com/teklynkliberapay/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a></noscript>
+                </div>
+                <div class="btn-container btn btn-link">
+                    <a href="https://www.paypal.com/donate/?hosted_button_id=UVKZUYFMXQDPL" target="_blank">Paypal</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="card light-blue">
+        <div class="card-body">
+            <h5 class="card-title">Disclaimer</h5>
+            <ul>
+                <li>The clips player may not function smoothly if you use multiple channels, which could result in temporary slowness between clips.</li>
+                <li><strong>Date range and featured clips:</strong> The clips player will try to find and play clips that meet these criteria first. If no clips are found, then it will attempt to display clips from the top most popular. Keep in mind that if you set a date range and/or limit to featured clips, there may be a possibility of displaying only a small number of clips.</li>
+            </ul>
+        </div>
     </div>
     <br>
     <div class="alert alert-dark" role="alert">Access Token is now required if you would like to show clips from channels that you follow.<br>
@@ -363,8 +423,17 @@ Clipped by {creator_name} {created_at}"></textarea>
     <a class="btn btn-link" href="https://github.com/teklynk/twitch_clips_player/blob/main/README.md"
        target="_blank">Help</a>
     <a class="btn btn-link" href="https://github.com/teklynk/twitch_clips_player" target="_blank">Github</a>
-    <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
-    <script type='text/javascript'>kofiwidget2.init('Donate', '#191d21', 'O4O0BWF2E');kofiwidget2.draw();</script> 
+    <div class="btn-container">
+        <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
+        <script type='text/javascript'>kofiwidget2.init('Donate', '#191d21', 'O4O0BWF2E');kofiwidget2.draw();</script>
+    </div>
+    <div class="btn-container">
+        <script type='text/javascript' src="https://liberapay.com/teklynkliberapay/widgets/button.js"></script>
+        <noscript><a href="https://liberapay.com/teklynkliberapay/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a></noscript>
+    </div>
+    <div class="btn-container btn btn-link">
+        <a href="https://www.paypal.com/donate/?hosted_button_id=UVKZUYFMXQDPL" target="_blank">Paypal</a>
+    </div>
 </div>
 <script>
     // tekbot_v1 mouse hover action
