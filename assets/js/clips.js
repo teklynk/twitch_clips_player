@@ -62,6 +62,11 @@ $(document).ready(function () {
     let clips_json = "";
     let apiUrl;
     let asyncResponse;
+    let chatConnect  = getUrlParameter('chatConnect').trim(); // If set to 'false' it will not connect to Twitch chat: &chatConnect=false
+
+    if (!chatConnect) {
+        chatConnect = "true"; //default
+    }
 
     if (!showDetails) {
         showDetails = "false"; //default
@@ -112,7 +117,7 @@ $(document).ready(function () {
     }
 
     // If Auth token is set, then connect to chat using oauth, else connect anonymously.
-    if (mainAccount > '' && ref > '') {
+    if (mainAccount > '' && ref > '' && chatConnect === 'true') {
         // Connect to twitch - needs auth token
         client = new tmi.Client({
             options: {
@@ -129,7 +134,7 @@ $(document).ready(function () {
 
         client.connect().catch(console.error);
 
-    } else if (mainAccount > '' && ref == '') {
+    } else if (mainAccount > '' && ref == '' && chatConnect === 'true') {
         // Connect to twitch anonymously - does not need auth token
         client = new tmi.Client({
             options: {
@@ -141,6 +146,8 @@ $(document).ready(function () {
         });
 
         client.connect().catch(console.error);
+    } else {
+        chatConnect === 'false';
     }
 
     // Get game details function
@@ -224,7 +231,7 @@ $(document).ready(function () {
     $(curr_clip).appendTo('#container');
 
     //if command is set
-    if (command) {
+    if (command && chatConnect === 'true') {
         // triggers on message
         client.on('chat', (channel, user, message, self) => {
 
@@ -269,41 +276,43 @@ $(document).ready(function () {
     // Hard-coded commands to control the current clip. Limited to mods and streamer
     // !clipskip, !clippause, !clipplay
     // Triggers on message
-    client.on('chat', (channel, user, message, self) => {
+    if (chatConnect === 'true') {
+        client.on('chat', (channel, user, message, self) => {
 
-        if (self || !message.startsWith('!')) return;
+            if (self || !message.startsWith('!')) return;
 
-        if (user['message-type'] === 'chat' && message.startsWith('!') && (user.mod || user.username === mainAccount)) {
-            let videoElement = document.querySelector("video");
-            const command = message.toLowerCase();
+            if (user['message-type'] === 'chat' && message.startsWith('!') && (user.mod || user.username === mainAccount)) {
+                let videoElement = document.querySelector("video");
+                const command = message.toLowerCase();
 
-            switch (command) {
-                case "!clipskip":
-                    console.log("Skipping Clip");
-                    nextClip(true); // skip clip
-                    break;
-                case "!clippause":
-                    console.log("Pausing Clip");
-                    videoElement.pause(); // pause clip
-                    break;
-                case "!clipplay":
-                    if (videoElement.paused) {
-                        console.log("Playing Clip");
-                        videoElement.play(); // continue playing clip if was paused
-                    }
-                    break;
-                case "!clipreload":
-                    // Remove element before loading the clip
-                    $('#container').empty();
-                    window.location.reload(); // Reload browser source
-                    break;
-                default:
-                    console.log(`Unknown command: ${command}`);
-                    break;
+                switch (command) {
+                    case "!clipskip":
+                        console.log("Skipping Clip");
+                        nextClip(true); // skip clip
+                        break;
+                    case "!clippause":
+                        console.log("Pausing Clip");
+                        videoElement.pause(); // pause clip
+                        break;
+                    case "!clipplay":
+                        if (videoElement.paused) {
+                            console.log("Playing Clip");
+                            videoElement.play(); // continue playing clip if was paused
+                        }
+                        break;
+                    case "!clipreload":
+                        // Remove element before loading the clip
+                        $('#container').empty();
+                        window.location.reload(); // Reload browser source
+                        break;
+                    default:
+                        console.log(`Unknown command: ${command}`);
+                        break;
+                }
             }
-        }
 
-    });
+        });
+    }
 
     async function preloadNextClip(channelName) {
 
