@@ -364,6 +364,7 @@ Clipped by {creator_name} {created_at}"></textarea>
         let customText = document.getElementById("customText").value.trim();
         let detailsText = document.getElementById("detailsText").value.trim();
         let clientId = 'cuql1zod4eeabjr3cnc6adjn9ezro4';
+        let validationError = false;
 
         if (showFollowing) {
             channel = '';
@@ -409,14 +410,36 @@ Clipped by {creator_name} {created_at}"></textarea>
             clientId = '';
         }
 
-        // build overlay url
-        let srcURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
-        let fullUrl = srcURL + "clips.html?channel=" + channel + "&exclude=" + exclude + "&limit=" + limit + "&dateRange=" + dateRange + "&themeOption=" + themeOption + "&preferFeatured=" + preferFeatured + "&showText=" + showText + "&showDetails=" + showDetails + "&detailsText=" + encodeURIComponent(detailsText) + "&mainAccount=" + mainChannel + "&command=" + command + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&ref=" + btoa(ref) + "&clientId=" + btoa(clientId);
-        fullUrl = fullUrl.replace("index.htmlclips.html", "clips.html");
-        document.getElementById("overlaylink").classList.remove("hide");
-        document.getElementById("overlaylink").innerHTML = "<p>Add this link as a browser source in OBS.<br>" +
-            "<a style='word-break:break-all;' href='" + fullUrl + "' target='_blank'>" + fullUrl + "</a><br><span class='text-warning'><small>* Never share this url with anyone or show it on stream!</small></span></p>";
+        function validateForm() {
+            const mainChannelInput = document.getElementById('mainChannel');
+            const channelInput = document.getElementById('channel');
+            const mainChannelValue = mainChannelInput.value;
+            const channelValue = channelInput.value;
+            const inputKeywords = ['http', 'https', 'twitch.tv'];
 
+            inputKeywords.forEach(keyword => {
+                if (mainChannelValue.includes(keyword) || channelValue.includes(keyword)) {
+                    alert(`Invalid input: Channel name cannot contain "${keyword}".`);
+                    validationError = true;
+                    return false;
+                }
+            });
+
+            return true;
+        }
+
+        validateForm();
+
+        if (!validationError) {
+            // build overlay url
+            let srcURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            let fullUrl = srcURL + "clips.html?channel=" + channel + "&exclude=" + exclude + "&limit=" + limit + "&dateRange=" + dateRange + "&themeOption=" + themeOption + "&preferFeatured=" + preferFeatured + "&showText=" + showText + "&showDetails=" + showDetails + "&detailsText=" + encodeURIComponent(detailsText) + "&mainAccount=" + mainChannel + "&command=" + command + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&ref=" + btoa(ref) + "&clientId=" + btoa(clientId);
+            fullUrl = fullUrl.replace("index.htmlclips.html", "clips.html");
+            document.getElementById("overlaylink").classList.remove("hide");
+            document.getElementById("overlaylink").innerHTML = "<p>Add this link as a browser source in OBS.<br>" + 
+                "<a style='word-break:break-all;' href='" + fullUrl + "' target='_blank'>" + fullUrl + "</a><br><span class='text-warning'><small>* Never share this url with anyone or show it on stream!</small></span></p>";
+        }
+        
     });
 </script>
 <div class="text-right m-4">

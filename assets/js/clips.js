@@ -64,6 +64,19 @@ $(document).ready(function () {
     let asyncResponse;
     let chatConnect  = getUrlParameter('chatConnect').trim(); // If set to 'false' it will not connect to Twitch chat: &chatConnect=false
 
+    const channel_keywords = ['http', 'https', 'twitch.tv'];
+
+    channel_keywords.forEach(keyword => {
+        if (channel.includes(keyword)) {
+            console.log(`${channel} is not an expected string. Exiting code...`);
+            throw new Error('Exiting code');
+        }
+        if (mainAccount.includes(keyword)) {
+            console.log(`${mainAccount} is not an expected string. Exiting code...`);
+            throw new Error('Exiting code');
+        }
+    });
+
     if (!chatConnect) {
         chatConnect = "true"; //default
     }
