@@ -471,6 +471,9 @@ $(document).ready(function () {
         curr_clip.volume = 1.0;
         curr_clip.load();
 
+        // Remove elements before loading the clip and clip details
+        removeElements();
+
         // Show channel name on top of video
         if (showText === 'true') {
             if (customText) {
@@ -481,9 +484,6 @@ $(document).ready(function () {
             } else {
                 $("<div id='text-container'><span class='title-text'>" + clips_json.data[randomClip]['broadcaster_name'] + "</span></div>").appendTo('#container');
             }
-        } else {
-            // Remove element before loading the clip
-            removeElements();
         }
 
         // Show clip details panel
@@ -542,9 +542,6 @@ $(document).ready(function () {
 
                 $("<div id='details-container'>" + dText + "</div>").appendTo('#container');
             }
-        } else {
-            // Remove element before loading the clip
-            removeElements();
         }
 
         // Move to the next clip when the current one finishes playing
