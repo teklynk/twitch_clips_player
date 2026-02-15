@@ -150,7 +150,7 @@ $(document).ready(function () {
 
         client.connect().catch((err) => {
             console.error(err);
-            $("<div style='position:absolute;top:0;left:0;width:100%;background:rgba(0,0,0,0.8);color:red;font-size:20px;text-align:center;padding:20px;z-index:10000;'>Login authentication failed. Twitch Access Token may have expired. Please generate a new one.</div>").prependTo('body');
+            $("<div class='msg-error'>Login authentication failed. Twitch Access Token may have expired. Please generate a new one.</div>").prependTo('body');
         });
 
     } else if (mainAccount > '' && ref == '' && chatConnect === 'true') {
@@ -176,7 +176,7 @@ $(document).ready(function () {
     }
 
     client.on("maxreconnect", () => {
-        $("<div style='position:absolute;top:0;left:0;width:100%;background:rgba(0,0,0,0.8);color:red;font-size:20px;text-align:center;padding:20px;z-index:10000;'>Login authentication failed. Failed to connect to Twitch Chat. Please refresh to try again. Twitch Access Token may have expired.</div>").prependTo('body');
+        $("<div class='msg-error'>Login authentication failed. Failed to connect to Twitch Chat. Please refresh to try again. Twitch Access Token may have expired.</div>").prependTo('body');
     });
 
     // Get game details function
@@ -207,7 +207,7 @@ $(document).ready(function () {
             }).responseText);
 
             if (jsonParse.error && jsonParse.error.includes("401 Unauthorized")) {
-                $("<div style='position:absolute;top:0;left:0;width:100%;background:rgba(0,0,0,0.8);color:red;font-size:20px;padding:20px;z-index:10000;'>Twitch Access Token has expired. Please generate a new one.</div>").prependTo('body');
+                $("<div class='msg-error'>Twitch Access Token has expired. Please generate a new one.</div>").prependTo('body');
             }
 
             return jsonParse;
