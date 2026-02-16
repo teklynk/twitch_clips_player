@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(document).ready(async function () {
     // clear localStorage on load. Some clips have a expire time that needs to be refreshed and can not sit in localStorage for too long.
     localStorage.clear();
     console.log('Cleared localStorage');
@@ -180,18 +180,19 @@ $(document).ready(function () {
     });
 
     // Get game details function
-    function game_by_id(game_id) {
-        let jsonParse = JSON.parse($.getJSON({
-            'url': apiServer + "/getgame.php?id=" + game_id,
-            'async': false
-        }).responseText);
-
+    async function game_by_id(game_id) {
+        const response = await fetch(apiServer + "/getgame.php?id=" + game_id);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        let jsonParse = await response.json();
+        
         return jsonParse;
     }
 
     if (showFollowing === 'true' && ref > '' && clientId > '') {
 
-        function following_pagination(cursor) {
+        async function following_pagination(cursor) {
             let jsonParse;
             let apiUrl;
 
@@ -201,10 +202,8 @@ $(document).ready(function () {
                 apiUrl = apiServer + "/getuserfollowing.php?channel=" + mainAccount + "&limit=100&ref=" + ref + "&clientId=" + clientId
             }
 
-            jsonParse = JSON.parse($.getJSON({
-                'url': apiUrl,
-                'async': false
-            }).responseText);
+            let response = await fetch(apiUrl);
+            jsonParse = await response.json();
 
             if (jsonParse.error && jsonParse.error.includes("401 Unauthorized")) {
                 $("<div class='msg-error'>Twitch Access Token has expired. Please generate a new one.</div>").prependTo('body');
@@ -222,13 +221,13 @@ $(document).ready(function () {
         }
 
         // Json following data - page 1
-        let following_json = following_pagination();
+        let following_json = await following_pagination();
 
         concatFollowing(following_json.data);
 
         // Start the Following pagination
         while (following_json.pagination['cursor']) {
-            following_json = following_pagination(following_json.pagination['cursor']);
+            following_json = await following_pagination(following_json.pagination['cursor']);
             concatFollowing(following_json.data);
         }
 
@@ -266,7 +265,7 @@ $(document).ready(function () {
     //if command is set
     if (command && chatConnect === 'true') {
         // triggers on message
-        client.on('chat', (channel, user, message, self) => {
+        client.on('chat', async (channel, user, message, self) => {
 
             if (self || !message.startsWith('!')) return;
 
@@ -294,7 +293,7 @@ $(document).ready(function () {
                 }
 
                 // Plays clips when command is used
-                loadClip(channel[clip_index]);
+                await loadClip(channel[clip_index]);
             }
         });
 
@@ -303,14 +302,14 @@ $(document).ready(function () {
         if (channel.length > 1 && typeof channel[clip_index + 1] !== 'undefined') {
             preloadNextClip(channel[clip_index + 1]);
         }
-        loadClip(channel[clip_index]);
+        await loadClip(channel[clip_index]);
     }
 
     // Hard-coded commands to control the current clip. Limited to mods and streamer
     // !clipskip, !clippause, !clipplay
     // Triggers on message
     if (chatConnect === 'true') {
-        client.on('chat', (channel, user, message, self) => {
+        client.on('chat', async (channel, user, message, self) => {
             const controlCommands = ["!clipskip", "!clippause", "!clipplay", "!clipreload"];
             const receivedCommand = message.toLowerCase().split(' ')[0];
 
@@ -322,7 +321,7 @@ $(document).ready(function () {
                 switch (receivedCommand) {
                     case "!clipskip":
                         console.log("Skipping Clip");
-                        nextClip(true); // skip clip
+                        await nextClip(true); // skip clip
                         break;
                     case "!clippause":
                         console.log("Pausing Clip");
@@ -362,11 +361,17 @@ $(document).ready(function () {
 
                 // Perform an asynchronous fetch request
                 asyncResponse = await fetch(apiUrl);
+                if (!asyncResponse.ok) {
+                    throw new Error('Network response was not ok');
+                }
                 clips_json = await asyncResponse.json();  // Parse the JSON response
 
                 // If dateRange or preferFeatured is set but no clips are found or only 1 clip is found. Try to pull any clip. 
                 if (clips_json.data.length === 0 && (dateRange > "" || preferFeatured !== "false")) {
                     asyncResponse = await fetch(`${apiServer}/getuserclips.php?channel=${channelName}&limit=${limit}&shuffle=true`);
+                    if (!asyncResponse.ok) {
+                        throw new Error('Network response was not ok');
+                    }
                     clips_json = await asyncResponse.json();  // Parse the JSON response
                     console.log('No clips found matching dateRange or preferFeatured filter. PULL ANY Clip found from: ' + channelName);
                 }
@@ -383,7 +388,7 @@ $(document).ready(function () {
     }
 
     // Get and play the clip
-    function loadClip(channelName) {
+    async function loadClip(channelName) {
 
         // Remove element before loading the clip
         removeElements();
@@ -398,17 +403,19 @@ $(document).ready(function () {
                     apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=false&limit=" + limit + "&shuffle=true" + dateRange;
                 }
 
-                clips_json = JSON.parse($.getJSON({
-                    'url': apiUrl,
-                    'async': false
-                }).responseText);
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                clips_json = await response.json();
 
                 // If dateRange or preferFeatured is set but no clips are found or only 1 clip is found. Try to pull any clip. 
                 if (clips_json.data.length === 0 && (dateRange > "" || preferFeatured !== "false")) {
-                    clips_json = JSON.parse($.getJSON({
-                        'url': apiServer + "/getuserclips.php?channel=" + channelName + "&limit=" + limit + "&shuffle=true",
-                        'async': false
-                    }).responseText);
+                    const fallbackResponse = await fetch(apiServer + "/getuserclips.php?channel=" + channelName + "&limit=" + limit + "&shuffle=true");
+                    if (!fallbackResponse.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    clips_json = await fallbackResponse.json();
 
                     console.log('No clips found matching dateRange or preferFeatured filter. PULL ANY Clip found from: ' + channelName);
                 }
@@ -417,13 +424,13 @@ $(document).ready(function () {
                     console.log('Set ' + channelName + ' in localStorage');
                     localStorage.setItem(channelName, JSON.stringify(clips_json));
                 } else {
-                    nextClip(true);
+                    await nextClip(true);
                 }
             } catch (e) {
                 // Sometimes the api returns an error. Usually when a channel no longer exists
                 if (e.name === 'TypeError' || e.name === 'SyntaxError') {
                     console.error(e.name + ' found. Skipping...');
-                    nextClip(true);
+                    await nextClip(true);
                     return false;
                 }
 
@@ -432,7 +439,7 @@ $(document).ready(function () {
                     // automatically clear localstorage if it exceeds the quota
                     localStorage.clear();
                     console.log('Cleared localStorage');
-                    nextClip(true);
+                    await nextClip(true);
                     return false;
                 } else {
                     console.error('An error occurred:', e);
@@ -531,7 +538,7 @@ $(document).ready(function () {
                 if (detailsText.includes("{game}")) {
                     // Show game title if it exists
                     if (clips_json.data[randomClip]['game_id']) {
-                        let game = game_by_id(clips_json.data[randomClip]['game_id']);
+                        let game = await game_by_id(clips_json.data[randomClip]['game_id']);
                         detailsText = detailsText.replace("{game}", game.data[0]['name']);
                     } else {
                         detailsText = detailsText.replace("{game}", "?");
@@ -568,7 +575,7 @@ $(document).ready(function () {
         curr_clip.addEventListener("ended", nextClip);
     }
 
-    function nextClip(skip = false) {
+    async function nextClip(skip = false) {
 
         // Properly remove video source
         let videoElement = document.querySelector("video");
@@ -585,14 +592,14 @@ $(document).ready(function () {
         if (skip === true) {
             // Skips to the next clip if a clip does not exist
             console.log("Skipping clip...");
-            loadClip(channel[clip_index]);
+            await loadClip(channel[clip_index]);
             curr_clip.play();
         } else {
             if (channel.length > 1 && typeof channel[clip_index + 1] !== 'undefined') {
                 preloadNextClip(channel[clip_index + 1]);
             }
             // Play a clip
-            loadClip(channel[clip_index]);
+            await loadClip(channel[clip_index]);
             curr_clip.play();
         }
     }
