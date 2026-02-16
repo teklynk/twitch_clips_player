@@ -27,7 +27,10 @@ $(document).ready(async function () {
 
     // Array Shuffler
     function shuffleArray(arr) {
-        arr.sort(() => Math.random() - 0.5);
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
     }
 
     // Get elements and remove elements
@@ -455,7 +458,7 @@ $(document).ready(async function () {
         if (channel.length > 1) {
 
             console.log('Using random selection logic instead of shuffle');
-            randomClip = Math.floor((Math.random() * clips_json.data.length - 1) + 1);
+            randomClip = Math.floor(Math.random() * clips_json.data.length);
 
         } else {
 
