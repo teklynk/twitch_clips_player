@@ -1,67 +1,57 @@
 # Twitch Clips Player Overlay
 
-## What is this?
-
 [obs_capture_clipsreel.webm](https://user-images.githubusercontent.com/4500737/225199595-d7a10be8-86dd-4669-9a86-280fb2b5907e.webm)
 
-
-This is a Twitch Clips Player, browser source overlay for OBS. 
-
-This grabs your Twitch clips and plays them one after the other in a loop. Keep your viewers entertained on your BRB or starting soon scenes. 
-
-## DISCLAIMER:
-This project is "AS-IS". It is free to use, clone, fork, modify, make it your own.
+## What is this?
+This is a Twitch Clips Player, browser source overlay for OBS. It grabs your Twitch clips and plays them one after the other in a loop. Keep your viewers entertained on your BRB or starting soon scenes.
 
 [Try it here](https://twitch-clips-player.pages.dev/)
 
-**FEATURES:** 
-- Control the clips from Twitch chat. !clipskip, !clippause, !clipplay, !clipreload. Limited to Mods and Streamer.
-- Show clips from channels that you follow. Grabs the most recent 700 channels.
-- Use a custom command to start the clips reel and restrict it to Mods only.
-- Type "!mycommand stop" in chat to stop the clips player.
-- Date Range option: This will grab a clip from within the last 5days, 10day, 30days... If no clips exist, then skip to the next channel.
-- Show clip details panel: This will display a panel in the lower third of the overlay that contains details about the clip. This can use variables:{channel},{title},{game},{creator_name},{created_at}.
+## Features
+- **Chat Control**: Control the clips from Twitch chat using `!clipskip`, `!clippause`, `!clipplay`, `!clipreload`. (Limited to Mods and Streamer).
+- **Following Feed**: Show clips from channels that you follow. Grabs the most recent 700 channels.
+- **Custom Commands**: Use a custom command to start the clips reel and restrict it to Mods only. Type `!mycommand stop` in chat to stop the clips player.
+- **Smart Filtering**:
+  - **Date Range**: Grab clips from within the last 5, 10, 30 days, etc.
+  - **Fallback**: If no clips match the filters (Date range/Featured), it falls back to the top most popular clips to ensure content plays.
+- **Details Panel**: Display a panel in the lower third of the overlay with clip details. Supports variables: `{channel}`, `{title}`, `{game}`, `{creator_name}`, `{created_at}`.
 
-## Notes:
-**Date range, featured clips:** The clips player will try to find and play clips that meet these options first. If no clips are found within these filters, then it will play a clip from the top most popular. Playing any clip is better than not playing a clip at all.
+## Setup Guide
 
-Twitch authentication is now required if you would like to show clips from channels that you follow and/or show a message in chat.
+### OBS Settings
+1. Add a **Browser Source** in OBS.
+2. Enter the URL with your desired parameters.
+3. **Important**: Check **"Shutdown source when not visible"** and **"Refresh browser when scene becomes active"**.
+   - This prevents the player from running in the background and ensures it reloads fresh when you switch to the scene.
 
-In OBS, set the browser source to: "Shutdown source when not visible" and "Refresh browser when scene becomes active". This will prevent the clips player from playing in the background. It will also reload/refresh the clips player when the source becomes active.
+### Authentication
+Twitch authentication is required if you want to:
+- Show clips from channels you follow.
+- Show messages in chat.
 
-## URL Parameters
+## Configuration (URL Parameters)
 
-**channel=Your channel name or a comma separated list of channels** (user1,user2,user3,user4)
+Add these parameters to your URL query string (e.g., `?channel=mychannel&limit=20`).
 
-**preferFeatured=true/false**  Only pull featured clips.
-
-**showText=true/false**  Enables the channel name on top of the video.
-
-**showDetails=true/false**  Enables the clips details panel on overlay.
-
-**detailsText=string**  Displays custom details about the clips. Can include {channel},{title},{game},{creator_name},{created_at}.
-
-**limit=integer**  Max number of clips to pull from (max is 100).
-
-**dateRange=integer**  Only pull clips from a specific date range.
-
-**command=string**  Custom command to fire off the clips player. If Not set, clips player will play as soon as the scene is active.
-
-**showFollowing=true/false** Pulls clips from the latest 100 channels that you are following. 
-
-**customText=string**  Displays custom message on top of clips. Can include {channel}.
-
-**mainAccount=channel**  The main channel that you want to send chat messages to.
-
-**ref=base64**  Access token
-
-**themeOption=integer** Various pre-made css themes top choose from.
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `channel` | string | Your channel name or a comma-separated list of channels (e.g., `user1,user2`). |
+| `mainAccount` | string | The main channel to monitor for chat commands. |
+| `ref` | base64 | Access token for authentication. |
+| `limit` | integer | Max number of clips to retrieve (max 100). |
+| `dateRange` | integer | Number of days to look back for clips. |
+| `preferFeatured` | true/false | If `true`, tries to pull featured clips first. |
+| `showFollowing` | true/false | Pulls clips from the latest 100 channels you follow. |
+| `showText` | true/false | Displays the channel name on top of the video. |
+| `showDetails` | true/false | Enables the clip details panel on the overlay. |
+| `detailsText` | string | Custom text for the details panel. Variables: `{channel}`, `{title}`, `{game}`, `{creator_name}`, `{created_at}`. |
+| `customText` | string | Custom message on top of clips. Variables: `{channel}`. |
+| `command` | string | Custom chat command to start the player. If not set, plays automatically on load. |
+| `themeOption` | integer | Select a pre-made CSS theme. |
 
 ## Custom CSS
 
-## Optional: Set a fixed video width and height.
-
-Add this to the OBS browser source CSS properties (optional).
+You can add this to the OBS browser source **CSS** box to set a fixed video width and height (optional).
 
 ```css
 video {
