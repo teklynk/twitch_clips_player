@@ -76,6 +76,7 @@ $(document).ready(async function () {
     let apiUrl;
     let asyncResponse;
     let chatConnect = (urlParams.get('chatConnect') || '').trim(); // If set to 'false' it will not connect to Twitch chat: &chatConnect=false
+    let pendingFetches = {};
 
     const channel_keywords = ['http', 'https', 'twitch.tv'];
 
@@ -361,33 +362,47 @@ $(document).ready(async function () {
     }
 
     async function fetchClipsForChannel(channelName) {
-        let apiUrl;
-        let response;
-        let data;
-
-        if (preferFeatured !== "false") {
-            apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=true&limit=" + limit + "&shuffle=true" + dateRange;
-        } else {
-            apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=false&limit=" + limit + "&shuffle=true" + dateRange;
+        if (pendingFetches[channelName]) {
+            return pendingFetches[channelName];
         }
 
-        response = await fetch(apiUrl);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        data = await response.json();
+        const fetchPromise = (async () => {
+            let apiUrl;
+            let response;
+            let data;
 
-        // If dateRange or preferFeatured is set but no clips are found or only 1 clip is found. Try to pull any clip. 
-        if (data.data.length === 0 && (dateRange > "" || preferFeatured !== "false")) {
-            response = await fetch(apiServer + "/getuserclips.php?channel=" + channelName + "&limit=" + limit + "&shuffle=true");
+            if (preferFeatured !== "false") {
+                apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=true&limit=" + limit + "&shuffle=true" + dateRange;
+            } else {
+                apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=false&limit=" + limit + "&shuffle=true" + dateRange;
+            }
+
+            response = await fetch(apiUrl);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             data = await response.json();
-            console.log('No clips found matching dateRange or preferFeatured filter. PULL ANY Clip found from: ' + channelName);
-        }
 
-        return data;
+            // If dateRange or preferFeatured is set but no clips are found or only 1 clip is found. Try to pull any clip. 
+            if (data.data.length === 0 && (dateRange > "" || preferFeatured !== "false")) {
+                response = await fetch(apiServer + "/getuserclips.php?channel=" + channelName + "&limit=" + limit + "&shuffle=true");
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                data = await response.json();
+                console.log('No clips found matching dateRange or preferFeatured filter. PULL ANY Clip found from: ' + channelName);
+            }
+
+            return data;
+        })();
+
+        pendingFetches[channelName] = fetchPromise;
+
+        try {
+            return await fetchPromise;
+        } finally {
+            delete pendingFetches[channelName];
+        }
     }
 
     async function preloadNextClip(channelName) {
