@@ -1,4 +1,7 @@
 $(document).ready(async function () {
+    // Get values from URL string
+    const urlParams = new URLSearchParams(window.location.search);
+
     // clear localStorage on load. Some clips have a expire time that needs to be refreshed and can not sit in localStorage for too long.
     localStorage.clear();
     console.log('Cleared localStorage');
@@ -32,13 +35,6 @@ $(document).ready(async function () {
     // Call the function
     const apiServer = await setRandomServer();
 
-    function getUrlParameter(name) {
-        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-        let regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-        let results = regex.exec(location.search);
-        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-    }
-
     // Array Shuffler
     function shuffleArray(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
@@ -56,21 +52,21 @@ $(document).ready(async function () {
     }
 
     // URL values
-    let channel = getUrlParameter('channel').toLowerCase().trim();
-    let mainAccount = getUrlParameter('mainAccount').toLowerCase().trim();
-    let limit = getUrlParameter('limit').trim();
-    let dateRange = getUrlParameter('dateRange').trim();
-    let preferFeatured = getUrlParameter('preferFeatured').trim();
-    let showText = getUrlParameter('showText').trim();
-    let showDetails = getUrlParameter('showDetails').trim();
-    let ref = getUrlParameter('ref').trim();
-    let clientId = getUrlParameter('clientId').trim();
-    let customText = getUrlParameter('customText').trim();
-    let detailsText = getUrlParameter('detailsText').trim();
-    let command = getUrlParameter('command').trim();
-    let showFollowing = getUrlParameter('showFollowing').trim();
-    let exclude = getUrlParameter('exclude').trim();
-    let themeOption = getUrlParameter('themeOption').trim();
+    let channel = (urlParams.get('channel') || '').toLowerCase().trim();
+    let mainAccount = (urlParams.get('mainAccount') || '').toLowerCase().trim();
+    let limit = (urlParams.get('limit') || '').trim();
+    let dateRange = (urlParams.get('dateRange') || '').trim();
+    let preferFeatured = (urlParams.get('preferFeatured') || '').trim();
+    let showText = (urlParams.get('showText') || '').trim();
+    let showDetails = (urlParams.get('showDetails') || '').trim();
+    let ref = (urlParams.get('ref') || '').trim();
+    let clientId = (urlParams.get('clientId') || '').trim();
+    let customText = (urlParams.get('customText') || '').trim();
+    let detailsText = (urlParams.get('detailsText') || '').trim();
+    let command = (urlParams.get('command') || '').trim();
+    let showFollowing = (urlParams.get('showFollowing') || '').trim();
+    let exclude = (urlParams.get('exclude') || '').trim();
+    let themeOption = (urlParams.get('themeOption') || '').trim();
     let randomClip = 0; // Default random clip index
     let clip_index = 0; // Default clip index
     let following = "";
@@ -79,7 +75,7 @@ $(document).ready(async function () {
     let clips_json = "";
     let apiUrl;
     let asyncResponse;
-    let chatConnect = getUrlParameter('chatConnect').trim(); // If set to 'false' it will not connect to Twitch chat: &chatConnect=false
+    let chatConnect = (urlParams.get('chatConnect') || '').trim(); // If set to 'false' it will not connect to Twitch chat: &chatConnect=false
 
     const channel_keywords = ['http', 'https', 'twitch.tv'];
 
@@ -510,7 +506,7 @@ $(document).ready(async function () {
         if (showText === 'true') {
             if (customText) {
                 // custom message to show on top of clip. includes {channel} name as a variable
-                customText = getUrlParameter('customText').trim();
+                customText = (urlParams.get('customText') || '').trim();
                 customText = customText.replace("{channel}", clips_json.data[randomClip]['broadcaster_name']);
                 $("<div id='text-container'><span class='title-text'>" + decodeURIComponent(customText) + "</span></div>").appendTo('#container');
             } else {
@@ -527,7 +523,7 @@ $(document).ready(async function () {
                 }
 
                 // custom clip details text
-                detailsText = getUrlParameter('detailsText').trim();
+                detailsText = (urlParams.get('detailsText') || '').trim();
                 detailsText = detailsText.replace("{channel}", clips_json.data[randomClip]['broadcaster_name']);
 
                 // Show clip title if it exists
