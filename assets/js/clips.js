@@ -8,8 +8,19 @@ $(document).ready(async function () {
 
     // Function to randomly select a api server
     async function setRandomServer() {
+        let serverArr = [];
+
+        // Custom server url
+        let apiServerUrl = (urlParams.get('apiServer') || '').toLowerCase().trim();
+
+        if (apiServerUrl) {
+            serverArr = [apiServerUrl];
+        } else {
+            serverArr = ["https://twitchapi.teklynk.com", "https://twitchapi.teklynk.dev", "https://twitchapi2.teklynk.dev"];
+        }
+
         // set the api gateway servers 
-        const servers = ["https://twitchapi.teklynk.com", "https://twitchapi.teklynk.dev", "https://twitchapi2.teklynk.dev"];
+        const servers = serverArr;
 
         // Shuffle the servers to try them in random order
         for (let i = servers.length - 1; i > 0; i--) {
