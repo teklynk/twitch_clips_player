@@ -2,9 +2,9 @@ $(document).ready(async function () {
     // Get values from URL string
     const urlParams = new URLSearchParams(window.location.search);
 
-    // clear localStorage on load. Some clips have a expire time that needs to be refreshed and can not sit in localStorage for too long.
-    localStorage.clear();
-    console.log('Cleared localStorage');
+    // clear sessionStorage on load. Some clips have a expire time that needs to be refreshed and can not sit in sessionStorage for too long.
+    sessionStorage.clear();
+    console.log('Cleared sessionStorage');
 
     // Function to randomly select a api server
     async function setRandomServer() {
@@ -418,16 +418,16 @@ $(document).ready(async function () {
 
     async function preloadNextClip(channelName) {
 
-        if (localStorage.getItem(channelName) === null && typeof channelName !== 'undefined') {
+        if (sessionStorage.getItem(channelName) === null && typeof channelName !== 'undefined') {
             console.log('Preloading next clip: ' + channelName);
 
             try {
                 let nextClipsData = await fetchClipsForChannel(channelName);
 
                 if (nextClipsData.data.length > 0) {
-                    console.log('Set ' + channelName + ' in localStorage');
+                    console.log('Set ' + channelName + ' in sessionStorage');
                     // Store the data in localStorage
-                    localStorage.setItem(channelName, JSON.stringify(nextClipsData));
+                    sessionStorage.setItem(channelName, JSON.stringify(nextClipsData));
                 }
             } catch (error) {
                 console.error('Error while preloading clip:', error);
@@ -443,13 +443,13 @@ $(document).ready(async function () {
 
         // Json data - Ajax calls
         // if localstorage does not exist
-        if (localStorage.getItem(channelName) === null && typeof channelName !== 'undefined') {
+        if (sessionStorage.getItem(channelName) === null && typeof channelName !== 'undefined') {
             try {
                 clips_json = await fetchClipsForChannel(channelName);
 
                 if (clips_json.data.length > 0) {
-                    console.log('Set ' + channelName + ' in localStorage');
-                    localStorage.setItem(channelName, JSON.stringify(clips_json));
+                    console.log('Set ' + channelName + ' in sessionStorage');
+                    sessionStorage.setItem(channelName, JSON.stringify(clips_json));
                 } else {
                     await nextClip(true);
                 }
@@ -462,10 +462,10 @@ $(document).ready(async function () {
                 }
 
                 if (e.name === 'QuotaExceededError') {
-                    console.error('LocalStorage Quota Exceeded. Please free up some space by deleting unnecessary data.');
-                    // automatically clear localstorage if it exceeds the quota
-                    localStorage.clear();
-                    console.log('Cleared localStorage');
+                    console.error('sessionStorage Quota Exceeded. Please free up some space by deleting unnecessary data.');
+                    // automatically clear sessionStorage if it exceeds the quota
+                    sessionStorage.clear();
+                    console.log('Cleared sessionStorage');
                     await nextClip(true);
                     return false;
                 } else {
@@ -474,8 +474,8 @@ $(document).ready(async function () {
             }
         } else {
             // Retrieve the object from storage
-            console.log('Pulling ' + channelName + ' from localStorage');
-            clips_json = JSON.parse(localStorage.getItem(channelName));
+            console.log('Pulling ' + channelName + ' from sessionStorage');
+            clips_json = JSON.parse(sessionStorage.getItem(channelName));
         }
 
         // Grab a random clip index anywhere from 0 to the clips_json.data.length.
