@@ -293,6 +293,9 @@ $(document).ready(async function () {
         channel = channel.split(',').map(element => element.trim()).filter(item => item !== "");
     }
 
+    // Remove duplicates
+    channel = [...new Set(channel)];
+
     // Randomly grab a channel from the list to start from
     if (channel.length > 0) {
         // shuffle the list of channel names
