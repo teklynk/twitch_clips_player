@@ -247,6 +247,7 @@ $(document).ready(async function () {
             // Globals: following, followCount
             function concatFollowing(jsonData) {
                 $.each(jsonData, function (i, val) {
+                    if (followCount >= 1000) return false;
                     following += val['broadcaster_login'] + ",";
                     followCount++;
                 });
@@ -258,7 +259,7 @@ $(document).ready(async function () {
             concatFollowing(following_json.data);
 
             // Start the Following pagination
-            while (following_json.pagination['cursor']) {
+            while (following_json.pagination['cursor'] && followCount < 1000) {
                 following_json = await following_pagination(following_json.pagination['cursor']);
                 concatFollowing(following_json.data);
             }
