@@ -2,17 +2,9 @@ $(document).ready(async function () {
     // Get values from URL string
     const urlParams = new URLSearchParams(window.location.search);
 
-    // Check if followList exists in sessionStorage before clearing
-    let cachedFollowList = sessionStorage.getItem('twitch_follow_list');
-
     // clear sessionStorage on load. Some clips have a expire time that needs to be refreshed and can not sit in sessionStorage for too long.
     sessionStorage.clear();
     console.log('Cleared sessionStorage');
-
-    // Restore followList if it existed
-    if (cachedFollowList) {
-        sessionStorage.setItem('twitch_follow_list', cachedFollowList);
-    }
 
     // Function to randomly select a api server
     async function setRandomServer() {
@@ -64,10 +56,7 @@ $(document).ready(async function () {
 
     // Get elements and remove elements
     function removeElements() {
-        const textContainer = document.querySelectorAll("#text-container");
-        const detailsContainer = document.querySelectorAll("#details-container");
-        Array.from(textContainer).forEach((element) => element.remove());
-        Array.from(detailsContainer).forEach((element) => element.remove());
+        $("#text-container, #details-container").remove();
     }
 
     // URL values
@@ -225,10 +214,10 @@ $(document).ready(async function () {
 
     if (showFollowing === 'true' && ref > '' && clientId > '') {
 
-        let followList = sessionStorage.getItem('twitch_follow_list');
+        let followList = localStorage.getItem('twitch_follow_list');
 
         if (followList) {
-            console.log('Pulling followList from sessionStorage');
+            console.log('Pulling followList from localStorage');
         } else {
             async function following_pagination(cursor) {
                 let jsonParse;
@@ -240,11 +229,16 @@ $(document).ready(async function () {
                     apiUrl = apiServer + "/getuserfollowing.php?channel=" + mainAccount + "&limit=100&ref=" + ref + "&clientId=" + clientId
                 }
 
-                let response = await fetch(apiUrl);
-                jsonParse = await response.json();
+                try {
+                    let response = await fetch(apiUrl);
+                    jsonParse = await response.json();
 
-                if (jsonParse.error && jsonParse.error.includes("401 Unauthorized")) {
-                    $("<div class='msg-error'>Twitch Access Token has expired. Please generate a new one.</div>").prependTo('body');
+                    if (jsonParse.error && jsonParse.error.includes("401 Unauthorized")) {
+                        $("<div class='msg-error'>Twitch Access Token has expired. Please generate a new one.</div>").prependTo('body');
+                    }
+                } catch (e) {
+                    console.error('Error fetching following list:', e);
+                    return { data: [], pagination: {} };
                 }
 
                 return jsonParse;
@@ -287,16 +281,16 @@ $(document).ready(async function () {
             channelListArray = [...new Set(channelListArray)];
 
             followList = channelListArray.join(',');
-            sessionStorage.setItem('twitch_follow_list', followList);
+            localStorage.setItem('twitch_follow_list', followList);
         }
 
         // Set channel to equal following list/string
-        channel = followList.split(',').map(element => element.trim());
+        channel = followList.split(',').map(element => element.trim()).filter(item => item !== "");
 
     } else {
 
         // Convert string to an array/list
-        channel = channel.split(',').map(element => element.trim());
+        channel = channel.split(',').map(element => element.trim()).filter(item => item !== "");
     }
 
     // Randomly grab a channel from the list to start from
