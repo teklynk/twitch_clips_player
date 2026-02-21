@@ -188,8 +188,7 @@
             channels that you follow.<br>
             <div class="form-label-group mb-4">
                 <div class="mb-2">
-                    <a href="https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=cuql1zod4eeabjr3cnc6adjn9ezro4&redirect_uri=https://twitch-clips-player.pages.dev&scope=chat:read+chat:edit+user:read:follows+moderator:read:followers&force_verify=true"
-                        target="_self"><img src="assets/images/connect.png"></a>
+                    <a id="twitch-auth-link" href="#" target="_self"><img src="assets/images/connect.png"></a>
                 </div>
                 <label for="ref">Access token</label>
                 <input type="password" id="ref" class="form-control">
@@ -302,6 +301,13 @@ Clipped by {creator_name} {created_at}"></textarea>
         function onInit() {
 
             let url = window.location.href;
+            let redirectUrl = window.location.origin + window.location.pathname;
+
+            // Update auth link
+            let authLink = document.getElementById("twitch-auth-link");
+            let clientId = "cuql1zod4eeabjr3cnc6adjn9ezro4";
+            let scope = "chat:read+chat:edit+user:read:follows+moderator:read:followers";
+            authLink.href = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=" + clientId + "&redirect_uri=" + redirectUrl + "&scope=" + scope + "&force_verify=true";
 
             if (url.indexOf('#access_token') !== -1) {
                 // extract the access_token from the url
@@ -313,7 +319,7 @@ Clipped by {creator_name} {created_at}"></textarea>
                 // Save token to localstorage
                 localStorage.setItem("TwitchClipsRef", access_token);
                 // Redirect to default page after getting token
-                window.location.href = "https://twitch-clips-player.pages.dev";
+                window.location.href = redirectUrl;
             } else {
                 document.getElementById("ref").value = localStorage.getItem("TwitchClipsRef");
             }
