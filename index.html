@@ -78,7 +78,7 @@
         </div>
 
         <div class="card mb-4">
-            <div class="card-body">
+            <div class="card-body shadow">
                 <h2>Twitch Clips Player Overlay</h2>
                 <p>This grabs your Twitch clips and plays them one after the other in a loop. Keep your viewers
                     entertained on your BRB or starting soon scenes.</p>
@@ -100,42 +100,44 @@
                 <p>Be sure to set "Shutdown source when not visible", "Control audio via OBS", "Refresh browser when
                     scene becomes active" on the OBS Browser Source properties.</p>
 
-                <div class="text-center p-2">
-                    <a class="btn btn-link btn-sm" href="https://github.com/teklynk/twitch_clips_player/blob/main/README.md" target="_blank">Help</a>
-                    <a class="btn btn-link btn-sm" href="https://github.com/teklynk/twitch_clips_player" target="_blank">Github</a>
-                    <a class="btn btn-link btn-sm" href="https://www.teklynk.com/support" target="_blank">Support</a>
+                <div class="text-center p-1">
+                    <a class="btn btn-dark btn-sm m-1" href="https://github.com/teklynk/twitch_clips_player/blob/main/README.md" target="_blank">Help</a>
+                    <a class="btn btn-dark btn-sm m-1" href="https://github.com/teklynk/twitch_clips_player" target="_blank">GitHub</a>
+                    <a class="btn btn-dark btn-sm m-1" href="https://www.teklynk.com/support" target="_blank">Support</a>
                 </div>
             </div>
         </div>
 
-        <div class="alert alert-dark" role="alert">Access Token is now required if you would like to show clips from
+        <div class="alert alert-dark shadow" role="alert">Access Token is now required if you would like to show clips from
             channels that you follow.<br>
             <div class="form-label-group">
                 <div>
                     <a id="twitch-auth-link" href="#" target="_self"><img src="assets/images/connect.png"></a>
                 </div>
-                <label for="ref">Access token</label>
-                <input type="password" id="ref" class="form-control">
-                <span id="show_ref"
-                    style="cursor:pointer;text-align:left;display:inline-block;width:70px;margin-top: 4px;font-size:smaller;vertical-align:top;"
-                    title="Show/Hide">show
-                </span>
+                <div class="form-label-group mt-2">
+                    <label for="ref">Access token</label>
+                    <input type="password" id="ref" class="form-control">
+                    <span id="show_ref"
+                        style="cursor:pointer;text-align:left;display:inline-block;width:70px;margin-top: 4px;font-size:smaller;vertical-align:top;"
+                        title="Show/Hide">show
+                    </span>
+                </div>
             </div>
         </div>
 
         <div class="form-label-group mb-4">
             <label for="mainChannel">Twitch Account</label>
-            <input type="text" id="mainChannel" class="form-control" value="" placeholder="MrCoolStreamer" size="50">
+            <input type="text" id="mainChannel" class="form-control shadow" value="" placeholder="MrCoolStreamer" size="50">
         </div>
         <div class="form-label-group mb-2">
             <label for="channel">Twitch channel(s) to pull clips from
                 <small class="text-warning">* This can be a single channel or a comma separated list of channels</small>
             </label>
-            <textarea id="channel" rows="3" class="form-control" style="min-height: 100px;"
+            <textarea id="channel" rows="3" class="form-control shadow" style="min-height: 100px;"
                 placeholder="MrCoolStreamer,GamerGamingGames,StreamBean,AnotherStreamer,WillStreamForBeer"></textarea>
         </div>
         <div class="form-check mb-2">
-            <input class="form-check-input" type="checkbox" value="" id="showFollowing">
+            <input class="form-check-input shadow" type="checkbox" value="" id="showFollowing">
             <label class="form-check-label" for="showFollowing">
                 Show clips from channels that you follow <small class="text-warning">* Requires Twitch Access
                     Token</small>
@@ -145,7 +147,7 @@
             <label for="exclude">Exclude channels
                 <small class="text-warning">* Comma separated list of channels</small>
             </label>
-            <textarea id="exclude" rows="3" class="form-control" style="min-height: 100px;"
+            <textarea id="exclude" rows="3" class="form-control shadow" style="min-height: 100px;"
                 placeholder="MrCoolStreamer,GamerGamingGames,StreamBean,AnotherStreamer,WillStreamForBeer"></textarea>
         </div>
         <div class="form-label-group mb-4" id="customCommandOptions">
@@ -154,7 +156,7 @@
                     <small class="text-warning">* If a custom command is Not set, the clips player will start playing as
                         soon as the scene is active.</small>
                 </label>
-                <input type="text" id="command" class="form-control" value="" placeholder="playclips" size="50">
+                <input type="text" id="command" class="form-control shadow" value="" placeholder="playclips" size="50">
             </div>
         </div>
         <div class="form-group range-slider mt-4">
@@ -176,13 +178,13 @@
             <small class="text-muted range-slider-value">Day(s)</small>
         </div>
         <div class="form-check mb-2">
-            <input class="form-check-input" type="checkbox" value="" id="preferFeatured">
+            <input class="form-check-input shadow" type="checkbox" value="" id="preferFeatured">
             <label class="form-check-label" for="preferFeatured">
                 Prefer featured clips (Featured clips if found)
             </label>
         </div>
         <div class="form-check mb-2">
-            <input class="form-check-input" type="checkbox" value="" id="showText" checked>
+            <input class="form-check-input shadow" type="checkbox" value="" id="showText" checked>
             <label class="form-check-label" for="showText">
                 Show channel name on top of video
             </label>
@@ -190,11 +192,11 @@
         <div class="form-label-group mt-2 mb-4 ml-4" id="showCustomText" checked>
             <label for="customText">Custom message <small>(Optional)</small>
             </label>
-            <input type="text" id="customText" class="form-control" value="" placeholder="Go check out {channel}"
+            <input type="text" id="customText" class="form-control shadow" value="" placeholder="Go check out {channel}"
                 size="255">
         </div>
         <div class="form-check mb-2">
-            <input class="form-check-input" type="checkbox" value="" id="showDetails" checked>
+            <input class="form-check-input shadow" type="checkbox" value="" id="showDetails" checked>
             <label class="form-check-label" for="showDetails">
                 Show clip details panel
             </label>
@@ -202,13 +204,13 @@
         <div class="form-label-group mt-2 mb-4 ml-4" id="showDetailsText" checked>
             <label for="detailsText">Custom clip details panel text <small>(Optional)</small>
             </label>
-            <textarea class="form-control" id="detailsText" rows="4" placeholder="{title}
+            <textarea class="form-control shadow" id="detailsText" rows="4" placeholder="{title}
 While streaming {game}
 Clipped by {creator_name} {created_at}"></textarea>
         </div>
         <div class="form-group">
             <label for="themeOption">Theme options</label>
-            <select class="form-control" id="themeOption">
+            <select class="form-control shadow" id="themeOption">
                 <option value="0">None</option>
                 <option value="1">Slide in fancy skewed</option>
                 <option value="2" selected>Slide in basic</option>
@@ -216,7 +218,7 @@ Clipped by {creator_name} {created_at}"></textarea>
             </select>
         </div>
         <br>
-        <button class="btn btn-lg btn-success btn-block" id="generate_button" type="button">Generate Overlay
+        <button class="btn btn-lg btn-success btn-block text-white" id="generate_button" type="button">Generate Overlay
             Link</button>
         <br>
         <div id="overlaylink" class="hide"></div>
@@ -453,10 +455,10 @@ Clipped by {creator_name} {created_at}"></textarea>
 
         });
     </script>
-    <div class="text-center m-4">
-        <a class="btn btn-link btn-sm" href="https://github.com/teklynk/twitch_clips_player/blob/main/README.md" target="_blank">Help</a>
-        <a class="btn btn-link btn-sm" href="https://github.com/teklynk/twitch_clips_player" target="_blank">Github</a>
-        <a class="btn btn-link btn-sm" href="https://www.teklynk.com/support" target="_blank">Support</a>
+    <div class="text-center p-1">
+        <a class="btn btn-dark btn-sm m-1" href="https://github.com/teklynk/twitch_clips_player/blob/main/README.md" target="_blank">Help</a>
+        <a class="btn btn-dark btn-sm m-1" href="https://github.com/teklynk/twitch_clips_player" target="_blank">GitHub</a>
+        <a class="btn btn-dark btn-sm m-1" href="https://www.teklynk.com/support" target="_blank">Support</a>
     </div>
     <script>
         // Json data - Ajax call
