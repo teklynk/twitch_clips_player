@@ -33,6 +33,18 @@
     <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
 </head>
 <style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Noto Sans, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+        background-color: #181821;
+        color: #ddd9e8 !important;
+    }
+
+    .card, .alert {
+        background-color: #292938 !important;
+        border-color: #292938 !important;
+        color: #ddd9e8 !important;
+    }
+
     .hide {
         display: none;
     }
@@ -218,10 +230,18 @@ Clipped by {creator_name} {created_at}"></textarea>
             </select>
         </div>
         <br>
-        <button class="btn btn-lg btn-success btn-block text-white" id="generate_button" type="button">Generate Overlay
+        <button class="btn btn-lg btn-success btn-block text-white shadow" id="generate_button" type="button">Generate Overlay
             Link</button>
         <br>
         <div id="overlaylink" class="hide"></div>
+    </div>
+    <div class="text-center p-1">
+        <a class="btn btn-dark btn-sm" href="https://github.com/teklynk/twitch_clips_player/blob/main/README.md" target="_blank">Help</a>
+        <a class="btn btn-dark btn-sm" href="https://github.com/teklynk/twitch_clips_player" target="_blank">GitHub</a>
+        <a class="btn btn-dark btn-sm" href="https://www.teklynk.com/support" target="_blank">Support</a>
+    </div>
+    <div class="container text-center p-4">
+        <small class="muted">Made with <span class="heart">♥</span> by <a href="https://www.teklynk.com" target="_blank">Teklynk</a></small>
     </div>
     <script>
         function onInit() {
@@ -454,13 +474,7 @@ Clipped by {creator_name} {created_at}"></textarea>
             }
 
         });
-    </script>
-    <div class="text-center p-1">
-        <a class="btn btn-dark btn-sm" href="https://github.com/teklynk/twitch_clips_player/blob/main/README.md" target="_blank">Help</a>
-        <a class="btn btn-dark btn-sm" href="https://github.com/teklynk/twitch_clips_player" target="_blank">GitHub</a>
-        <a class="btn btn-dark btn-sm" href="https://www.teklynk.com/support" target="_blank">Support</a>
-    </div>
-    <script>
+
         // Json data - Ajax call
         let nav_json = JSON.parse($.getJSON({
             'url': "https://twitchapi.teklynk.com/getnav.php",
