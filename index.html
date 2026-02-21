@@ -302,6 +302,7 @@ Clipped by {creator_name} {created_at}"></textarea>
 
             let url = window.location.href;
             let redirectUrl = window.location.origin + window.location.pathname;
+            redirectUrl = redirectUrl.replace(/\/$/, "");
 
             // Update auth link
             let authLink = document.getElementById("twitch-auth-link");
