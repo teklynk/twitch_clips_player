@@ -290,6 +290,9 @@ Clipped by {creator_name} {created_at}"></textarea>
             if (localStorage.getItem("TwitchClipsThemeOption")) {
                 document.getElementById("themeOption").value = localStorage.getItem("TwitchClipsThemeOption");
             }
+            if (localStorage.getItem("TwitchClipsExclude")) {
+                document.getElementById("exclude").value = localStorage.getItem("TwitchClipsExclude");
+            }
 
             let rangeSlider = function rangeSlider() {
                 let slider = $('.range-slider'),
@@ -341,6 +344,10 @@ Clipped by {creator_name} {created_at}"></textarea>
 
         document.getElementById("themeOption").onchange = function () {
             localStorage.setItem("TwitchClipsThemeOption", this.value);
+        };
+
+        document.getElementById("exclude").onchange = function () {
+            localStorage.setItem("TwitchClipsExclude", this.value);
         };
 
         // Check if any input fields have changed
