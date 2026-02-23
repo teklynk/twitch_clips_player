@@ -65,6 +65,7 @@ $(document).ready(async function () {
     let limit = (urlParams.get('limit') || '').trim();
     let dateRange = (urlParams.get('dateRange') || '').trim();
     let preferFeatured = (urlParams.get('preferFeatured') || '').trim();
+    let showPoster = (urlParams.get('showPoster') || '').trim();
     let showText = (urlParams.get('showText') || '').trim();
     let showDetails = (urlParams.get('showDetails') || '').trim();
     let ref = (urlParams.get('ref') || '').trim();
@@ -109,6 +110,10 @@ $(document).ready(async function () {
 
     if (!preferFeatured) {
         preferFeatured = "false"; //default
+    }
+
+    if (!showPoster) {
+        showPoster = "true"; //default
     }
 
     if (!showFollowing) {
@@ -541,7 +546,11 @@ $(document).ready(async function () {
 
         // Create video element and load a new clip
         // adding a poster will help reduce the gap between clips.
-        curr_clip.poster = clips_json.data[randomClip]['thumbnail_url'];
+        if (showPoster === 'true') {
+            curr_clip.poster = clips_json.data[randomClip]['thumbnail_url'];
+        } else {
+            curr_clip.poster = "";
+        }
         curr_clip.src = clips_json.data[randomClip]['clip_url'];
         curr_clip.autoplay = true;
         curr_clip.controls = false;

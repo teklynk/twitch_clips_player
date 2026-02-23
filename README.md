@@ -52,6 +52,8 @@ Add these parameters to your URL query string (e.g., `?channel=mychannel&limit=2
 | `customText` | string | Custom message on top of clips. Variables: `{channel}`. |
 | `command` | string | Custom chat command to start the player. If not set, plays automatically on load. |
 | `themeOption` | integer | Select a pre-made CSS theme. |
+| `showPoster` | true/false | Show or hide the video poster thumbnail image |
+| `apiServer` | string | Point the clips player to specific API gateway server |
 
 ## Custom CSS
 
