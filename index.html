@@ -290,6 +290,44 @@ Clipped by {creator_name} {created_at}"></textarea>
             if (localStorage.getItem("TwitchClipsExclude")) {
                 document.getElementById("exclude").value = localStorage.getItem("TwitchClipsExclude");
             }
+            if (localStorage.getItem("TwitchClipsShowFollowing")) {
+                let isChecked = (localStorage.getItem("TwitchClipsShowFollowing") === 'true');
+                document.getElementById("showFollowing").checked = isChecked;
+                if (isChecked) {
+                    document.getElementById("channel").setAttribute('disabled', 'disabled');
+                    document.getElementById("showExclude").classList.remove('hide');
+                } else {
+                    document.getElementById("channel").removeAttribute('disabled');
+                    document.getElementById("showExclude").classList.add('hide');
+                }
+            }
+            if (localStorage.getItem("TwitchClipsPreferFeatured")) {
+                document.getElementById("preferFeatured").checked = (localStorage.getItem("TwitchClipsPreferFeatured") === 'true');
+            }
+            if (localStorage.getItem("TwitchClipsShowText")) {
+                let isChecked = (localStorage.getItem("TwitchClipsShowText") === 'true');
+                document.getElementById("showText").checked = isChecked;
+                if (!isChecked) {
+                    document.getElementById("showCustomText").classList.add('hide');
+                } else {
+                    document.getElementById("showCustomText").classList.remove('hide');
+                }
+            }
+            if (localStorage.getItem("TwitchClipsShowDetails")) {
+                let isChecked = (localStorage.getItem("TwitchClipsShowDetails") === 'true');
+                document.getElementById("showDetails").checked = isChecked;
+                if (!isChecked) {
+                    document.getElementById("showDetailsText").classList.add('hide');
+                } else {
+                    document.getElementById("showDetailsText").classList.remove('hide');
+                }
+            }
+            if (localStorage.getItem("TwitchClipsLimit")) {
+                document.getElementById("limit").value = localStorage.getItem("TwitchClipsLimit");
+            }
+            if (localStorage.getItem("TwitchClipsDateRange")) {
+                document.getElementById("dateRange").value = localStorage.getItem("TwitchClipsDateRange");
+            }
 
             let rangeSlider = function rangeSlider() {
                 let slider = $('.range-slider'),
@@ -299,7 +337,7 @@ Clipped by {creator_name} {created_at}"></textarea>
                 slider.each(function () {
 
                     value.each(function () {
-                        let value = $(this).prev().attr('value');
+                        let value = $(this).prev().val();
                         $(this).html(value);
                     });
 
@@ -345,6 +383,30 @@ Clipped by {creator_name} {created_at}"></textarea>
 
         document.getElementById("exclude").onchange = function () {
             localStorage.setItem("TwitchClipsExclude", this.value);
+        };
+
+        document.getElementById("showFollowing").onchange = function () {
+            localStorage.setItem("TwitchClipsShowFollowing", this.checked);
+        };
+
+        document.getElementById("preferFeatured").onchange = function () {
+            localStorage.setItem("TwitchClipsPreferFeatured", this.checked);
+        };
+
+        document.getElementById("showText").onchange = function () {
+            localStorage.setItem("TwitchClipsShowText", this.checked);
+        };
+
+        document.getElementById("showDetails").onchange = function () {
+            localStorage.setItem("TwitchClipsShowDetails", this.checked);
+        };
+
+        document.getElementById("limit").oninput = function () {
+            localStorage.setItem("TwitchClipsLimit", this.value);
+        };
+
+        document.getElementById("dateRange").oninput = function () {
+            localStorage.setItem("TwitchClipsDateRange", this.value);
         };
 
         // Check if any input fields have changed
