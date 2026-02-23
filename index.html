@@ -15,7 +15,7 @@
     <meta property="og:url" content="" />
     <meta property="og:site_name" content="Twitch Clips Player" />
     <script src="assets/js/jquery-3.6.0.min.js"></script>
-    <script src="assets/js/bootstrap.bundle.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="assets/css/bootstrap452.min.css">
     <link rel="stylesheet" href="assets/css/dark.min.css">
     <link rel="apple-touch-icon" sizes="57x57" href="assets/images/apple-icon-57x57.png">
@@ -483,14 +483,14 @@ Clipped by {creator_name} {created_at}"></textarea>
         });
 
         // Json data - Ajax call
-        let nav_json = JSON.parse($.getJSON({
-            'url': "https://twitchapi.teklynk.com/getnav.php",
-            'async': false
-        }).responseText);
-
-        $.each(nav_json, function (i, val) {
-            $('<a class="dropdown-item" href="' + val.url + '">' + val.name + '</a>').appendTo('#main-nav');
-        });
+        fetch("https://twitchapi.teklynk.com/getnav.php")
+            .then(response => response.json())
+            .then(nav_json => {
+                $.each(nav_json, function (i, val) {
+                    $('<a class="dropdown-item" href="' + val.url + '">' + val.name + '</a>').appendTo('#main-nav');
+                });
+            })
+            .catch(error => console.error('Error loading navigation:', error));
     </script>
 </body>
 
