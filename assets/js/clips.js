@@ -6,6 +6,9 @@ $(document).ready(async function () {
     sessionStorage.clear();
     console.log('Cleared sessionStorage');
 
+    // Remove twitch_follow_list from localStorage so that it pulls new followed channels
+    localStorage.removeItem('twitch_follow_list');
+
     // Function to randomly select a api server
     async function setRandomServer() {
         let serverArr = [];
