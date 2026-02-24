@@ -444,7 +444,7 @@ Clipped by {creator_name} {created_at}"></textarea>
             let channel = document.getElementById("channel").value.trim();
             channel = channel.replace(/\s+/g, ""); // remove white space
             let mainChannel = document.getElementById("mainChannel").value.trim();
-            let exclude = document.getElementById("exclude").value.trim();
+            let exclude = document.getElementById("exclude").value.trim().toLowerCase();
             exclude = exclude.replace(/\s+/g, ""); // remove white space
             let ref = document.getElementById("ref").value.trim();
             let limit = document.getElementById("limit").value;
