@@ -354,11 +354,11 @@ Clipped by {creator_name} {created_at}"></textarea>
         document.getElementById("channel").oninput = function () {
             document.getElementById("channel").style.height = "";
             document.getElementById("channel").style.height = Math.min(document.getElementById("channel").scrollHeight, 300) + "px";
-            localStorage.setItem("TwitchClipsChannels", this.value);
+            localStorage.setItem("TwitchClipsChannels", this.value.toLowerCase());
         };
 
         document.getElementById("mainChannel").oninput = function () {
-            localStorage.setItem("TwitchClipsMainChannel", this.value);
+            localStorage.setItem("TwitchClipsMainChannel", this.value.toLowerCase());
         };
 
         document.getElementById("command").oninput = function () {
@@ -378,7 +378,7 @@ Clipped by {creator_name} {created_at}"></textarea>
         };
 
         document.getElementById("exclude").onchange = function () {
-            localStorage.setItem("TwitchClipsExclude", this.value);
+            localStorage.setItem("TwitchClipsExclude", this.value.toLowerCase());
         };
 
         document.getElementById("showFollowing").onchange = function () {

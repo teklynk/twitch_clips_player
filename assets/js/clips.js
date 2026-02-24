@@ -77,7 +77,7 @@ $(document).ready(async function () {
     let detailsText = (urlParams.get('detailsText') || '').trim();
     let command = (urlParams.get('command') || '').trim();
     let showFollowing = (urlParams.get('showFollowing') || '').trim();
-    let exclude = (urlParams.get('exclude') || '').trim();
+    let exclude = (urlParams.get('exclude') || '').toLowerCase().trim();
     let themeOption = (urlParams.get('themeOption') || '').trim();
     let randomClip = 0; // Default random clip index
     let clip_index = 0; // Default clip index
