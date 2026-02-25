@@ -2,13 +2,6 @@ $(document).ready(async function () {
     // Get values from URL string
     const urlParams = new URLSearchParams(window.location.search);
 
-    // clear sessionStorage on load. Some clips have a expire time that needs to be refreshed and can not sit in sessionStorage for too long.
-    sessionStorage.clear();
-    console.log('Cleared sessionStorage');
-
-    // Remove twitch_follow_list from localStorage so that it pulls new followed channels
-    localStorage.removeItem('twitch_follow_list');
-
     // Function to randomly select a api server
     async function setRandomServer() {
         let serverArr = [];
@@ -222,10 +215,10 @@ $(document).ready(async function () {
 
     if (showFollowing === 'true' && ref > '' && clientId > '') {
 
-        let followList = localStorage.getItem('twitch_follow_list');
+        let followList = sessionStorage.getItem('twitch_follow_list');
 
         if (followList) {
-            console.log('Pulling followList from localStorage');
+            console.log('Pulling followList from sessionStorage');
         } else {
             async function following_pagination(cursor) {
                 let jsonParse;
@@ -290,7 +283,7 @@ $(document).ready(async function () {
             channelListArray = [...new Set(channelListArray)];
 
             followList = channelListArray.join(',');
-            localStorage.setItem('twitch_follow_list', followList);
+            sessionStorage.setItem('twitch_follow_list', followList);
         }
 
         // Set channel to equal following list/string
@@ -457,7 +450,7 @@ $(document).ready(async function () {
 
                 if (nextClipsData.data.length > 0) {
                     console.log('Set ' + channelName + ' in sessionStorage');
-                    // Store the data in localStorage
+                    // Store the data in sessionStorage
                     sessionStorage.setItem(channelName, JSON.stringify(nextClipsData));
                 }
             } catch (error) {
@@ -473,7 +466,7 @@ $(document).ready(async function () {
         removeElements();
 
         // Json data - Ajax calls
-        // if localstorage does not exist
+        // if sessionStorage does not exist
         if (sessionStorage.getItem(channelName) === null && typeof channelName !== 'undefined') {
             try {
                 clips_json = await fetchClipsForChannel(channelName);
