@@ -82,6 +82,7 @@ $(document).ready(async function () {
     let asyncResponse;
     let chatConnect = (urlParams.get('chatConnect') || '').trim(); // If set to 'false' it will not connect to Twitch chat: &chatConnect=false
     let pendingFetches = {};
+    let errorCount = 0;
 
     const channel_keywords = ['http', 'https', 'twitch.tv'];
 
@@ -487,9 +488,13 @@ $(document).ready(async function () {
 
                 if (e.name === 'QuotaExceededError') {
                     console.error('sessionStorage Quota Exceeded. Please free up some space by deleting unnecessary data.');
-                    // automatically clear sessionStorage if it exceeds the quota
+                    // automatically clear sessionStorage if it exceeds the quota but keep the twitch_follow_list
+                    let followListInStorage = sessionStorage.getItem('twitch_follow_list');
                     sessionStorage.clear();
-                    console.log('Cleared sessionStorage');
+                    if (followListInStorage) {
+                        sessionStorage.setItem('twitch_follow_list', followListInStorage);
+                    }
+                    console.log('Cleared sessionStorage (except twitch_follow_list)');
                     await nextClip(true);
                     return false;
                 } else {
@@ -547,6 +552,22 @@ $(document).ready(async function () {
         } else {
             curr_clip.poster = "";
         }
+
+        // Error checking. Check if video clip/url produces any errors. Try 3 times, then stop to prevent the clips player from a run away loop.
+        curr_clip.onerror = async function() {
+            console.log("Error loading clip: " + clips_json.data[randomClip]['clip_url']);
+            errorCount++;
+            if (errorCount >= 3) {
+                console.log("Too many errors. Stopping.");
+                return;
+            }
+            await nextClip(true);
+        };
+
+        curr_clip.onloadeddata = function() {
+            errorCount = 0;
+        };
+
         curr_clip.src = clips_json.data[randomClip]['clip_url'];
         curr_clip.autoplay = true;
         curr_clip.controls = false;
@@ -634,6 +655,7 @@ $(document).ready(async function () {
 
         // Properly remove video source
         let videoElement = document.querySelector("video");
+        if (videoElement) videoElement.onerror = null;
         videoElement.pause();
         videoElement.removeAttribute("src"); // empty source
         videoElement.load();
