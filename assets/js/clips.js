@@ -204,14 +204,17 @@ $(document).ready(async function () {
     });
 
     // Get game details function
-    async function game_by_id(game_id) {
-        const response = await fetch(apiServer + "/getgame.php?id=" + game_id);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+    async function game_title(game_id) {
+        try {
+            const response = await fetch(apiServer + "/getgame.php?id=" + game_id);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return await response.json();
+        } catch (e) {
+            console.error(e);
+            return null;
         }
-        let jsonParse = await response.json();
-
-        return jsonParse;
     }
 
     if (showFollowing === 'true' && ref > '' && clientId > '') {
@@ -614,7 +617,7 @@ $(document).ready(async function () {
                 if (detailsText.includes("{game}")) {
                     // Show game title if it exists
                     if (clips_json.data[randomClip]['game_id']) {
-                        let game = await game_by_id(clips_json.data[randomClip]['game_id']);
+                        let game = await game_title(clips_json.data[randomClip]['game_id']);
                         detailsText = detailsText.replace("{game}", game.data[0]['name']);
                     } else {
                         detailsText = detailsText.replace("{game}", "?");
