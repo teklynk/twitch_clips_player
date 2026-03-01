@@ -83,6 +83,7 @@ $(document).ready(async function () {
     let chatConnect = (urlParams.get('chatConnect') || '').trim(); // If set to 'false' it will not connect to Twitch chat: &chatConnect=false
     let pendingFetches = {};
     let errorCount = 0;
+    let globalRetryCount = 0;
 
     const channel_keywords = ['http', 'https', 'twitch.tv'];
 
@@ -302,6 +303,11 @@ $(document).ready(async function () {
     // Remove duplicates
     channel = [...new Set(channel)];
 
+    // Set a reasonable retry limit to prevent infinite loops, especially with large channel lists.
+    // It allows for at least 20 retries for small lists (1-9 channels) to handle temporary network issues,
+    // allows for two full rotations for medium lists (10-50 channels), and caps at 100 for very large lists.
+    const maxRetries = Math.max(20, Math.min(channel.length * 2, 100));
+
     // Randomly grab a channel from the list to start from
     if (channel.length > 0) {
         // shuffle the list of channel names
@@ -478,18 +484,34 @@ $(document).ready(async function () {
                 if (clips_json.data.length > 0) {
                     console.log('Set ' + channelName + ' in sessionStorage');
                     sessionStorage.setItem(channelName, JSON.stringify(clips_json));
+                    globalRetryCount = 0;
                 } else {
+                    globalRetryCount++;
+                    if (globalRetryCount > maxRetries) {
+                        console.log("Max retries reached (No clips found). Stopping to prevent infinite loop.");
+                        return;
+                    }
                     await nextClip(true);
                 }
             } catch (e) {
                 // Sometimes the api returns an error. Usually when a channel no longer exists
                 if (e.name === 'TypeError' || e.name === 'SyntaxError') {
+                    globalRetryCount++;
+                    if (globalRetryCount > maxRetries) {
+                        console.log("Max retries reached (Network/API Error). Stopping to prevent infinite loop.");
+                        return false;
+                    }
                     console.error(e.name + ' found. Skipping...');
                     await nextClip(true);
                     return false;
                 }
 
                 if (e.name === 'QuotaExceededError') {
+                    globalRetryCount++;
+                    if (globalRetryCount > maxRetries) {
+                        console.log("Max retries reached (Quota Error). Stopping to prevent infinite loop.");
+                        return false;
+                    }
                     console.error('sessionStorage Quota Exceeded. Please free up some space by deleting unnecessary data.');
                     // automatically clear sessionStorage if it exceeds the quota but keep the twitch_follow_list
                     let followListInStorage = sessionStorage.getItem('twitch_follow_list');
@@ -508,6 +530,7 @@ $(document).ready(async function () {
             // Retrieve the object from storage
             console.log('Pulling ' + channelName + ' from sessionStorage');
             clips_json = JSON.parse(sessionStorage.getItem(channelName));
+            globalRetryCount = 0;
         }
 
         // Grab a random clip index anywhere from 0 to the clips_json.data.length.
