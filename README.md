@@ -5,6 +5,8 @@
 ## What is this?
 This is a Twitch Clips Player, browser source overlay for OBS. It grabs your Twitch clips and plays them one after the other in a loop. Keep your viewers entertained on your BRB or starting soon scenes.
 
+**NOTE:** This project relies on a custom Twitch API Gateway server/service. You can host this service using Docker. Check out the project for more details. [https://github.com/teklynk/twitch_api_public](https://github.com/teklynk/twitch_api_public)
+
 Try it here:
 - [https://twitchclipsplayer.com](https://twitchclipsplayer.com)
 - [https://twitch-clips-player.teklynk.com](https://twitch-clips-player.teklynk.com)
