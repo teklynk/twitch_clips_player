@@ -206,12 +206,23 @@ $(document).ready(async function () {
 
     // Get game details function
     async function game_title(game_id) {
+        if (sessionStorage.getItem('game_' + game_id)) {
+            return JSON.parse(sessionStorage.getItem('game_' + game_id));
+        }
         try {
             const response = await fetch(apiServer + "/getgame.php?id=" + game_id);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            return await response.json();
+            let data = await response.json();
+            if (data.data && data.data.length > 0) {
+                try {
+                    sessionStorage.setItem('game_' + game_id, JSON.stringify(data));
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+            return data;
         } catch (e) {
             console.error(e);
             return null;
