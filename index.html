@@ -18,6 +18,7 @@
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="assets/css/bootstrap452.min.css">
     <link rel="stylesheet" href="assets/css/dark.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">   
     <link rel="apple-touch-icon" sizes="57x57" href="assets/images/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="assets/images/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="assets/images/apple-icon-72x72.png">
@@ -74,6 +75,11 @@
         background-color: #354e69 !important;
         color: #fff !important;
     }
+
+    .btn-purple, .btn-purple:hover, .btn-purple:focus, .btn-purple:active {
+        background-color: #6441a5;
+        border-color: #523c7c;
+    }
 </style>
 
 <body onload="onInit()">
@@ -110,21 +116,22 @@
                 </ul>
                 <p>Be sure to set "Shutdown source when not visible", "Control audio via OBS", "Refresh browser when
                     scene becomes active" on the OBS Browser Source properties.</p>
-                <p>Join our Discord to get the latest on new features and updates, submit feature requests, report issues, and talk tech with the community.</p>
+                <p>Join the Discord to get the latest on new features and updates, submit feature requests, report issues, and talk tech with the community.</p>
                 <div class="text-center p-1">
-                    <a class="btn btn-dark btn-sm" href="https://github.com/teklynk/twitch_clips_player/blob/main/README.md" target="_blank">Help</a>
-                    <a class="btn btn-dark btn-sm" href="https://github.com/teklynk/twitch_clips_player" target="_blank">GitHub</a>
-                    <a class="btn btn-dark btn-sm" href="https://discord.gg/seZh8GHeEJ" target="_blank">Discord</a>
-                    <a class="btn btn-dark btn-sm" href="https://www.teklynk.com/support" target="_blank">💲 Support</a>
+                    <a class="btn btn-link btn-lg" href="https://github.com/teklynk/twitch_clips_player/blob/main/README.md" target="_blank" title="README"><i class="fa-brands fa-readme"></i></a>
+                    <a class="btn btn-link btn-lg" href="https://github.com/teklynk/twitch_clips_player" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a class="btn btn-link btn-lg" href="https://discord.gg/seZh8GHeEJ" target="_blank" title="Join the Discord"><i class="fa-brands fa-discord"></i></a>
+                    <a class="btn btn-link btn-lg" href="https://www.teklynk.com/contact" target="_blank" title="Contact me"><i class="fa-solid fa-envelope"></i></a>
+                    <a class="btn btn-link btn-lg" href="https://www.teklynk.com/support" target="_blank" title="Donate/Support"><i class="fa-solid fa-circle-dollar-to-slot"></i></a>
                 </div>
             </div>
         </div>
 
-        <div class="alert alert-dark shadow" role="alert">Access Token is required if you would like to show clips from
-            channels that you follow.<br>
+        <div class="alert alert-dark shadow" role="alert"><p>Access Token is required if you would like to show clips from
+            channels that you follow.</p>
             <div class="form-label-group">
                 <div>
-                    <a id="twitch-auth-link" href="#" target="_self"><img src="assets/images/connect.png"></a>
+                    <a class="btn btn-purple btn-lg text-white shadow-sm font-weight-bold" id="twitch-auth-link" href="#" target="_self" title="Sign in with your Twitch account"><i class="fa-brands fa-twitch"></i>&nbsp;Connect</a>
                 </div>
                 <div class="form-label-group mt-2">
                     <label for="ref">Access token</label>
@@ -230,13 +237,14 @@ Clipped by {creator_name} {created_at}"></textarea>
         <div id="overlaylink" class="hide"></div>
     </div>
     <div class="text-center p-1">
-        <a class="btn btn-dark btn-sm" href="https://github.com/teklynk/twitch_clips_player/blob/main/README.md" target="_blank">Help</a>
-        <a class="btn btn-dark btn-sm" href="https://github.com/teklynk/twitch_clips_player" target="_blank">GitHub</a>
-        <a class="btn btn-dark btn-sm" href="https://discord.gg/seZh8GHeEJ" target="_blank">Discord</a>
-        <a class="btn btn-dark btn-sm" href="https://www.teklynk.com/support" target="_blank">💲 Support</a>
+        <a class="btn btn-link btn-lg" href="https://github.com/teklynk/twitch_clips_player/blob/main/README.md" target="_blank" title="README"><i class="fa-brands fa-readme"></i></a>
+        <a class="btn btn-link btn-lg" href="https://github.com/teklynk/twitch_clips_player" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+        <a class="btn btn-link btn-lg" href="https://discord.gg/seZh8GHeEJ" target="_blank" title="Join the Discord"><i class="fa-brands fa-discord"></i></a>
+        <a class="btn btn-link btn-lg" href="https://www.teklynk.com/contact" target="_blank" title="Contact me"><i class="fa-solid fa-envelope"></i></a>
+        <a class="btn btn-link btn-lg" href="https://www.teklynk.com/support" target="_blank" title="Donate/Support"><i class="fa-solid fa-circle-dollar-to-slot"></i></a>
     </div>
     <div class="container text-center p-4">
-        <small class="muted">Made with <span class="heart">♥</span> by <a href="https://www.teklynk.com" target="_blank">Teklynk</a></small>
+        <small class="muted">Made with <i class="fa fa-heart vertical-middle text-danger"></i> by <a href="https://www.teklynk.com" target="_blank">Teklynk</a></small>
     </div>
     <script>
         function onInit() {
@@ -460,7 +468,6 @@ Clipped by {creator_name} {created_at}"></textarea>
             command = command.replace('!', '');
             let customText = document.getElementById("customText").value.trim();
             let detailsText = document.getElementById("detailsText").value.trim();
-            let clientId = 'cuql1zod4eeabjr3cnc6adjn9ezro4';
             let validationError = false;
 
             if (showFollowing) {
