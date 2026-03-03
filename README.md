@@ -77,3 +77,19 @@ video {
     top: 44vw;
 }
 ```
+
+## Self Host / Local Development
+
+You can run this project locally using Docker. A docker-compose.yml file is included.
+
+```bash
+docker-compose up -d --build
+```
+
+The project will be available at: `http://localhost:5001`
+
+Stop and remove the container with:
+
+```bash
+docker-compose down
+```
