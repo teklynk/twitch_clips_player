@@ -245,6 +245,8 @@ Clipped by {creator_name} {created_at}"></textarea>
         <small class="muted">Made with <i class="fa fa-heart vertical-middle text-danger"></i> by <a href="https://www.teklynk.com" target="_blank">Teklynk</a></small>
     </div>
     <script>
+        const TWITCH_CLIENT_ID = "cuql1zod4eeabjr3cnc6adjn9ezro4";
+
         function onInit() {
 
             let url = window.location.href;
@@ -253,9 +255,8 @@ Clipped by {creator_name} {created_at}"></textarea>
 
             // Update auth link
             let authLink = document.getElementById("twitch-auth-link");
-            let clientId = "cuql1zod4eeabjr3cnc6adjn9ezro4";
             let scope = "chat:read+chat:edit+user:read:follows+moderator:read:followers";
-            authLink.href = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=" + clientId + "&redirect_uri=" + redirectUrl + "&scope=" + scope + "&force_verify=true";
+            authLink.href = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=" + TWITCH_CLIENT_ID + "&redirect_uri=" + redirectUrl + "&scope=" + scope + "&force_verify=true";
 
             if (url.indexOf('#access_token') !== -1) {
                 // extract the access_token from the url
@@ -466,7 +467,7 @@ Clipped by {creator_name} {created_at}"></textarea>
             command = command.replace('!', '');
             let customText = document.getElementById("customText").value.trim();
             let detailsText = document.getElementById("detailsText").value.trim();
-            let clientId = "cuql1zod4eeabjr3cnc6adjn9ezro4";
+            let clientId = TWITCH_CLIENT_ID;
             let validationError = false;
 
             if (showFollowing) {
@@ -504,15 +505,9 @@ Clipped by {creator_name} {created_at}"></textarea>
             }
 
             if (showFollowing === false) {
-                clientId = '';
-                ref = '';
-            }
-
-            if (showFollowing === false) {
                 exclude = '';
                 clientId = '';
             }
-
             function validateForm() {
                 const mainChannelInput = document.getElementById('mainChannel');
                 const channelInput = document.getElementById('channel');
