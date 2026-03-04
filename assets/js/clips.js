@@ -314,10 +314,8 @@ $(document).ready(async function () {
     // Remove duplicates
     channel = [...new Set(channel)];
 
-    // Set a reasonable retry limit to prevent infinite loops, especially with large channel lists.
-    // It allows for at least 20 retries for small lists (1-9 channels) to handle temporary network issues,
-    // allows for two full rotations for medium lists (10-50 channels), and caps at 100 for very large lists.
-    const maxRetries = Math.max(20, Math.min(channel.length * 2, 100));
+    // Set a reasonable retry limit to prevent infinite loops.
+    const maxRetries = 3;
 
     // Randomly grab a channel from the list to start from
     if (channel.length > 0) {
@@ -502,6 +500,7 @@ $(document).ready(async function () {
                         console.log("Max retries reached (No clips found). Stopping to prevent infinite loop.");
                         return;
                     }
+                    await new Promise(resolve => setTimeout(resolve, 1000));
                     await nextClip(true);
                 }
             } catch (e) {
@@ -513,6 +512,7 @@ $(document).ready(async function () {
                         return false;
                     }
                     console.error(e.name + ' found. Skipping...');
+                    await new Promise(resolve => setTimeout(resolve, 1000));
                     await nextClip(true);
                     return false;
                 }
@@ -531,6 +531,7 @@ $(document).ready(async function () {
                         sessionStorage.setItem('twitch_follow_list', followListInStorage);
                     }
                     console.log('Cleared sessionStorage (except twitch_follow_list)');
+                    await new Promise(resolve => setTimeout(resolve, 1000));
                     await nextClip(true);
                     return false;
                 } else {
