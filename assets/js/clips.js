@@ -467,11 +467,9 @@ $(document).ready(async function () {
             try {
                 let nextClipsData = await fetchClipsForChannel(channelName);
 
-                if (nextClipsData.data.length > 0) {
-                    console.log('Set ' + channelName + ' in sessionStorage');
-                    // Store the data in sessionStorage
-                    sessionStorage.setItem(channelName, JSON.stringify(nextClipsData));
-                }
+                console.log('Set ' + channelName + ' in sessionStorage');
+                // Store the data in sessionStorage
+                sessionStorage.setItem(channelName, JSON.stringify(nextClipsData));
             } catch (error) {
                 console.error('Error while preloading clip:', error);
             }
@@ -502,6 +500,7 @@ $(document).ready(async function () {
                     }
                     await new Promise(resolve => setTimeout(resolve, 1000));
                     await nextClip(true);
+                    return;
                 }
             } catch (e) {
                 // Sometimes the api returns an error. Usually when a channel no longer exists
@@ -542,8 +541,20 @@ $(document).ready(async function () {
             // Retrieve the object from storage
             console.log('Pulling ' + channelName + ' from sessionStorage');
             clips_json = JSON.parse(sessionStorage.getItem(channelName));
-            globalRetryCount = 0;
         }
+
+        if (!clips_json || !clips_json.data || clips_json.data.length === 0) {
+            console.log("No clips found for " + channelName + ". Skipping.");
+            globalRetryCount++;
+            if (globalRetryCount > maxRetries) {
+                console.log("Max retries reached (No clips found). Stopping to prevent infinite loop.");
+                return;
+            }
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            await nextClip(true);
+            return;
+        }
+        globalRetryCount = 0;
 
         // Grab a random clip index anywhere from 0 to the clips_json.data.length.
         if (channel.length > 1) {
