@@ -330,6 +330,26 @@ $(document).ready(async function () {
     let curr_clip = document.createElement('video');
     $(curr_clip).appendTo('#container');
 
+    // Create progress bar
+    let progressBarContainer = document.createElement('div');
+    progressBarContainer.id = 'progress-bar-container';
+    $(progressBarContainer).appendTo('#container');
+
+    let progressBar = document.createElement('div');
+    progressBar.id = 'progress-bar';
+    $(progressBar).appendTo(progressBarContainer);
+
+    // Update progress bar
+    curr_clip.addEventListener('timeupdate', () => {
+        if (curr_clip.duration) {
+            let percentage = (curr_clip.currentTime / curr_clip.duration) * 100;
+            progressBar.style.width = percentage + '%';
+        }
+    });
+
+    // Move to the next clip when the current one finishes playing
+    curr_clip.addEventListener("ended", nextClip);
+
     //if command is set
     if (command && chatConnect === 'true') {
         // triggers on message
@@ -695,9 +715,6 @@ $(document).ready(async function () {
                 $("<div id='details-container'>" + dText + "</div>").appendTo('#container');
             }
         }
-
-        // Move to the next clip when the current one finishes playing
-        curr_clip.addEventListener("ended", nextClip);
     }
 
     async function nextClip(skip = false) {

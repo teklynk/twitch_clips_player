@@ -22,8 +22,6 @@ html, body {
 
 #container {
     display: block;
-    padding: 4px;
-    margin: 4px;
     text-align: center;
 }
 
@@ -31,7 +29,6 @@ video {
     width: 100%;
     height: auto;
     max-height: 100%;
-    border-radius: 10px;
     z-index: -1;
 }
 
@@ -89,6 +86,22 @@ video {
 #details-container .details-text.item-3 {
     font-size: 1.5vw;
     font-weight: normal;
+}
+
+#progress-bar-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #000;
+}
+
+#progress-bar {
+    left: 0;
+    width: 0%;
+    height: 4px;
+    background-color: #9146FF;
+    z-index: 10;
 }
 
 @keyframes fadeout {

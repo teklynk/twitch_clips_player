@@ -29,6 +29,7 @@ Try it here:
 2. Enter the URL with your desired parameters.
 3. **Important**: Check **"Shutdown source when not visible"** and **"Refresh browser when scene becomes active"**.
    - This prevents the player from running in the background and ensures it reloads fresh when you switch to the scene.
+   - Set browser source window size to **"1920x1080"** and then resize/scale the browser source window.
 
 ### Authentication
 Twitch authentication is required if you want to:
@@ -75,6 +76,11 @@ video {
 
 #details-container {
     top: 44vw;
+}
+
+/** Hide progress bar **/
+#progress-bar-container {
+    display: none;
 }
 ```
 
