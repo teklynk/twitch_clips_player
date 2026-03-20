@@ -341,18 +341,20 @@ $(document).ready(async function () {
     $(progressBar).appendTo(progressBarContainer);
 
     // Update progress bar
-    curr_clip.addEventListener('timeupdate', () => {
+    function animateProgressBar() {
         if (curr_clip.duration) {
             $(progressBarContainer).css("display", "block");
             let percentage = (curr_clip.currentTime / curr_clip.duration) * 100;
             progressBar.style.width = percentage + '%';
             // immediately set the progress bar width back to 0%
-            if (percentage == 100) {
+            if (percentage >= 100) {
                 $(progressBar).css("width", "0%");
                 $(progressBarContainer).css("display", "none");
             }
-        } 
-    });
+        }
+        requestAnimationFrame(animateProgressBar);
+    }
+    requestAnimationFrame(animateProgressBar);
 
     // Move to the next clip when the current one finishes playing
     curr_clip.addEventListener("ended", nextClip);
