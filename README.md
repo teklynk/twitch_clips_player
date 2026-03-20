@@ -80,7 +80,7 @@ video {
 
 /** Hide progress bar **/
 #progress-bar-container {
-    display: none;
+    display: none !important;
 }
 ```
 
