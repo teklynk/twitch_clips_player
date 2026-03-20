@@ -627,6 +627,8 @@ $(document).ready(async function () {
             curr_clip.poster = clips_json.data[randomClip]['thumbnail_url'];
             if (curr_clip.poster) {
                 curr_clip.poster = curr_clip.poster.replace("-preview-480x272.jpg", "-preview-1920x1080.jpg");
+            } else {
+                curr_clip.poster = "";
             }
         } else {
             curr_clip.poster = "";
