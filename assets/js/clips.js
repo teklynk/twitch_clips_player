@@ -334,6 +334,7 @@ $(document).ready(async function () {
     let progressBarContainer = document.createElement('div');
     progressBarContainer.id = 'progress-bar-container';
     $(progressBarContainer).appendTo('#container');
+    $(progressBarContainer).css("display", "none");
 
     let progressBar = document.createElement('div');
     progressBar.id = 'progress-bar';
@@ -342,11 +343,13 @@ $(document).ready(async function () {
     // Update progress bar
     curr_clip.addEventListener('timeupdate', () => {
         if (curr_clip.duration) {
+            $(progressBarContainer).css("display", "block");
             let percentage = (curr_clip.currentTime / curr_clip.duration) * 100;
             progressBar.style.width = percentage + '%';
             // immediately set the progress bar width back to 0%
             if (percentage == 100) {
                 $(progressBar).css("width", "0%");
+                $(progressBarContainer).css("display", "none");
             }
         } 
     });
@@ -622,6 +625,9 @@ $(document).ready(async function () {
         // adding a poster will help reduce the gap between clips.
         if (showPoster === 'true') {
             curr_clip.poster = clips_json.data[randomClip]['thumbnail_url'];
+            if (curr_clip.poster) {
+                curr_clip.poster = curr_clip.poster.replace("-preview-480x272.jpg", "-preview-1920x1080.jpg");
+            }
         } else {
             curr_clip.poster = "";
         }
