@@ -344,7 +344,11 @@ $(document).ready(async function () {
         if (curr_clip.duration) {
             let percentage = (curr_clip.currentTime / curr_clip.duration) * 100;
             progressBar.style.width = percentage + '%';
-        }
+            // immediately set the progress bar width back to 0%
+            if (percentage == 100) {
+                $(progressBar).css("width", "0%");
+            }
+        } 
     });
 
     // Move to the next clip when the current one finishes playing
