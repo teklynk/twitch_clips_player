@@ -22,6 +22,9 @@ Try it here:
   - **Fallback**: If no clips match the filters (Date range/Featured), it falls back to the top most popular clips to ensure content plays.
 - **Details Panel**: Display a panel in the lower third of the overlay with clip details. Supports variables: `{channel}`, `{title}`, `{game}`, `{creator_name}`, `{created_at}`.
 
+## Notes
+If you set `Date Range` AND `Prefer featured clips`, it will try to pull clips that are featured within the specified date range.
+
 ## Setup Guide
 
 ### OBS Settings
