@@ -57,6 +57,7 @@ video {
     border-radius: 0px 24px 24px 0px;
     width: auto;
     animation: fadeout 15s forwards;
+    z-index: 99;
 }
 
 #details-container .details-text {
