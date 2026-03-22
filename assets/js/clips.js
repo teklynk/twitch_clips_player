@@ -518,6 +518,8 @@ $(document).ready(async function () {
                 clips_json = await fetchClipsForChannel(channelName);
 
                 if (clips_json.data.length > 0) {
+                    // Shuffle the array so it is random on each reload
+                    shuffleArray(clips_json.data);
                     console.log('Set ' + channelName + ' in sessionStorage');
                     sessionStorage.setItem(channelName, JSON.stringify(clips_json));
                     globalRetryCount = 0;
@@ -569,7 +571,11 @@ $(document).ready(async function () {
         } else {
             // Retrieve the object from storage
             console.log('Pulling ' + channelName + ' from sessionStorage');
+            // shuffle the json each time it is retrieved to make the playthrough more unique
             clips_json = JSON.parse(sessionStorage.getItem(channelName));
+            if (clips_json && clips_json.data) shuffleArray(clips_json.data);
+            console.log('Shuffled clips_json');
+            console.log(clips_json);
         }
 
         if (!clips_json || !clips_json.data || clips_json.data.length === 0) {

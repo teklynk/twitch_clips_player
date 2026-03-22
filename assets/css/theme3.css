@@ -3,10 +3,23 @@
 #container {
     height: auto;
     overflow: hidden;
+    display: block;
+    padding: 4px;
+    margin: 4px;
+    text-align: center;
 }
 
 video {
+    width: 100%;
+    height: auto;
+    max-height: 100%;
+    border-radius: 10px;
     margin-top: 6vw;
+    z-index: -1;
+}
+
+#progress-bar-container {
+    display: none !important;
 }
 
 #text-container {
