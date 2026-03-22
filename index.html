@@ -238,6 +238,21 @@ Clipped by {creator_name} {created_at}"></textarea>
                 <option value="3">Outside the box</option>
             </select>
         </div>
+        <div class="form-group mb-2">
+            <label>Force Video Size (Optional)</label>
+            <div class="form-row">
+                <div class="col"><input type="number" id="videoWidth" class="form-control shadow" placeholder="Width (e.g. 1920)"></div>
+                <div class="col"><input type="number" id="videoHeight" class="form-control shadow" placeholder="Height (e.g. 1080)"></div>
+            </div>
+            <small class="text-muted">Set specific width and height to force video scale. Be sure to also set your OBS browser source to this width and height.</small>
+        </div>
+        <div class="form-check mb-2">
+            <input class="form-check-input shadow" type="checkbox" value="" id="progressBar" checked>
+            <label class="form-check-label" for="progressBar">
+                Show progress bar
+            </label>
+        </div>
+        
         <br>
         <button class="btn btn-lg btn-success btn-block text-white shadow" id="generate_button" type="button">Generate Overlay
             Link</button>
@@ -318,6 +333,12 @@ Clipped by {creator_name} {created_at}"></textarea>
             if (localStorage.getItem("TwitchClipsPreferFeatured")) {
                 document.getElementById("preferFeatured").checked = (localStorage.getItem("TwitchClipsPreferFeatured") === 'true');
             }
+            if (localStorage.getItem("TwitchClipsVideoWidth")) {
+                document.getElementById("videoWidth").value = localStorage.getItem("TwitchClipsVideoWidth");
+            }
+            if (localStorage.getItem("TwitchClipsVideoHeight")) {
+                document.getElementById("videoHeight").value = localStorage.getItem("TwitchClipsVideoHeight");
+            }
             if (localStorage.getItem("TwitchClipsShowText")) {
                 let isChecked = (localStorage.getItem("TwitchClipsShowText") === 'true');
                 document.getElementById("showText").checked = isChecked;
@@ -326,6 +347,10 @@ Clipped by {creator_name} {created_at}"></textarea>
                 } else {
                     document.getElementById("showCustomText").classList.remove('hide');
                 }
+            }
+            if (localStorage.getItem("TwitchClipsProgressBar")) {
+                let isChecked = (localStorage.getItem("TwitchClipsProgressBar") === 'true');
+                document.getElementById("progressBar").checked = isChecked;
             }
             if (localStorage.getItem("TwitchClipsShowDetails")) {
                 let isChecked = (localStorage.getItem("TwitchClipsShowDetails") === 'true');
@@ -407,8 +432,20 @@ Clipped by {creator_name} {created_at}"></textarea>
             localStorage.setItem("TwitchClipsPreferFeatured", this.checked);
         };
 
+        document.getElementById("videoWidth").oninput = function () {
+            localStorage.setItem("TwitchClipsVideoWidth", this.value);
+        };
+
+        document.getElementById("videoHeight").oninput = function () {
+            localStorage.setItem("TwitchClipsVideoHeight", this.value);
+        };
+
         document.getElementById("showText").onchange = function () {
             localStorage.setItem("TwitchClipsShowText", this.checked);
+        };
+
+        document.getElementById("progressBar").onchange = function () {
+            localStorage.setItem("TwitchClipsProgressBar", this.checked);
         };
 
         document.getElementById("showDetails").onchange = function () {
@@ -467,9 +504,13 @@ Clipped by {creator_name} {created_at}"></textarea>
             let ref = document.getElementById("ref").value.trim();
             let limit = document.getElementById("limit").value;
             let dateRange = document.getElementById("dateRange").value;
+            let videoWidth = document.getElementById("videoWidth").value.trim();
+            let videoHeight = document.getElementById("videoHeight").value.trim();
+            let videoSize = (videoWidth && videoHeight) ? videoWidth + "x" + videoHeight : "";
             let themeOption = document.getElementById("themeOption").value;
             let preferFeatured = document.getElementById("preferFeatured").checked;
             let showText = document.getElementById("showText").checked;
+            let progressBar = document.getElementById("progressBar").checked;
             let showDetails = document.getElementById("showDetails").checked;
             let showFollowing = document.getElementById("showFollowing").checked;
             let command = document.getElementById("command").value.trim();
@@ -540,7 +581,7 @@ Clipped by {creator_name} {created_at}"></textarea>
             if (!validationError) {
                 // build overlay url
                 let srcURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
-                let fullUrl = srcURL + "clips.html?channel=" + channel + "&exclude=" + exclude + "&limit=" + limit + "&dateRange=" + dateRange + "&themeOption=" + themeOption + "&preferFeatured=" + preferFeatured + "&showText=" + showText + "&showDetails=" + showDetails + "&detailsText=" + encodeURIComponent(detailsText) + "&mainAccount=" + mainChannel + "&command=" + command + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&ref=" + btoa(ref) + "&clientId=" + btoa(clientId);
+                let fullUrl = srcURL + "clips.html?channel=" + channel + "&exclude=" + exclude + "&limit=" + limit + "&dateRange=" + dateRange + "&videoSize=" + videoSize + "&themeOption=" + themeOption + "&preferFeatured=" + preferFeatured + "&showText=" + showText + "&progressBar=" + progressBar + "&showDetails=" + showDetails + "&detailsText=" + encodeURIComponent(detailsText) + "&mainAccount=" + mainChannel + "&command=" + command + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&ref=" + btoa(ref) + "&clientId=" + btoa(clientId);
                 fullUrl = fullUrl.replace("index.htmlclips.html", "clips.html");
                 document.getElementById("overlaylink").classList.remove("hide");
                 document.getElementById("overlaylink").innerHTML = "<p>Add this link as a browser source in OBS.<br>" +

@@ -1,4 +1,13 @@
 $(document).ready(async function () {
+
+    // automatically clear sessionStorage on load
+    let followListInStorage = sessionStorage.getItem('twitch_follow_list');
+    sessionStorage.clear();
+    if (followListInStorage) {
+        sessionStorage.setItem('twitch_follow_list', followListInStorage);
+    }
+    console.log('Cleared sessionStorage (except twitch_follow_list)');
+
     // Get values from URL string
     const urlParams = new URLSearchParams(window.location.search);
 
@@ -62,6 +71,7 @@ $(document).ready(async function () {
     let dateRange = (urlParams.get('dateRange') || '').trim();
     let preferFeatured = (urlParams.get('preferFeatured') || '').trim();
     let showPoster = (urlParams.get('showPoster') || '').trim();
+    let videoSize= (urlParams.get('videoSize') || '').trim();
     let showText = (urlParams.get('showText') || '').trim();
     let showDetails = (urlParams.get('showDetails') || '').trim();
     let ref = (urlParams.get('ref') || '').trim();
@@ -72,6 +82,7 @@ $(document).ready(async function () {
     let showFollowing = (urlParams.get('showFollowing') || '').trim();
     let exclude = (urlParams.get('exclude') || '').toLowerCase().trim();
     let themeOption = (urlParams.get('themeOption') || '').trim();
+    let progressBarOption = (urlParams.get('progressBar') || '').trim();
     let randomClip = 0; // Default random clip index
     let clip_index = 0; // Default clip index
     let following = "";
@@ -330,11 +341,31 @@ $(document).ready(async function () {
     let curr_clip = document.createElement('video');
     $(curr_clip).appendTo('#container');
 
+    if (videoSize > '') {
+        let dimensions = videoSize.split('x');
+        $(curr_clip).css({
+            "width": dimensions[0] + "px",
+            "height": dimensions[1] + "px",
+            "object-fit": "fill"
+        });
+    }
+
     // Create progress bar
     let progressBarContainer = document.createElement('div');
     progressBarContainer.id = 'progress-bar-container';
     $(progressBarContainer).appendTo('#container');
     $(progressBarContainer).css("display", "none");
+
+    if (videoSize > '') {
+        let dimensions = videoSize.split('x');
+        $(progressBarContainer).css({
+            "width": dimensions[0] + "px",
+            "left": "0",
+            "right": "0",
+            "margin-left": "auto",
+            "margin-right": "auto"
+        });
+    }
 
     let progressBar = document.createElement('div');
     progressBar.id = 'progress-bar';
@@ -342,7 +373,7 @@ $(document).ready(async function () {
 
     // Update progress bar
     function animateProgressBar() {
-        if (curr_clip.duration) {
+        if (curr_clip.duration && progressBarOption !== 'false') {
             $(progressBarContainer).css("display", "block");
             let percentage = (curr_clip.currentTime / curr_clip.duration) * 100;
             progressBar.style.width = percentage + '%';
@@ -518,8 +549,6 @@ $(document).ready(async function () {
                 clips_json = await fetchClipsForChannel(channelName);
 
                 if (clips_json.data.length > 0) {
-                    // Shuffle the array so it is random on each reload
-                    shuffleArray(clips_json.data);
                     console.log('Set ' + channelName + ' in sessionStorage');
                     sessionStorage.setItem(channelName, JSON.stringify(clips_json));
                     globalRetryCount = 0;
@@ -571,11 +600,7 @@ $(document).ready(async function () {
         } else {
             // Retrieve the object from storage
             console.log('Pulling ' + channelName + ' from sessionStorage');
-            // shuffle the json each time it is retrieved to make the playthrough more unique
             clips_json = JSON.parse(sessionStorage.getItem(channelName));
-            if (clips_json && clips_json.data) shuffleArray(clips_json.data);
-            console.log('Shuffled clips_json');
-            console.log(clips_json);
         }
 
         if (!clips_json || !clips_json.data || clips_json.data.length === 0) {
@@ -632,7 +657,11 @@ $(document).ready(async function () {
         // Create video element and load a new clip
         // adding a poster will help reduce the gap between clips.
         if (showPoster === 'true') {
-            curr_clip.poster = clips_json.data[randomClip]['thumbnail_url'];
+            if (videoSize > '') {
+                curr_clip.poster = clips_json.data[randomClip]['thumbnail_url'].replace("1920x1080", videoSize);
+            } else {
+                curr_clip.poster = clips_json.data[randomClip]['thumbnail_url'];
+            }
         } else {
             curr_clip.poster = "";
         }
