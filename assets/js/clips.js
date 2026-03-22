@@ -1,12 +1,12 @@
 $(document).ready(async function () {
 
     // automatically clear sessionStorage on load
-    let followListInStorage = sessionStorage.getItem('twitch_follow_list');
-    sessionStorage.clear();
-    if (followListInStorage) {
-        sessionStorage.setItem('twitch_follow_list', followListInStorage);
-    }
-    console.log('Cleared sessionStorage (except twitch_follow_list)');
+    Object.keys(sessionStorage).forEach((key) => {
+        if (key !== 'twitch_follow_list' && !key.startsWith('game_')) {
+            sessionStorage.removeItem(key);
+        }
+    });
+    console.log('Cleared sessionStorage (except twitch_follow_list and game_*)');
 
     // Get values from URL string
     const urlParams = new URLSearchParams(window.location.search);
@@ -359,11 +359,7 @@ $(document).ready(async function () {
     if (videoSize > '') {
         let dimensions = videoSize.split('x');
         $(progressBarContainer).css({
-            "width": dimensions[0] + "px",
-            "left": "0",
-            "right": "0",
-            "margin-left": "auto",
-            "margin-right": "auto"
+            "width": dimensions[0] + "px"
         });
     }
 
