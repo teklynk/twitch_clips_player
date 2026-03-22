@@ -59,6 +59,8 @@ Add these parameters to your URL query string (e.g., `?channel=mychannel&limit=2
 | `command` | string | Custom chat command to start the player. If not set, plays automatically on load. |
 | `themeOption` | integer | Select a pre-made CSS theme. |
 | `showPoster` | true/false | Show or hide the video poster thumbnail image |
+| `progressBar` | true/false | Show or hide the video progress bar |
+| `videoSize` | string| This will force the video player to a specific size: eg: 1920x1080, 1280x720 |
 | `apiServer` | string | Point the clips player to specific API gateway server |
 
 ## Custom CSS
