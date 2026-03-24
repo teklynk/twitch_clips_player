@@ -461,7 +461,7 @@ Clipped by {creator_name} {created_at}"></textarea>
         };
 
         // Check if any input fields have changed
-        $(":text,textarea,select,:checkbox,input[type=range],input[type=password]").on('change', function (e) {
+        $(":text,textarea,select,:checkbox,input[type=range],input[type=password],input[type=number]").on('change', function (e) {
             $("#overlaylink").addClass("hide");
         });
 
