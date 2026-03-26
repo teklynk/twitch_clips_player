@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Righteous&family=Orbitron:wght@400;700&display=swap');
+
+#text-container {
+    top: 3vw;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    transform: none;
+    box-shadow: none;
+    border: none;
+    background-color: transparent;
+}
+
+.title-text {
+    font-family: 'Righteous', cursive;
+    font-size: 6vw;
+    word-wrap: break-word;
+    color: #fff;
+    padding: 0;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-style: italic;
+    /* Retro 3D Chrome Effect */
+    text-shadow: 
+        2px 2px 0px #ff00ff,
+        4px 4px 0px #330033,
+        0 0 20px rgba(255, 0, 255, 0.8),
+        0 0 40px rgba(0, 238, 255, 0.5);
+    transform: none;
+    display: inline-block;
+}
+
+#details-container {
+    top: 43vw;
+    left: 2vw;
+    background: linear-gradient(180deg, rgba(45, 0, 77, 0.9) 0%, rgba(20, 0, 35, 0.95) 100%);
+    padding: 20px 40px;
+    margin-right: 0;
+    border-radius: 5px;
+    border: 3px solid #ff00ff;
+    box-shadow: 
+        0 0 20px #ff00ff,
+        inset 0 0 10px #ff00ff,
+        0 0 40px rgba(0, 238, 255, 0.3);
+    transform: skew(-10deg) translateZ(0);
+    backface-visibility: hidden;
+    width: fit-content;
+    animation: synth-glow 2s infinite alternate, fadeout 15s forwards;
+}
+
+#details-container .details-text {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    text-shadow: 0 0 8px #00eeff;
+    color: #00eeff;
+    word-wrap: break-word;
+    transform: skew(10deg) translateZ(0);
+    backface-visibility: hidden;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+#details-container .details-text.item-0 {
+    font-size: 2vw;
+}
+
+#details-container .details-text.item-1 {
+    font-size: 1.5vw;
+}
+
+#details-container .details-text.item-2 {
+    font-size: 1vw;
+}
+
+#progress-bar-container {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+#progress-bar {
+    background: linear-gradient(90deg, #ff00ff, #00eeff);
+}
+
+@keyframes synth-glow {
+    from { border-color: #ff00ff; box-shadow: 0 0 15px #ff00ff, inset 0 0 5px #ff00ff, 0 0 35px rgba(0, 238, 255, 0.2); }
+    to { border-color: #00eeff; box-shadow: 0 0 25px #00eeff, inset 0 0 15px #00eeff, 0 0 45px rgba(255, 0, 255, 0.4); }
+}

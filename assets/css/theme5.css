@@ -26,7 +26,7 @@
 }
 
 #details-container {
-    top: 40vw;
+    top: 43vw;
     left: 2vw;
     background-color: rgba(0, 0, 0, 0.8);
     padding: 15px 30px;
@@ -46,6 +46,18 @@
     color: #fff;
     word-wrap: break-word;
     transform: skew(15deg);
+}
+
+#details-container .details-text.item-0 {
+    font-size: 2vw;
+}
+
+#details-container .details-text.item-1 {
+    font-size: 1.5vw;
+}
+
+#details-container .details-text.item-2 {
+    font-size: 1vw;
 }
 
 #progress-bar-container {
