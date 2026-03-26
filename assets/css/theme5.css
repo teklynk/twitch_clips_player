@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+#text-container {
+    top: 2vw;
+    left: 1vw;
+    width: auto;
+    padding: 0;
+    transform: skew(-15deg);
+    display: inline-block;
+    box-shadow: 0 0 15px #00fbff, inset 0 0 5px #00fbff;
+    border: 2px solid #00fbff;
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.title-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3vw;
+    word-wrap: break-word;
+    color: #00fbff;
+    padding: 10px 40px;
+    font-weight: bold;
+    text-shadow: 0 0 10px #00fbff;
+    transform: skew(15deg);
+    display: inline-block;
+}
+
+#details-container {
+    top: 40vw;
+    left: 2vw;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 15px 30px;
+    margin-right: 0;
+    border-radius: 0;
+    border-left: 8px solid #ff00ff;
+    border-right: 2px solid #ff00ff;
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.6);
+    transform: skew(-15deg);
+    width: fit-content;
+}
+
+#details-container .details-text {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    text-shadow: 0 0 8px #ff00ff;
+    color: #fff;
+    word-wrap: break-word;
+    transform: skew(15deg);
+}
+
+#progress-bar-container {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+#progress-bar {
+    background-color: #fcee0a;
+}
