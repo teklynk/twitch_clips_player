@@ -47,6 +47,7 @@
     transform: skew(-10deg) translateZ(0);
     backface-visibility: hidden;
     width: fit-content;
+    max-width: 90%;
     animation: synth-glow 2s infinite alternate, fadeout 15s forwards;
 }
 

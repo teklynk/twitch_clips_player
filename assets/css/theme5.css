@@ -2,7 +2,7 @@
 
 #text-container {
     top: 2vw;
-    left: 1vw;
+    left: 2vw;
     width: auto;
     padding: 0;
     transform: skew(-15deg);
@@ -37,6 +37,7 @@
     box-shadow: 0 0 20px rgba(255, 0, 255, 0.6);
     transform: skew(-15deg);
     width: fit-content;
+    max-width: 90%;
 }
 
 #details-container .details-text {

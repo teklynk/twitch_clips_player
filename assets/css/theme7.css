@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@700&display=swap');
+
+#text-container {
+    top: 3vw;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+}
+
+.title-text {
+    font-family: 'Bangers', cursive;
+    font-size: 4vw;
+    word-wrap: break-word;
+    background-color: #e62429; /* Comic Red */
+    color: #ffde00; /* Comic Yellow */
+    padding: 10px 50px;
+    font-weight: normal;
+    text-transform: uppercase;
+    border: 6px solid #000;
+    box-shadow: 12px 12px 0px #000;
+    transform: rotate(-4deg);
+    letter-spacing: 3px;
+    display: inline-block;
+}
+
+#details-container {
+    top: 45vw;
+    left: 1vw;
+    background-color: #eee;
+    padding: 15px 35px;
+    margin-right: 0;
+    border-radius: 0;
+    border: 5px solid #000;
+    box-shadow: 10px 10px 0px #000;
+    width: fit-content;
+    max-width: 90%;
+    transform: rotate(-1deg);
+}
+
+#details-container .details-text {
+    font-family: 'Comic Neue', cursive;
+    font-weight: 700;
+    color: #000;
+    word-wrap: break-word;
+    text-transform: uppercase;
+    text-shadow: none;
+}
+
+#details-container .details-text.item-0 {
+    font-size: 2vw;
+    border-bottom: 3px solid #000;
+    margin-bottom: 5px;
+}
+
+#details-container .details-text.item-1 {
+    font-size: 1.5vw;
+}
+
+#details-container .details-text.item-2 {
+    font-size: 1vw;
+}
+
+#progress-bar-container {
+    background-color: #000;
+}
+
+#progress-bar {
+    background-color: #ffde00;
+}

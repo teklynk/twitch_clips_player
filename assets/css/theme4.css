@@ -34,6 +34,7 @@
     box-shadow: 0 0 30px rgba(255, 102, 196, 0.5);
     width: fit-content;
     backdrop-filter: blur(4px);
+    max-width: 90%;
 }
 
 #details-container .details-text {
