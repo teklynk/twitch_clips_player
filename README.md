@@ -65,29 +65,44 @@ Add these parameters to your URL query string (e.g., `?channel=mychannel&limit=2
 
 ## Custom CSS
 
-You can add this to the OBS browser source **CSS** box to set a fixed video width and height (optional).
+Moving the clip details panel in OBS is quite straightforward. Since the overlay uses absolute positioning, you can easily override its location by adding a few lines of CSS to your browser source's Custom CSS field.
 
+### How to change the position of the Details Panel
+
+- In OBS, right-click your Twitch Clips Player browser source and select Properties.
+- Scroll down to the Custom CSS text box.
+- Paste one of the following snippets at the bottom of that box.
+
+To move the panel to the Top-Right corner:
 ```css
-video {
-    width: 1280px !important;
-    height: 720px !important;
-    background-color: #000000;
-}
-
-#container {
-    padding:0;
-    margin:0;
-}
-
 #details-container {
-    top: 44vw;
-}
-
-/** Hide progress bar **/
-#progress-bar-container {
-    display: none !important;
+    top: 2vw !important;
+    left: auto !important;
+    right: 2vw !important;
 }
 ```
+To move the panel to the Bottom-Right corner:
+```css
+#details-container {
+    top: auto !important;
+    bottom: 5vw !important;
+    left: auto !important;
+    right: 2vw !important;
+}
+```
+To move the panel to the Bottom-Left corner:
+```css
+#details-container {
+    top: auto !important;
+    bottom: 5vw !important;
+    left: 2vw !important;
+}
+```
+
+### Pro-Tips for Users:
+- __The `!important` rule:__ Always include `!important` after your values. This ensures your custom settings override the built-in theme styles.
+- __Units__ (`vw` vs `px`): I recommend using `vw` (viewport width) units. This keeps the panel's position relative to the size of the video, so it stays in the same spot even if you resize the browser source in OBS.
+- __Fine-tuning:__ You can use decimal points (e.g., `42.5vw`) for pixel-perfect placement!
 
 ## Self Host / Local Development
 
