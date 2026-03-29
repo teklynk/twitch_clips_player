@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+#text-container {
+    top: 4vw;
+    left: 2vw;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    text-align: center;
+    animation: fadeout 15s forwards;
+}
+
+.title-text {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 2.5vw;
+    word-wrap: break-word;
+    background-color: #000;
+    color: #fcee0a; /* Retro Yellow */
+    padding: 15px 40px;
+    font-weight: normal;
+    text-transform: uppercase;
+    border-radius: 10px;
+    border: 4px solid #fff;
+    box-shadow: 0 0 0 6px #0050FF;
+    display: inline-block;
+    letter-spacing: 2px;
+}
+
+.title-text::before {
+    font-size: 1vw;
+    display: block;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+#details-container {
+    top: 38vw;
+    left: 2vw;
+    background-color: #000;
+    padding: 30px;
+    margin-right: 0;
+    border-radius: 10px;
+    border: 4px solid #fff;
+    box-shadow: 0 0 0 6px #0050FF;
+    width: fit-content;
+    max-width: 90%;
+    animation: fadeout 15s forwards;
+}
+
+#details-container::after {
+    content: "▼";
+    position: absolute;
+    bottom: 15px;
+    right: 25px;
+    color: #fff;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.5vw;
+    animation: retro-blink 0.8s infinite;
+}
+
+#details-container .details-text {
+    font-family: 'Press Start 2P', cursive;
+    font-weight: normal;
+    color: #fff;
+    word-wrap: break-word;
+    text-transform: uppercase;
+    text-shadow: none;
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+#details-container .details-text.item-0 {
+    font-size: 1.5vw;
+    border-bottom: none;
+    margin-bottom: 20px;
+    color: #00fbff; /* Highlight Cyan */
+}
+
+#details-container .details-text.item-1 {
+    font-size: 1vw;
+}
+
+#details-container .details-text.item-2 {
+    font-size: 1vw;
+}
+
+#progress-bar-container {
+    background-color: #333;
+}
+
+#progress-bar {
+    background-color: #fff;
+}
+
+@keyframes retro-blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}

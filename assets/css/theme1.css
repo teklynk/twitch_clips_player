@@ -6,20 +6,20 @@
     box-shadow: 0 4px #00000090;
     max-width: 100%;
     padding: 4px 0 8px 0;
-    border-radius: 4px;
-    left: -2000px;
-    animation: slide 0s ease forwards;
+    border-radius: 0;
 }
 
 #details-container {
     top: 42vw;
-    border-radius: 4px;
-    transform: skew(8deg, -8deg);
+    border-radius: 0;
+    transform: skew(4deg, -4deg);
     margin-left: 0;
     background: #00008890;
     box-shadow: 0 4px #00000090;
     position: absolute;
-    animation: movein 0s ease forwards, moveout 0s 10s ease forwards;
+    width: fit-content;
+    max-width: 90%;
+    animation: movein 1s ease forwards, moveout .5s 15s ease forwards;
 }
 
 #details-container .details-text.item-0 {
@@ -44,10 +44,6 @@
 
 #details-container .details-text.item-3 {
     font-size: 1.5vw;
-}
-
-@keyframes slide {
-    100% {left: 0;}
 }
 
 @keyframes movein {

@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap');
+
+#text-container {
+    top: 2vw;
+    width: auto;
+    display: block;
+    padding: 0;
+    text-align: left;
+    animation: movein .5s ease forwards, moveout .5s 15s ease forwards;
+}
+
+.title-text {
+    font-family: 'VT323', monospace;
+    font-size: 5vw;
+    word-wrap: break-word;
+    background-color: rgba(0, 20, 0, 0.8);
+    color: #00ff41;
+    /* Matrix Green */
+    padding: 10px 20px;
+    font-weight: normal;
+    text-transform: uppercase;
+    border-left: 8px solid #00ff41;
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.7);
+    display: inline-block;
+    letter-spacing: 1px;
+}
+
+.title-text::before {
+    font-size: 1.5vw;
+    display: block;
+    color: #008f11;
+    margin-bottom: -5px;
+}
+
+#details-container {
+    top: 42vw;
+    background-color: rgba(0, 10, 0, 0.9);
+    padding: 20px;
+    margin-right: 0;
+    border-radius: 0;
+    border: 1px solid #00ff41;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.2), inset 0 0 10px rgba(0, 255, 65, 0.1);
+    width: fit-content;
+    max-width: 90%;
+    animation: movein .5s ease forwards, moveout .5s 15s ease forwards;
+}
+
+#details-container::before {
+    display: block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1vw;
+    color: #00ff41;
+    margin-bottom: 10px;
+    opacity: 0.7;
+}
+
+#details-container .details-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-weight: normal;
+    color: #00ff41;
+    word-wrap: break-word;
+    text-transform: uppercase;
+    text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+    margin-bottom: 4px;
+}
+
+#details-container .details-text::before {
+    content: "> ";
+    color: #00ff41;
+}
+
+#details-container .details-text.item-0 {
+    font-size: 1.8vw;
+    border-bottom: none;
+    margin-bottom: 10px;
+    color: #fff;
+    text-shadow: 0 0 8px #00ff41;
+}
+
+#details-container .details-text.item-1 {
+    font-size: 1.2vw;
+}
+
+#details-container .details-text.item-2 {
+    font-size: 1.1vw;
+}
+
+#progress-bar-container {
+    background-color: rgba(0, 40, 0, 0.5);
+}
+
+#progress-bar {
+    background-color: #00ff41;
+}
+
+@keyframes movein {
+    from {
+        left: -2000px;
+    }
+
+    to {
+        left: 0px;
+    }
+}
+
+@keyframes moveout {
+    from {
+        left: 0px;
+    }
+
+    to {
+        left: -2000px;
+    }
+}
