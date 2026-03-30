@@ -71,6 +71,10 @@
 
 #details-container .details-text.item-0 {
     font-size: 1.8vw;
+    overflow: hidden;
+    max-width: 50ch;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     border-bottom: none;
     margin-bottom: 10px;
     color: #fff;
@@ -79,6 +83,10 @@
 
 #details-container .details-text.item-1 {
     font-size: 1.2vw;
+    overflow: hidden;
+    max-width: 100ch;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #details-container .details-text.item-2 {

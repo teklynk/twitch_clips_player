@@ -51,10 +51,18 @@
 
 #details-container .details-text.item-0 {
     font-size: 2vw;
+    overflow: hidden;
+    max-width: 50ch;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #details-container .details-text.item-1 {
     font-size: 1.5vw;
+    overflow: hidden;
+    max-width: 100ch;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #details-container .details-text.item-2 {
