@@ -61,7 +61,7 @@ $(document).ready(async function () {
 
     // Get elements and remove elements
     function removeElements() {
-        $("#text-container, #details-container").remove();
+        $("#text-container, #details-container, #profile-badge").remove();  
     }
 
     // URL values
@@ -83,6 +83,7 @@ $(document).ready(async function () {
     let exclude = (urlParams.get('exclude') || '').toLowerCase().trim();
     let themeOption = (urlParams.get('themeOption') || '').trim();
     let progressBarOption = (urlParams.get('progressBar') || '').trim();
+    let profileBadge = (urlParams.get('profileBadge') || '').trim();
     let randomClip = 0; // Default random clip index
     let clip_index = 0; // Default clip index
     let following = "";
@@ -119,6 +120,14 @@ $(document).ready(async function () {
 
     if (!preferFeatured) {
         preferFeatured = "false"; //default
+    }
+
+    if (!progressBarOption) {
+        progressBarOption = 'true'; // default
+    }
+
+    if (!profileBadge) {
+        profileBadge = 'false'; // default
     }
 
     if (!showPoster) {
@@ -214,6 +223,28 @@ $(document).ready(async function () {
     client.on("maxreconnect", () => {
         $("<div class='msg-error'>Login authentication failed. Failed to connect to Twitch Chat. Please refresh to try again. Twitch Access Token may have expired.</div>").prependTo('body');
     });
+
+    // Twitch API get user info
+    async function getInfo(channel) {
+        let storageKey = channel + "-info";
+        if (sessionStorage.getItem(storageKey)) {
+            return JSON.parse(sessionStorage.getItem(storageKey));
+        } else {
+            let urlU = apiServer + "/getuserinfo.php?channel=" + channel;
+            try {
+                const response = await fetch(urlU);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                sessionStorage.setItem(storageKey, JSON.stringify(data));
+                return data;
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+        }
+    }
 
     // Get game details function
     async function game_title(game_id) {
@@ -685,6 +716,12 @@ $(document).ready(async function () {
 
         // Remove elements before loading the clip and clip details
         removeElements();
+
+        // Fetch and show profile image badge
+        if (profileBadge !== 'false') {
+            const userInfo = await getInfo(channelName);
+            $("<img id='profile-badge' src='" + userInfo.data[0].profile_image_url + "'>").appendTo("#container");
+        }
 
         // Show channel name on top of video
         if (showText === 'true') {

@@ -109,6 +109,20 @@ video {
     z-index: 10;
 }
 
+#profile-badge {
+    position: absolute;
+    top: 1vw;
+    right: 1vw;
+    width: 6vw;
+    height: 6vw;
+    border-radius: 100%;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 0.2vw solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 0.5vw rgba(0,0,0,0.8);
+    animation: fadeout 10s forwards;
+}
+
 @keyframes fadeout {
     0%   {opacity: 1;}
     90%  {opacity: 1;}

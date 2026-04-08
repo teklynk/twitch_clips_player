@@ -60,7 +60,8 @@ Add these parameters to your URL query string (e.g., `?channel=mychannel&limit=2
 | `themeOption` | integer | Select a pre-made CSS theme. |
 | `showPoster` | true/false | Show or hide the video poster thumbnail image |
 | `progressBar` | true/false | Show or hide the video progress bar |
-| `videoSize` | string| This will force the video player to a specific size: eg: 1920x1080, 1280x720 |
+| `profileBadge` | true/false | Show or hide the channel profile badge/image |
+| `videoSize` | string | This will force the video player to a specific size: eg: 1920x1080, 1280x720 |
 | `apiServer` | string | Point the clips player to specific API gateway server |
 
 ## Custom CSS
