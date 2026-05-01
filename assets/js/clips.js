@@ -37,19 +37,28 @@ $(document).ready(async function () {
         for (const server of servers) {
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 2000);
-                await fetch(server, { method: 'HEAD', signal: controller.signal });
+                const timeoutId = setTimeout(() => controller.abort(), 3000);
+                const response = await fetch(server, { method: 'HEAD', signal: controller.signal });
                 clearTimeout(timeoutId);
-                return server;
+                
+                // Ensure the server returns a successful 2xx status code
+                if (response.ok) {
+                    return server;
+                }
             } catch (error) {
                 console.warn(`Server ${server} is unreachable. Trying next...`);
             }
         }
-        return servers[0];
+        return null;
     }
 
     // Call the function
-    const apiServer = await setRandomServer();
+    let apiServer = await setRandomServer();
+
+    if (!apiServer) {
+        console.error('All API Gateway servers are currently unreachable.');
+        $("<div class='msg-error'>All API Gateway servers are currently unreachable. Please try again later.</div>").prependTo('body');
+    }
 
     // Array Shuffler
     function shuffleArray(arr) {
@@ -283,9 +292,9 @@ $(document).ready(async function () {
                 let apiUrl;
 
                 if (cursor) {
-                    apiUrl = apiServer + "/getuserfollowing.php?channel=" + mainAccount + "&limit=100&ref=" + ref + "&clientId=" + clientId + "&after=" + cursor
+                    apiUrl = apiServer + "/getuserfollowing.php?channel=" + mainAccount + "&limit=100&ref=" + ref + "&clientId=" + clientId + "&after=" + cursor;
                 } else {
-                    apiUrl = apiServer + "/getuserfollowing.php?channel=" + mainAccount + "&limit=100&ref=" + ref + "&clientId=" + clientId
+                    apiUrl = apiServer + "/getuserfollowing.php?channel=" + mainAccount + "&limit=100&ref=" + ref + "&clientId=" + clientId;
                 }
 
                 try {
@@ -518,7 +527,11 @@ $(document).ready(async function () {
                 apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=false&limit=" + limit + "&shuffle=true" + dateRange;
             }
 
-            response = await fetch(apiUrl);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3000); // 3-second timeout for API calls
+
+            response = await fetch(apiUrl, { signal: controller.signal });
+            clearTimeout(timeoutId);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -526,7 +539,10 @@ $(document).ready(async function () {
 
             // If dateRange or preferFeatured is set but no clips are found or only 1 clip is found. Try to pull any clip. 
             if (data.data.length === 0 && (dateRange > "" || preferFeatured !== "false")) {
-                response = await fetch(apiServer + "/getuserclips.php?channel=" + channelName + "&limit=" + limit + "&shuffle=true");
+                const fallbackController = new AbortController();
+                const fallbackTimeoutId = setTimeout(() => fallbackController.abort(), 3000); // 3-second timeout for fallback
+                response = await fetch(apiServer + "/getuserclips.php?channel=" + channelName + "&limit=" + limit + "&shuffle=true", { signal: fallbackController.signal });
+                clearTimeout(fallbackTimeoutId);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -590,26 +606,16 @@ $(document).ready(async function () {
                     return;
                 }
             } catch (e) {
-                // Sometimes the api returns an error. Usually when a channel no longer exists
-                if (e.name === 'TypeError' || e.name === 'SyntaxError') {
-                    globalRetryCount++;
-                    if (globalRetryCount > maxRetries) {
-                        console.log("Max retries reached (Network/API Error). Stopping to prevent infinite loop.");
-                        return false;
-                    }
-                    console.error(e.name + ' found. Skipping...');
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    await nextClip(true);
-                    return false;
+                console.error('An error occurred in loadClip:', e);
+
+                // If a network error or timeout occurs, attempt to switch to a healthy API server
+                if (e.name === 'TypeError' || e.name === 'AbortError') {
+                    console.log('Network error or timeout detected. Attempting to find a new healthy API server...');
+                    apiServer = await setRandomServer();
                 }
 
+                // Sometimes the api returns an error. Usually when a channel no longer exists
                 if (e.name === 'QuotaExceededError') {
-                    globalRetryCount++;
-                    if (globalRetryCount > maxRetries) {
-                        console.log("Max retries reached (Quota Error). Stopping to prevent infinite loop.");
-                        return false;
-                    }
-                    console.error('sessionStorage Quota Exceeded. Please free up some space by deleting unnecessary data.');
                     // automatically clear sessionStorage if it exceeds the quota but keep the twitch_follow_list
                     let followListInStorage = sessionStorage.getItem('twitch_follow_list');
                     sessionStorage.clear();
@@ -617,12 +623,19 @@ $(document).ready(async function () {
                         sessionStorage.setItem('twitch_follow_list', followListInStorage);
                     }
                     console.log('Cleared sessionStorage (except twitch_follow_list)');
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    await nextClip(true);
-                    return false;
-                } else {
-                    console.error('An error occurred:', e);
                 }
+
+                // For ANY error (Network, API, or Quota), attempt to skip to the next clip
+                // but respect the globalRetryCount to prevent infinite loops.
+                globalRetryCount++;
+                if (globalRetryCount > maxRetries) {
+                    console.log("Max retries reached. Stopping to prevent infinite loop.");
+                    return false;
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                await nextClip(true);
+                return false;
             }
         } else {
             // Retrieve the object from storage
