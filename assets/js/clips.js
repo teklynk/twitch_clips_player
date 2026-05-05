@@ -763,9 +763,9 @@ $(document).ready(async function () {
                 // Show clip title if it exists
                 if (detailsText.includes("{title}")) {
                     if (clips_json.data[randomClip]['title']) {
-                        detailsText = detailsText.replace("{title}", clips_json.data[randomClip]['title']);
+                        detailsText = detailsText.replace(/{title}/g, clips_json.data[randomClip]['title']);
                     } else {
-                        detailsText = detailsText.replace("{title}", "?");
+                        detailsText = detailsText.replace(/{title}/g, "?");
                     }
                 }
 
@@ -773,20 +773,24 @@ $(document).ready(async function () {
                 if (detailsText.includes("{game}")) {
                     // Show game title if it exists
                     if (clips_json.data[randomClip]['game_id']) {
-                        let game = await game_title(clips_json.data[randomClip]['game_id']);
-                        detailsText = detailsText.replace("{game}", game.data[0]['name']);
+                        const game = await game_title(clips_json.data[randomClip]['game_id']);
+                        if (game && game.data && game.data[0]) {
+                            detailsText = detailsText.replace(/{game}/g, game.data[0]['name']);
+                        } else {
+                            detailsText = detailsText.replace(/{game}/g, "?");
+                        }
                     } else {
-                        detailsText = detailsText.replace("{game}", "?");
+                        detailsText = detailsText.replace(/{game}/g, "?");
                     }
                 }
 
                 // Format created_at date
                 if (detailsText.includes("{created_at}")) {
-                    detailsText = detailsText.replace("{created_at}", moment(clips_json.data[randomClip]['created_at']).format("MMMM D, YYYY"));
+                    detailsText = detailsText.replace(/{created_at}/g, moment(clips_json.data[randomClip]['created_at']).format("MMMM D, YYYY"));
                 }
 
                 if (detailsText.includes("{creator_name}")) {
-                    detailsText = detailsText.replace("{creator_name}", clips_json.data[randomClip]['creator_name']);
+                    detailsText = detailsText.replace(/{creator_name}/g, clips_json.data[randomClip]['creator_name']);
                 }
 
                 let dText = "";
