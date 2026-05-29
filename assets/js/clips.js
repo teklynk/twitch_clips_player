@@ -93,6 +93,7 @@ $(document).ready(async function () {
     let themeOption = (urlParams.get('themeOption') || '').trim();
     let progressBarOption = (urlParams.get('progressBar') || '').trim();
     let profileBadge = (urlParams.get('profileBadge') || '').trim();
+    let delay = (urlParams.get('delay') || '').trim();
     let randomClip = 0; // Default random clip index
     let clip_index = 0; // Default clip index
     let following = "";
@@ -137,6 +138,12 @@ $(document).ready(async function () {
 
     if (!profileBadge) {
         profileBadge = 'false'; // default
+    }
+
+    if (!delay || isNaN(delay)) {
+        delay = 0;
+    } else {
+        delay = parseInt(delay);
     }
 
     if (!showPoster) {
@@ -817,8 +824,19 @@ $(document).ready(async function () {
         let videoElement = document.querySelector("video");
         if (videoElement) videoElement.onerror = null;
         videoElement.pause();
+        videoElement.removeAttribute("poster"); // clear previous poster
         videoElement.removeAttribute("src"); // empty source
         videoElement.load();
+
+        // Hide elements and video during delay
+        removeElements();
+        $(curr_clip).hide();
+
+        if (delay > 0 && skip !== true) {
+            await new Promise(resolve => setTimeout(resolve, delay * 1000));
+        }
+
+        $(curr_clip).show();
 
         if (clip_index < channel.length - 1) {
             clip_index += 1;

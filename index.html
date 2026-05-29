@@ -231,6 +231,13 @@
             <small class="text-muted range-slider-value"></small>
             <small class="text-muted range-slider-value">Day(s)</small>
         </div>
+        <div class="form-group range-slider mt-4">
+            <label for="delay">Add a delay between clips (Optional)</label>
+            <input type="range" max="100" min="0" step="1" class="form-control range-slider-range shadow" id="delay"
+                value="0" style="height: 0;">
+            <small class="text-muted range-slider-value"></small>
+            <small class="text-muted range-slider-value">Seconds</small>
+        </div>
         <div class="form-check mb-2">
             <input class="form-check-input shadow" type="checkbox" value="" id="preferFeatured">
             <label class="form-check-label" for="preferFeatured">
@@ -415,6 +422,9 @@ Clipped by {creator_name} {created_at}"></textarea>
             if (localStorage.getItem("TwitchClipsDateRange")) {
                 document.getElementById("dateRange").value = localStorage.getItem("TwitchClipsDateRange");
             }
+            if (localStorage.getItem("TwitchClipsDelay")) {
+                document.getElementById("delay").value = localStorage.getItem("TwitchClipsDelay");
+            }
 
             let rangeSlider = function rangeSlider() {
                 let slider = $('.range-slider'),
@@ -512,6 +522,10 @@ Clipped by {creator_name} {created_at}"></textarea>
             localStorage.setItem("TwitchClipsDateRange", this.value);
         };
 
+        document.getElementById("delay").oninput = function () {
+            localStorage.setItem("TwitchClipsDelay", this.value);
+        };
+
         // Check if any input fields have changed
         $(":text,textarea,select,:checkbox,input[type=range],input[type=password],input[type=number]").on('change', function (e) {
             $("#overlaylink").addClass("hide");
@@ -570,6 +584,7 @@ Clipped by {creator_name} {created_at}"></textarea>
             command = command.replace('!', '');
             let customText = document.getElementById("customText").value.trim();
             let detailsText = document.getElementById("detailsText").value.trim();
+            let delay = document.getElementById("delay").value;
             let clientId = TWITCH_CLIENT_ID;
             let validationError = false;
 
@@ -634,7 +649,7 @@ Clipped by {creator_name} {created_at}"></textarea>
             if (!validationError) {
                 // build overlay url
                 let srcURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
-                let fullUrl = srcURL + "clips.html?channel=" + channel + "&exclude=" + exclude + "&limit=" + limit + "&dateRange=" + dateRange + "&videoSize=" + videoSize + "&themeOption=" + themeOption + "&preferFeatured=" + preferFeatured + "&showText=" + showText + "&progressBar=" + progressBar + "&profileBadge=" + profileBadge + "&showDetails=" + showDetails + "&detailsText=" + encodeURIComponent(detailsText) + "&mainAccount=" + mainChannel + "&command=" + command + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&ref=" + btoa(ref) + "&clientId=" + btoa(clientId);
+                let fullUrl = srcURL + "clips.html?channel=" + channel + "&exclude=" + exclude + "&limit=" + limit + "&dateRange=" + dateRange + "&videoSize=" + videoSize + "&themeOption=" + themeOption + "&preferFeatured=" + preferFeatured + "&showText=" + showText + "&progressBar=" + progressBar + "&profileBadge=" + profileBadge + "&showDetails=" + showDetails + "&detailsText=" + encodeURIComponent(detailsText) + "&mainAccount=" + mainChannel + "&command=" + command + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&delay=" + delay + "&ref=" + btoa(ref) + "&clientId=" + btoa(clientId);
                 fullUrl = fullUrl.replace("index.htmlclips.html", "clips.html");
                 document.getElementById("overlaylink").classList.remove("hide");
                 document.getElementById("overlaylink").innerHTML = "<p>Add this link as a browser source in OBS.<br>" +
