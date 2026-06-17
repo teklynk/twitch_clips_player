@@ -64,6 +64,7 @@ Add these parameters to your URL query string (e.g., `?channel=mychannel&limit=2
 | `videoSize` | string | This will force the video player to a specific size: eg: 1920x1080, 1280x720 |
 | `apiServer` | string | Point the clips player to specific API gateway server |
 | `delay` | integer | Number of seconds to wait/hide between clips. |
+| `cache` | true/false | Enable server-side cache for 1 hour. Default is `true` |
 
 ## Custom CSS
 
