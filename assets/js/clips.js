@@ -94,6 +94,7 @@ $(document).ready(async function () {
     let progressBarOption = (urlParams.get('progressBar') || '').trim();
     let profileBadge = (urlParams.get('profileBadge') || '').trim();
     let delay = (urlParams.get('delay') || '').trim();
+    let cache = (urlParams.get('cache') || '').trim();
     let randomClip = 0; // Default random clip index
     let clip_index = 0; // Default clip index
     let following = "";
@@ -529,9 +530,9 @@ $(document).ready(async function () {
             let data;
 
             if (preferFeatured !== "false") {
-                apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=true&limit=" + limit + "&shuffle=true" + dateRange;
+                apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=true&limit=" + limit + "&shuffle=true&cache="+ cache + dateRange;
             } else {
-                apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=false&limit=" + limit + "&shuffle=true" + dateRange;
+                apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=false&limit=" + limit + "&shuffle=true&cache="+ cache + dateRange;
             }
 
             const controller = new AbortController();
@@ -548,7 +549,7 @@ $(document).ready(async function () {
             if (data.data.length === 0 && (dateRange > "" || preferFeatured !== "false")) {
                 const fallbackController = new AbortController();
                 const fallbackTimeoutId = setTimeout(() => fallbackController.abort(), 3000); // 3-second timeout for fallback
-                response = await fetch(apiServer + "/getuserclips.php?channel=" + channelName + "&limit=" + limit + "&shuffle=true", { signal: fallbackController.signal });
+                response = await fetch(apiServer + "/getuserclips.php?channel=" + channelName + "&limit=" + limit + "&shuffle=true&cache=" + cache, { signal: fallbackController.signal });
                 clearTimeout(fallbackTimeoutId);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');

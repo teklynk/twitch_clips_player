@@ -303,6 +303,12 @@ Clipped by {creator_name} {created_at}"></textarea>
                 Show progress bar
             </label>
         </div>
+        <div class="form-check mb-2 mt-4">
+            <input class="form-check-input shadow" type="checkbox" value="" id="cache" checked>
+            <label class="form-check-label" for="cache">
+                Enable/Disable Server-side cache of clips
+            </label>
+        </div>
         
         <br>
         <button class="btn btn-lg btn-success btn-block text-white shadow" id="generate_button" type="button">Generate Overlay
@@ -425,6 +431,10 @@ Clipped by {creator_name} {created_at}"></textarea>
             if (localStorage.getItem("TwitchClipsDelay")) {
                 document.getElementById("delay").value = localStorage.getItem("TwitchClipsDelay");
             }
+            if (localStorage.getItem("TwitchCache")) {
+                let isChecked = (localStorage.getItem("TwitchCache") === 'true');
+                document.getElementById("cache").checked = isChecked;
+            }
 
             let rangeSlider = function rangeSlider() {
                 let slider = $('.range-slider'),
@@ -526,6 +536,10 @@ Clipped by {creator_name} {created_at}"></textarea>
             localStorage.setItem("TwitchClipsDelay", this.value);
         };
 
+        document.getElementById("cache").onchange = function () {
+            localStorage.setItem("TwitchCache", this.checked);
+        };
+
         // Check if any input fields have changed
         $(":text,textarea,select,:checkbox,input[type=range],input[type=password],input[type=number]").on('change', function (e) {
             $("#overlaylink").addClass("hide");
@@ -585,6 +599,7 @@ Clipped by {creator_name} {created_at}"></textarea>
             let customText = document.getElementById("customText").value.trim();
             let detailsText = document.getElementById("detailsText").value.trim();
             let delay = document.getElementById("delay").value;
+            let cache = document.getElementById("cache").checked;
             let clientId = TWITCH_CLIENT_ID;
             let validationError = false;
 
@@ -649,7 +664,7 @@ Clipped by {creator_name} {created_at}"></textarea>
             if (!validationError) {
                 // build overlay url
                 let srcURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
-                let fullUrl = srcURL + "clips.html?channel=" + channel + "&exclude=" + exclude + "&limit=" + limit + "&dateRange=" + dateRange + "&videoSize=" + videoSize + "&themeOption=" + themeOption + "&preferFeatured=" + preferFeatured + "&showText=" + showText + "&progressBar=" + progressBar + "&profileBadge=" + profileBadge + "&showDetails=" + showDetails + "&detailsText=" + encodeURIComponent(detailsText) + "&mainAccount=" + mainChannel + "&command=" + command + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&delay=" + delay + "&ref=" + btoa(ref) + "&clientId=" + btoa(clientId);
+                let fullUrl = srcURL + "clips.html?channel=" + channel + "&exclude=" + exclude + "&limit=" + limit + "&dateRange=" + dateRange + "&videoSize=" + videoSize + "&themeOption=" + themeOption + "&preferFeatured=" + preferFeatured + "&showText=" + showText + "&progressBar=" + progressBar + "&profileBadge=" + profileBadge + "&showDetails=" + showDetails + "&detailsText=" + encodeURIComponent(detailsText) + "&mainAccount=" + mainChannel + "&command=" + command + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&delay=" + delay + "&cache=" + cache + "&ref=" + btoa(ref) + "&clientId=" + btoa(clientId);
                 fullUrl = fullUrl.replace("index.htmlclips.html", "clips.html");
                 document.getElementById("overlaylink").classList.remove("hide");
                 document.getElementById("overlaylink").innerHTML = "<p>Add this link as a browser source in OBS.<br>" +
