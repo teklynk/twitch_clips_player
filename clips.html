@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,11 +25,54 @@
     <link rel="icon" type="image/png" sizes="96x96" href="assets/images/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
 </head>
+<style>
+    /* hidden - positioned off screen */
+    .watermark {
+        background: #000000;
+        padding: 8px 16px;
+        border-radius: 10px;
+        position: fixed;
+        top: 50vw;
+        right: -1000px;
+        font-size: 2.5vw;
+        opacity: 0.9;
+        color: #fff;
+        text-shadow: 2px 2px #000000;
+        z-index: 9999;
+        transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* slide in */
+    .watermark.show {
+        right: 5vw;
+        opacity: 0.9;
+    }
+
+    /* slide out */
+    .watermark.fade-out {
+        right: -1000px;
+        opacity: 0;
+    }
+</style>
 
 <body>
 
-<div id="container">
-</div>
+    <div id="container">
+    </div>
+    <script>
+        // Watermark
+        $("<div class='watermark'>Powered By: TwitchClipsPlayer.com</div>").appendTo('#container');
 
+        // Trigger slide-in
+        setTimeout(function () {
+            $('.watermark').addClass('show');
+        }, 10000);
+
+        // Slide out
+        setTimeout(function () {
+            $('.watermark').addClass('fade-out');
+        }, 30000);
+    </script>
 </body>
+
 </html>
