@@ -535,9 +535,9 @@ $(document).ready(async function () {
             let data;
 
             if (preferFeatured !== "false") {
-                apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=true&limit=" + limit + "&shuffle=true&cache="+ cache + dateRange;
+                apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=true&limit=" + limit + "&shuffle=true&quality=" + quality + "&cache=" + cache + dateRange;
             } else {
-                apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=false&limit=" + limit + "&shuffle=true&cache="+ cache + dateRange;
+                apiUrl = apiServer + "/getuserclips.php?channel=" + channelName + "&prefer_featured=false&limit=" + limit + "&shuffle=true&quality=" + quality + "&cache=" + cache + dateRange;
             }
 
             const controller = new AbortController();
@@ -554,7 +554,7 @@ $(document).ready(async function () {
             if (data.data.length === 0 && (dateRange > "" || preferFeatured !== "false")) {
                 const fallbackController = new AbortController();
                 const fallbackTimeoutId = setTimeout(() => fallbackController.abort(), 10000); // 10-second timeout for fallback
-                response = await fetch(apiServer + "/getuserclips.php?channel=" + channelName + "&limit=" + limit + "&shuffle=true&cache=" + cache, { signal: fallbackController.signal });
+                response = await fetch(apiServer + "/getuserclips.php?channel=" + channelName + "&limit=" + limit + "&shuffle=true&quality=" + quality + "&cache=" + cache, { signal: fallbackController.signal });
                 clearTimeout(fallbackTimeoutId);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
