@@ -78,6 +78,7 @@ $(document).ready(async function () {
     let channel = (urlParams.get('channel') || '').toLowerCase().trim();
     let mainAccount = (urlParams.get('mainAccount') || '').toLowerCase().trim();
     let limit = (urlParams.get('limit') || '').trim();
+    let quality = (urlParams.get('quality') || '').trim();
     let dateRange = (urlParams.get('dateRange') || '').trim();
     let preferFeatured = (urlParams.get('preferFeatured') || '').trim();
     let showPoster = (urlParams.get('showPoster') || '').trim();
