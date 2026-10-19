@@ -710,7 +710,7 @@ $(document).ready(async function () {
         // Create video element and load a new clip
         // adding a poster will help reduce the gap between clips.
         if (showPoster === 'true') {
-            curr_clip.poster = clips_json.data[randomClip]['thumbnail_url'].replace("1920x1080", "1280x720");
+            curr_clip.poster = clips_json.data[randomClip]['thumbnail_url'];
         } else {
             curr_clip.poster = "";
         }
