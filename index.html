@@ -323,6 +323,16 @@ Clipped by {creator_name} {created_at}"></textarea>
             <small class="text-muted">Set specific width and height to force video scale. Be sure to also set your OBS
                 browser source to this width and height.</small>
         </div>
+        <div class="form-group mb-4">
+            <label for="quality">Quality</label>
+            <select class="form-control shadow" id="quality">
+                <option value="1080">1080p</option>
+                <option value="720" selected>720p</option>
+                <option value="480">480p</option>
+                <option value="360">360p</option>
+            </select>
+            <small class="text-muted">Adjusting the video quality can help improve playback performance</small>
+        </div>
         <div class="form-check mb-2">
             <input class="form-check-input shadow" type="checkbox" value="" id="profileBadge">
             <label class="form-check-label" for="profileBadge">
@@ -449,6 +459,9 @@ Clipped by {creator_name} {created_at}"></textarea>
             }
             if (localStorage.getItem("TwitchClipsThemeOption")) {
                 document.getElementById("themeOption").value = localStorage.getItem("TwitchClipsThemeOption");
+            }
+            if (localStorage.getItem("TwitchClipsQuality")) {
+                document.getElementById("quality").value = localStorage.getItem("TwitchClipsQuality");
             }
             if (localStorage.getItem("TwitchClipsExclude")) {
                 document.getElementById("exclude").value = localStorage.getItem("TwitchClipsExclude");
@@ -581,6 +594,10 @@ Clipped by {creator_name} {created_at}"></textarea>
             localStorage.setItem("TwitchClipsThemeOption", this.value);
         };
 
+        document.getElementById("quality").onchange = function () {
+            localStorage.setItem("TwitchClipsQuality", this.value);
+        };
+
         document.getElementById("exclude").onchange = function () {
             localStorage.setItem("TwitchClipsExclude", this.value.toLowerCase());
         };
@@ -681,6 +698,7 @@ Clipped by {creator_name} {created_at}"></textarea>
             let videoHeight = document.getElementById("videoHeight").value.trim();
             let videoSize = (videoWidth && videoHeight) ? videoWidth + "x" + videoHeight : "";
             let themeOption = document.getElementById("themeOption").value;
+            let quality = document.getElementById("quality").value;
             let preferFeatured = document.getElementById("preferFeatured").checked;
             let showText = document.getElementById("showText").checked;
             let progressBar = document.getElementById("progressBar").checked;
@@ -757,7 +775,7 @@ Clipped by {creator_name} {created_at}"></textarea>
             if (!validationError) {
                 // build overlay url
                 let srcURL = window.location.protocol + "//" + window.location.host + window.location.pathname;
-                let fullUrl = srcURL + "clips.html?channel=" + channel + "&exclude=" + exclude + "&limit=" + limit + "&dateRange=" + dateRange + "&videoSize=" + videoSize + "&themeOption=" + themeOption + "&preferFeatured=" + preferFeatured + "&showText=" + showText + "&progressBar=" + progressBar + "&profileBadge=" + profileBadge + "&showDetails=" + showDetails + "&detailsText=" + encodeURIComponent(detailsText) + "&mainAccount=" + mainChannel + "&command=" + command + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&delay=" + delay + "&cache=" + cache + "&quality=720&ref=" + btoa(ref) + "&clientId=" + btoa(clientId);
+                let fullUrl = srcURL + "clips.html?channel=" + channel + "&exclude=" + exclude + "&limit=" + limit + "&dateRange=" + dateRange + "&videoSize=" + videoSize + "&themeOption=" + themeOption + "&preferFeatured=" + preferFeatured + "&showText=" + showText + "&progressBar=" + progressBar + "&profileBadge=" + profileBadge + "&showDetails=" + showDetails + "&detailsText=" + encodeURIComponent(detailsText) + "&mainAccount=" + mainChannel + "&command=" + command + "&customText=" + encodeURIComponent(customText) + "&showFollowing=" + showFollowing + "&delay=" + delay + "&cache=" + cache + "&quality=" + quality + "&ref=" + btoa(ref) + "&clientId=" + btoa(clientId);
                 fullUrl = fullUrl.replace("index.htmlclips.html", "clips.html");
                 document.getElementById("overlaylink").classList.remove("hide");
                 document.getElementById("overlaylink").innerHTML = "<p>Add this link as a browser source in OBS.<br>" +
