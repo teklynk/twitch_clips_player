@@ -115,6 +115,14 @@ docker-compose up -d --build
 
 The project will be available at: `http://localhost:5001`
 
+
+If you have file permissions issues or 403 forbidden, run this at the root of the project.
+
+```bash
+chmod o+x .
+find assets -type d -exec chmod o+x {} +
+```
+
 Stop and remove the container with:
 
 ```bash

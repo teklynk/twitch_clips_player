@@ -2,6 +2,7 @@
 
 #container {
     height: auto;
+    min-height: 1200px;
     overflow: hidden;
     display: block;
     padding: 4px;

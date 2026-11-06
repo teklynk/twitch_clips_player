@@ -88,7 +88,9 @@ $(document).ready(async function () {
     let ref = (urlParams.get('ref') || '').trim();
     let clientId = (urlParams.get('clientId') || '').trim();
     let customText = (urlParams.get('customText') || '').trim();
+    let positionText = (urlParams.get('customTextPosition') || 'top').trim();
     let detailsText = (urlParams.get('detailsText') || '').trim();
+    let detailsTextPosition = (urlParams.get('positionDetailsText') || 'bottom-left').trim();
     let command = (urlParams.get('command') || '').trim();
     let showFollowing = (urlParams.get('showFollowing') || '').trim();
     let exclude = (urlParams.get('exclude') || '').toLowerCase().trim();
@@ -760,6 +762,21 @@ $(document).ready(async function () {
             } else {
                 $("<div id='text-container'><span class='title-text'>" + clips_json.data[randomClip]['broadcaster_name'] + "</span></div>").appendTo('#container');
             }
+
+            if (parseInt(themeOption, 10) !== 3) {
+                const textContainer = document.getElementById("text-container");
+                if (positionText === 'bottom') {
+                    if (themeOption === '1') {
+                        textContainer.style.setProperty('top', '49vw', 'important');
+                    } else {
+                        textContainer.style.setProperty('top', '42vw', 'important');
+                        textContainer.style.setProperty('left', '0', 'important');
+                    }
+                } else if (positionText === 'middle') {
+                    textContainer.style.setProperty('top', '22vw', 'important');
+                    textContainer.style.setProperty('left', '0', 'important');
+                }
+            }
         }
 
         // Show clip details panel
@@ -821,6 +838,36 @@ $(document).ready(async function () {
                 }
 
                 $("<div id='details-container'>" + dText + "</div>").appendTo('#container');
+
+                if (parseInt(themeOption) !== 3) {
+                    const detailsContainer = document.getElementById("details-container");
+                    if (detailsTextPosition === 'top-right' || detailsTextPosition === 'bottom-right') {
+                        detailsContainer.style.setProperty('--slide-offset', '2000px');
+                    }
+
+                    if (detailsTextPosition === 'top-left') {
+                        detailsContainer.style.setProperty('top', '2vw', 'important');
+                        detailsContainer.style.setProperty('left', '0vw', 'important');
+                        detailsContainer.style.setProperty('right', 'auto', 'important');
+                    } else if (detailsTextPosition === 'top-right') {
+                        detailsContainer.style.setProperty('top', '2vw', 'important');
+                        detailsContainer.style.setProperty('left', 'auto', 'important');
+                        if (parseInt(themeOption) === 0 || parseInt(themeOption) === 2)  {
+                            detailsContainer.style.setProperty('right', '0vw', 'important');
+                        } else {
+                            detailsContainer.style.setProperty('right', '1vw', 'important');
+                        }
+                    } else if (detailsTextPosition === 'bottom-right') {
+                        detailsContainer.style.setProperty('top', 'auto', 'important');
+                        detailsContainer.style.setProperty('bottom', '5vw', 'important');
+                        detailsContainer.style.setProperty('left', 'auto', 'important');
+                        if (parseInt(themeOption) === 0 || parseInt(themeOption) === 2)  {
+                            detailsContainer.style.setProperty('right', '0vw', 'important');
+                        } else {
+                            detailsContainer.style.setProperty('right', '1vw', 'important');
+                        }
+                    }
+                }
             }
         }
     }

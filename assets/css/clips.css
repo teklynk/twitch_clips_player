@@ -51,8 +51,6 @@ video {
     top: 36vw;
     background: #00000090;
     padding: 12px 24px 12px 24px;
-    margin-right: 24px;
-    border-radius: 0px 24px 24px 0px;
     width: auto;
     animation: fadeout 15s forwards;
     z-index: 99;

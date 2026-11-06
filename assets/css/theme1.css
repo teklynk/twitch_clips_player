@@ -47,11 +47,11 @@
 }
 
 @keyframes movein {
-  from { left: -2000px; }
-  to   { left: 0px; }
+    from { translate: var(--slide-offset, -2000px) 0; }
+    to   { translate: 0 0; }
 }
 
 @keyframes moveout {
-  from { left: 0px; }
-  to   { left: -2000px; }
+    from { translate: 0 0; }
+    to   { translate: var(--slide-offset, -2000px) 0; }
 }

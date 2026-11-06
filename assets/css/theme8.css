@@ -101,20 +101,20 @@
 
 @keyframes movein {
     from {
-        left: -2000px;
+        translate: var(--slide-offset, -2000px) 0;
     }
 
     to {
-        left: 0px;
+        translate: 0 0;
     }
 }
 
 @keyframes moveout {
     from {
-        left: 0px;
+        translate: 0 0;
     }
 
     to {
-        left: -2000px;
+        translate: var(--slide-offset, -2000px) 0;
     }
 }
